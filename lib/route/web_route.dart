@@ -20,7 +20,7 @@ Future<List<FinchRoute>> getFinchRoute(Request rq) async {
     FinchRoute(
       path: '/app/includes.js',
       methods: Methods.ALL,
-      index: homeController.index,
+      index: IncludeJsController().index,
     ),
     FinchRoute(
       path: '/robots.txt',
