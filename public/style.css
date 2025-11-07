@@ -199,3 +199,34 @@ pre[class*="language-"] {
 .dark pre[class*="language-"] {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
+
+/* Header Copy Link Button */
+.header-copy-link {
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    vertical-align: middle;
+    font-size: 0.875em;
+}
+
+.header-copy-link:hover {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.dark .header-copy-link:hover {
+    background: rgba(96, 165, 250, 0.1);
+}
+
+/* Ensure headers can show the button on hover */
+.md-header-tag {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.md-header-tag:hover .header-copy-link {
+    opacity: 1 !important;
+}
+

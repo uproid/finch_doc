@@ -260,3 +260,76 @@ if (toolsDropdown && toolsMenu) {
         }
     });
 }
+
+// Add copy link button to all headers with md-header-tag class
+function addHeaderCopyButtons() {
+    const headers = document.querySelectorAll('.md-header-tag[id]');
+    
+    headers.forEach(header => {
+        // Create a wrapper for the header content and button
+        const headerId = header.getAttribute('id');
+        if (!headerId) return;
+        
+        // Check if button already exists
+        if (header.querySelector('.header-copy-link')) return;
+        
+        // Create the copy link button
+        const copyButton = document.createElement('button');
+        copyButton.className = 'header-copy-link inline-flex items-center justify-center ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400';
+        copyButton.innerHTML = '<i class="fas fa-hashtag text-sm"></i>';
+        copyButton.setAttribute('aria-label', 'Copy link to this section');
+        copyButton.setAttribute('title', 'Copy link');
+        
+        // Add click handler
+        copyButton.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const url = window.location.origin + window.location.pathname + '#' + headerId;
+            
+            try {
+                await navigator.clipboard.writeText(url);
+                
+                // Visual feedback
+                const originalHTML = copyButton.innerHTML;
+                copyButton.innerHTML = '<i class="fas fa-check text-sm"></i>';
+                copyButton.classList.add('text-green-600', 'dark:text-green-400');
+                
+                setTimeout(() => {
+                    copyButton.innerHTML = originalHTML;
+                    copyButton.classList.remove('text-green-600', 'dark:text-green-400');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy link:', err);
+                // Fallback for older browsers
+                const tempInput = document.createElement('input');
+                tempInput.value = url;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                
+                // Visual feedback
+                const originalHTML = copyButton.innerHTML;
+                copyButton.innerHTML = '<i class="fas fa-check text-sm"></i>';
+                copyButton.classList.add('text-green-600', 'dark:text-green-400');
+                
+                setTimeout(() => {
+                    copyButton.innerHTML = originalHTML;
+                    copyButton.classList.remove('text-green-600', 'dark:text-green-400');
+                }, 2000);
+            }
+        });
+        
+        // Make the header a group for hover effect
+        header.classList.add('group', 'relative');
+        
+        // Append the button to the header
+        header.appendChild(copyButton);
+    });
+}
+
+// Initialize header copy buttons when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addHeaderCopyButtons);
+} else {
+    addHeaderCopyButtons();
+}

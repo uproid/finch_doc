@@ -151,32 +151,32 @@ class ContentModel {
         switch (node.tag) {
           case 'h1':
             node.attributes['class'] =
-                'text-4xl font-bold mt-8 mb-4 scroll-mt-20';
+                'md-header-tag text-4xl font-bold mt-8 mb-4 scroll-mt-20';
             node.attributes['id'] = node.textContent.toSlug();
             break;
           case 'h2':
             node.attributes['class'] =
-                'text-3xl font-semibold mt-8 mb-4 scroll-mt-20';
+                'md-header-tag text-3xl font-semibold mt-8 mb-4 scroll-mt-20';
             node.attributes['id'] = node.textContent.toSlug();
             break;
           case 'h3':
             node.attributes['class'] =
-                'text-2xl font-semibold mt-6 mb-3 scroll-mt-20';
+                'md-header-tag text-2xl font-semibold mt-6 mb-3 scroll-mt-20';
             node.attributes['id'] = node.textContent.toSlug();
             break;
           case 'h4':
             node.attributes['class'] =
-                'text-xl font-semibold mt-6 mb-2 scroll-mt-20';
+                'md-header-tag text-xl font-semibold mt-6 mb-2 scroll-mt-20';
             node.attributes['id'] = node.textContent.toSlug();
             break;
           case 'h5':
             node.attributes['class'] =
-                'text-lg font-semibold mt-4 mb-2 scroll-mt-20';
+                'md-header-tag text-lg font-semibold mt-4 mb-2 scroll-mt-20';
             node.attributes['id'] = node.textContent.toSlug();
             break;
           case 'h6':
             node.attributes['class'] =
-                'text-base font-semibold mt-4 mb-1 scroll-mt-20';
+                'md-header-tag text-base font-semibold mt-4 mb-1 scroll-mt-20';
             node.attributes['id'] = node.textContent.toSlug();
           case 'p':
             node.attributes['class'] = 'mb-4 leading-7';
