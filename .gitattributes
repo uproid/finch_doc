@@ -1,0 +1,4 @@
+*.dart linguist-language=Dart Finch
+/public/**/* linguist-vendored
+*.md linguist-documentation
+/lib/widgets/**/* linguist-vendored
