@@ -1,9 +1,46 @@
 // Search functionality with AJAX
 let searchTimeout;
+let blurBackdrop = null;
+
+// Create blur backdrop element
+function createBlurBackdrop() {
+    if (!blurBackdrop) {
+        blurBackdrop = document.createElement('div');
+        blurBackdrop.className = 'search-blur-backdrop';
+        document.body.appendChild(blurBackdrop);
+        
+        // Close search when clicking backdrop
+        blurBackdrop.addEventListener('click', () => {
+            hideSearchResults();
+        });
+    }
+    return blurBackdrop;
+}
+
+function showBlurBackdrop() {
+    const backdrop = createBlurBackdrop();
+    requestAnimationFrame(() => {
+        backdrop.classList.add('active');
+    });
+}
+
+function hideBlurBackdrop() {
+    if (blurBackdrop) {
+        blurBackdrop.classList.remove('active');
+    }
+}
+
+function hideSearchResults() {
+    searchResults.classList.add('hidden');
+    hideBlurBackdrop();
+}
 
 async function performSearch(query, resultsContainer) {
     if (!query || query.length < 2) {
         resultsContainer.classList.add('hidden');
+        if (resultsContainer === searchResults) {
+            hideBlurBackdrop();
+        }
         return;
     }
 
@@ -18,6 +55,11 @@ async function performSearch(query, resultsContainer) {
         </div>
     `;
     resultsContainer.classList.remove('hidden');
+    
+    // Show blur backdrop for desktop search
+    if (resultsContainer === searchResults) {
+        showBlurBackdrop();
+    }
 
     // Debounce search requests
     searchTimeout = setTimeout(async () => {
@@ -95,6 +137,15 @@ searchInput.addEventListener('focus', (e) => {
     }
 });
 
+searchInput.addEventListener('blur', (e) => {
+    // Delay to allow clicking on search results
+    setTimeout(() => {
+        if (!searchResults.contains(document.activeElement)) {
+            hideSearchResults();
+        }
+    }, 200);
+});
+
 // Mobile Search
 const mobileSearchToggle = document.getElementById('mobileSearchToggle');
 const mobileSearchModal = document.getElementById('mobileSearchModal');
@@ -120,7 +171,7 @@ mobileSearchInput.addEventListener('input', (e) => {
 // Close search results when clicking outside
 document.addEventListener('click', (e) => {
     if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-        searchResults.classList.add('hidden');
+        hideSearchResults();
     }
 });
 
@@ -133,7 +184,7 @@ document.addEventListener('keydown', (e) => {
     
     // ESC to close search
     if (e.key === 'Escape') {
-        searchResults.classList.add('hidden');
+        hideSearchResults();
         mobileSearchModal.classList.add('hidden');
     }
 });

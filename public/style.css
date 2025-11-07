@@ -230,3 +230,28 @@ pre[class*="language-"] {
     opacity: 1 !important;
 }
 
+/* Search popup blur background */
+.search-blur-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.search-blur-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.dark .search-blur-backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
