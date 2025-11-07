@@ -142,15 +142,33 @@ document.addEventListener('keydown', (e) => {
 const themeToggle = document.getElementById('themeToggle');
 const html = document.documentElement;
 
+function updatePrismTheme(isDark) {
+    const prismLight = document.getElementById('prism-light');
+    const prismDark = document.getElementById('prism-dark');
+    
+    if (isDark) {
+        prismLight.disabled = true;
+        prismDark.disabled = false;
+    } else {
+        prismLight.disabled = false;
+        prismDark.disabled = true;
+    }
+}
+
+// Initialize Prism theme on load
+updatePrismTheme(html.classList.contains('dark'));
+
 themeToggle.addEventListener('click', () => {
     const isDark = html.classList.contains('dark');
     
     if (isDark) {
         html.classList.remove('dark');
         localStorage.setItem('theme', 'light');
+        updatePrismTheme(false);
     } else {
         html.classList.add('dark');
         localStorage.setItem('theme', 'dark');
+        updatePrismTheme(true);
     }
     
     // Force a repaint to ensure styles are updated

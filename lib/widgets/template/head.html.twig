@@ -19,13 +19,30 @@
         if (theme === 'dark') {
             document.documentElement.classList.add('dark');
         }
+        // Set Prism theme based on current theme
+        window.addEventListener('DOMContentLoaded', function() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const prismLight = document.getElementById('prism-light');
+            const prismDark = document.getElementById('prism-dark');
+            if (prismLight && prismDark) {
+                if (isDark) {
+                    prismLight.disabled = true;
+                    prismDark.disabled = false;
+                } else {
+                    prismLight.disabled = false;
+                    prismDark.disabled = true;
+                }
+            }
+        });
     })();
 </script>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="/style.css">
-<!-- Prism.js for syntax highlighting -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+<!-- Prism.js for syntax highlighting - Light theme -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" id="prism-light">
+<!-- Prism.js for syntax highlighting - Dark theme -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" id="prism-dark" disabled>
 <!-- Prism.js Toolbar for copy button -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
 <script>
