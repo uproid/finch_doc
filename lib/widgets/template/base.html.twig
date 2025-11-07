@@ -34,12 +34,16 @@
                 <div class="flex-1 w-full min-w-0 px-4 sm:px-6 lg:px-8 py-8 max-w-4xl xl:mx-24 order-2 xl:order-1">
                     
                     <!-- Breadcrumb -->
-                    <nav class="flex mb-6 text-sm overflow-x-auto">
+                    <nav class="flex items-center justify-between mb-6 text-sm overflow-x-auto">
                         <ol class="flex items-center space-x-2 flex-nowrap">
                             <li class="whitespace-nowrap"><a href="/" class="text-blue-600 dark:text-blue-400 hover:underline">Home</a></li>
                             <li class="whitespace-nowrap"><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
                             <li class="text-gray-600 dark:text-gray-400 whitespace-nowrap">{{ title }}</li>
                         </ol>
+                        <a href="{{ github }}/edit/master/doc/{{ filename }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap ml-4">
+                            <i class="fas fa-edit text-sm"></i>
+                            <span class="text-xs hidden sm:inline">Edit</span>
+                        </a>
                     </nav>
 
                     <!-- Mobile TOC -->
