@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'template/head.html.twig' %}
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    {% include 'template/navbar.html.twig' %}
+    <!-- Main Container -->
+    <div class="flex pt-16 justify-center">
+        <div class="flex w-full max-w-[1600px]">
+        
+        <!-- Left Sidebar - Navigation Menu -->
+        <aside id="leftSidebar" class="fixed bg-white dark:bg-gray-900 dark:lg:bg-transparent lg:bg-transparent lg:sticky top-16 left-0 h-[calc(100vh-4rem)] w-64 border-r border-gray-200 dark:border-gray-700 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40 flex-shrink-0">
+            <div class="p-4">
+                <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">Documentation</h3>
+                
+                <!-- Getting Started -->
+                <div class="mb-6">
+                    <ul class="space-y-1">
+                        {% for (key,title) in menus %}
+                            <li><a href="/{{ key }}" class="{{ $e.isKey(key) ? 'menu-item-active text-blue-600 dark:text-blue-400' : '' }} block px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">{{ title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+        </aside>
+
+        <!-- Overlay for mobile -->
+        <div id="overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"></div>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 min-w-0 w-full lg:w-auto overflow-x-hidden">
+            <div class="flex flex-col xl:flex-row w-full relative">
+                <!-- Content -->
+                <div class="flex-1 w-full min-w-0 px-4 sm:px-6 lg:px-8 py-8 max-w-4xl xl:mr-64 order-2 xl:order-1">
+                    
+                    <!-- Breadcrumb -->
+                    <nav class="flex mb-6 text-sm overflow-x-auto">
+                        <ol class="flex items-center space-x-2 flex-nowrap">
+                            <li class="whitespace-nowrap"><a href="/" class="text-blue-600 dark:text-blue-400 hover:underline">Home</a></li>
+                            <li class="whitespace-nowrap"><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
+                            <li class="text-gray-600 dark:text-gray-400 whitespace-nowrap">{{ title }}</li>
+                        </ol>
+                    </nav>
+
+                    <!-- Mobile TOC -->
+                    <div class="xl:hidden mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                        <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">On This Page</h3>
+                        <nav>
+                            <ul class="flex flex-wrap gap-2">
+                                {% for section in index %}
+                                    <li><a href="#{{ section.id }}" class="inline-block px-3 py-1 text-xs rounded-lg bg-white dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border border-gray-200 dark:border-gray-600">{{ section.title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </nav>
+                    </div>
+                    {% if $e.isKey('')  %}
+                        <!-- Hero Section -->
+                        <div class="mb-12">
+                            <!-- Logo and Title -->
+                            <div class="flex items-center justify-center gap-6 mb-8">
+                                <img src="/logo.svg" alt="Finch Framework" class="h-32 w-32">
+                                <div>
+                                    <h1 class="text-5xl font-bold text-gray-900 dark:text-white">Finch</h1>
+                                    <span class="text-lg text-gray-600 dark:text-gray-300">v{{ finchVersion }}</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Announcement Badge -->
+                            <div class="text-center mb-8">
+                                <a href="https://pub.dev/packages/finch" rel="noopener noreferrer" target="_blank" class="group inline-flex items-center rounded-full border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950 px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 transition-all hover:border-blue-300 dark:hover:border-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900 hover:shadow-md">
+                                    <span class="text-lg mr-2 animate-bounce">🎉</span>
+                                    <div class="w-px h-4 bg-gray-300 dark:bg-gray-600 mx-3"></div>
+                                    <span class="font-semibold">v{{ finchVersion }} - Now Available on pub.dev</span>
+                                    <svg class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="flex flex-wrap items-center justify-center gap-4 mb-10">
+                                <a href="https://github.com/uproid/finch" target="_blank" rel="noopener noreferrer">
+                                    <button class="h-11 px-6 group inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium transition-all hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-750 hover:shadow-lg">
+                                        <i class="fab fa-github text-xl mr-2.5"></i>
+                                        <span>View on GitHub</span>
+                                    </button>
+                                </a>
+                                <a href="https://example.uproid.com/" rel="noopener noreferrer" target="_blank">
+                                    <button class="h-11 px-6 group inline-flex items-center rounded-full border border-blue-500 dark:border-blue-600 bg-blue-600 dark:bg-blue-700 text-white font-medium transition-all hover:bg-blue-700 dark:hover:bg-blue-800 hover:shadow-lg">
+                                        <i class="fas fa-external-link-alt mr-2.5"></i>
+                                        <span>Live Demo</span>
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Document Content -->
+                    <article class="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none overflow-x-auto">
+                        {{ content }}
+                    </article>
+
+                    <!-- Navigation Buttons -->
+                    <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+                        {% if previous is defined %}
+                            <a href="/{{ previous.key }}" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-arrow-left flex-shrink-0"></i>
+                                <div class="text-left min-w-0">
+                                    <div class="text-xs text-gray-500">Previous</div>
+                                    <div class="font-semibold truncate">{{ previous.title }}</div>
+                                </div>
+                            </a>
+                        {% endif %}
+                        {% if next is defined %}
+                            <a href="/{{ next.key }}" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 {% if previous is not defined %}ml-auto{% endif %}">
+                                <div class="text-right min-w-0">
+                                    <div class="text-xs opacity-80">Next</div>
+                                    <div class="font-semibold truncate">
+                                        {{ next.title }}
+                                    </div>
+                                </div>
+                                <i class="fas fa-arrow-right flex-shrink-0"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <!-- Footer -->
+                    <footer class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-600 dark:text-gray-400">
+                        <p>© {{ $l.now | dateFormat("yyyy") }} Finch Documentation. All rights reserved.</p>
+                        <p class="mt-2">Built with ❤️ using Finch</p>
+                    </footer>
+                </div>
+
+                <!-- Right Sidebar - Table of Contents -->
+                <aside class="xl:fixed xl:right-[calc((100vw-1600px)/2)] xl:top-16 xl:h-[calc(100vh-4rem)] xl:w-64 w-full overflow-y-auto px-4 py-6 xl:py-8 border-b xl:border-b-0 xl:border-l border-gray-200 dark:border-gray-700 order-1 xl:order-2 bg-white dark:bg-gray-900 hidden xl:block">
+                    <div class="xl:sticky xl:top-0">
+                        <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">On This Page</h3>
+                        <nav id="tableOfContents">
+                            <ul class="space-y-2">
+                                {% for section in index %}
+                                    <li class="block"><a href="#{{ section.id }}" class="block px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border-l-2 border-transparent hover:border-blue-600 pl-3 md-level-{{ section.level }}">{{ section.title }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </nav>
+                        
+                        <!-- Action Buttons -->
+                        <div class="mt-6 space-y-1 pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <a href="{{ github }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                <i class="fab fa-github text-sm"></i>
+                                <span class="text-xs">Star on GitHub</span>
+                            </a>
+                            <a href="{{ github }}/issues" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                <i class="fas fa-exclamation-circle text-sm"></i>
+                                <span class="text-xs">Create Issues</span>
+                            </a>
+                            <a href="{{ github }}/edit/master/doc/{{ filename }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                <i class="fas fa-edit text-sm"></i>
+                                <span class="text-xs">Edit this page</span>
+                            </a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </main>
+        </div>
+    </div>
+    <script src="/script.js"></script>
+</body>
+</html>

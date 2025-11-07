@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  finchdoc:
+    hostname: finchdoc
+    container_name: finchdoc
+    image: dart:stable
+    restart: always
+    ports:
+      - "9902:9902"
+      - "9901:9901"
+    build:
+      context: .
+
+  nginx_finchdoc:
+    hostname: nginx_finchdoc
+    container_name: nginx_finchdoc
+    image: nginx:latest
+    restart: always
+    ports:
+      - "9900:9900"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./public/:/var/www/html
+    depends_on:
+      - finchdoc

@@ -1,0 +1,6 @@
+{
+    "error.field.required": "The field is required",
+    "error.field.email": "The field must be a valid email",
+    "error.field": "The field is invalid",
+    "mongo.error.DuplicateKey": "Field value already exists"
+}

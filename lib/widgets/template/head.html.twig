@@ -1,0 +1,28 @@
+{% block head %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ title }} | Finch v{{ finchVersion }}</title>
+<meta name="description" content="Finch helps developers build scalable Dart backends with MongoDB, MySQL, SQLite, WebSockets, auto API docs, authentication, email, and deployment tools.">
+<meta name="keywords" content="Dart backend framework, Dart web development, scalable backend, MongoDB Dart, MySQL Dart, SQLite Dart, WebSockets Dart, real-time API, Swagger documentation, API authentication, email integration, microservices Dart, enterprise backend, deployment tools">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+<meta name="robots" content="index, follow">
+
+
+<script>
+    (function () {
+        const theme = localStorage.getItem('theme') || 'light';
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    })();
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="/style.css">
+<script>
+    tailwind.config = {
+        darkMode: 'class'
+    }
+</script>
+{% endblock %}

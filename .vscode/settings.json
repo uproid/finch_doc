@@ -1,0 +1,147 @@
+{
+    "workbench.colorTheme": "Default Dark+",
+    "dart.flutterHotReloadOnSave": "all",
+    "dart.hotReloadOnSave": "all",
+    "html.validate.styles": false,
+    "i18n-ally.localesPaths": "./languages",
+    "i18n-ally.sourceLanguage": "en",
+    "i18n-ally.keystyle": "flat",
+    "i18n-ally.preferredDelimiter": "_",
+    "i18n-ally.sortKeys": true,
+    "i18n-ally.keepFulfilled": true,
+    "i18n-ally.translate.promptSource": true,
+    "i18n-ally.pathMatcher": "{locale}.json",
+    "i18n-ally.translate.saveAsCandidates": true,
+    "i18n-ally.editor.preferEditor": true,
+    "i18n-ally.keysInUse": [
+        "view.progress_submenu.translated_keys",
+        "view.progress_submenu.missing_keys",
+        "view.progress_submenu.empty_keys"
+    ],
+    "i18n-ally.usage.scanningIgnore": [
+        "examples"
+    ],
+    "i18n-ally.regex.usageMatchAppend": [
+        "/\\*\\s*i18n\\s*\\*/\\s*['\"`]({key})['\"`]",
+        "'{key}'.tr",
+    ],
+    "i18n-ally.regex.usageMatch": [
+        "\"([^\"]+)\"(.tr|.trArgs|.trPlural|.trParams|.trPluralParams)",
+        "'([^']+)'(.tr|.trArgs|.trPlural|.trParams|.trPluralParams)",
+        "DS\\.tr\\(\"([^\"]+)\"\\)",
+        "DS\\.tr\\('([^']+)'\\)",
+        "\\$t\\('([^']+)'\\)",
+        "\\$t\\(\"([^\"]+)\"\\)",
+    ],
+    "i18n-ally.enabledFrameworks": [
+        "vscode",
+        "vue",
+        "general",
+        "flutter",
+        "globalize"
+    ],
+    "i18n-ally.theme.annotation": "rgba(0, 255, 0, 1)",
+    "i18n-ally.theme.annotationBorder": "rgba(0, 150, 150, 1)",
+    "i18n-ally.theme.annotationMissing": "#FF5500",
+    "i18n-ally.theme.annotationMissingBorder": "#0055FF",
+    "eslint.validate": [
+        "javascript",
+        "typescript",
+        "javascriptreact",
+        "typescriptreact",
+        "vue",
+        "html",
+        "flutter"
+    ],
+    "ComponentPreviewer.serverURL": "http://localhost:8080",
+    "liveServer.settings.port": 5501,
+    "search.exclude": {
+        "**/frontend_dashboard": true
+    },
+    "files.exclude": {
+        "**/frontend_dashboard": true
+    },
+    "cSpell.words": [
+        "certbot",
+        "dotenv",
+        "dweb",
+        "faild",
+        "filemanager",
+        "notfound",
+        "sublist",
+        "Uproid",
+        "urpod"
+    ],
+    "highlight.regex.regexes": [
+        {
+            "name": "TODO/CRITICAL",
+            "description": "Show todo and critical keyword on comment(s)",
+            "languageRegex": "\\b(c|cpp|go|java|javascript|php|rust|typescript)\\b",
+            "regexes": [
+                {
+                    "regex": [
+                        "(?:[\"][^]*?(?:(?<!\\\\)[\"]))",
+                        "|",
+                        "(",
+                        "(?:/\\*[^]*?\\*/)",
+                        "|",
+                        "(?://[^]*?(?:(?<!\\\\)$))",
+                        ")"
+                    ],
+                    "regexFlag": "gm",
+                    "regexLimit": 25000,
+                    "regexes": [
+                        {
+                            "index": 1,
+                            "regex": [
+                                "\\b(?<todo>TODO)\\b",
+                                "|",
+                                "\\b(CRITICAL)\\b"
+                            ],
+                            "regexFlag": "gmi",
+                            "regexLimit": 25000,
+                            "decorations": [
+                                {
+                                    "index": "todo",
+                                    "borderRadius": "4px",
+                                    "fontWeight": "bold",
+                                    "overviewRulerColor": "#FF9900FF",
+                                    "overviewRulerLane": 4,
+                                    "light": {
+                                        "color": "#000000",
+                                        "backgroundColor": "#FF990050",
+                                        "border": "1px solid #FF990090"
+                                    },
+                                    "dark": {
+                                        "color": "#FFFFFF",
+                                        "backgroundColor": "#FF990090",
+                                        "border": "1px solid #FF990050"
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "borderRadius": "4px",
+                                    "fontWeight": "bold",
+                                    "overviewRulerColor": "#FF0000FF",
+                                    "overviewRulerLane": 4,
+                                    "light": {
+                                        "color": "#000000",
+                                        "backgroundColor": "#FF000050",
+                                        "border": "1px solid #FF000090"
+                                    },
+                                    "dark": {
+                                        "color": "#FFFFFF",
+                                        "backgroundColor": "#FF000090",
+                                        "border": "1px solid #FF000050"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "active": true
+        }
+    ],
+    "yaml.schemaStore.enable": false
+}
