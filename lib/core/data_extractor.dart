@@ -83,6 +83,7 @@ class ContentModel {
   String key;
   String title = '';
   String html = '';
+  String description = '';
   List<Map<String, dynamic>> index = [];
 
   ContentModel? next;
@@ -99,6 +100,7 @@ class ContentModel {
 
   void _initIndex(String md) {
     List<Element> doc = Document().parse(md).whereType<Element>().toList();
+
     var tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
     for (var node in doc) {
       if (title.isEmpty) {
@@ -112,6 +114,25 @@ class ContentModel {
           'title': node.textContent,
         });
       }
+    }
+
+    // Extract first text after first h tag as description
+    for (var i = 0; i < doc.length; i++) {
+      var node = doc[i];
+      if (tags.contains(node.tag)) {
+        // Look for next text node
+        for (var j = i + 1; j < doc.length; j++) {
+          var nextNode = doc[j];
+          if (nextNode.tag == 'p') {
+            description = nextNode.textContent.trim().removeHtmlTags();
+            return;
+          }
+        }
+      }
+    }
+    // Optimize description length
+    if (description.length > 150) {
+      description = description.substring(0, 150) + '...';
     }
   }
 

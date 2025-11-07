@@ -64,7 +64,7 @@ function displayResults(data, container, searchTerm) {
                     <i class="fas fa-file-alt text-blue-600 dark:text-blue-400 mt-1"></i>
                     <div class="flex-1 min-w-0">
                         <div class="font-semibold text-gray-900 dark:text-gray-100">${highlightMatch(item.title, searchTerm)}</div>
-                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">${item.key}</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">${item.description}</div>
                     </div>
                 </div>
             </a>

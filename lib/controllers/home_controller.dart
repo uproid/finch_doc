@@ -21,6 +21,7 @@ class HomeController extends Controller {
     rq.addParam('menus', DataExtractor.menus);
     rq.addParam('filename', content.filename);
     rq.addParam('github', 'https://github.com/uproid/finch');
+    rq.addParam('description', content.description);
     rq.addParam('finchVersion', FinchApp.info.version);
 
     if (content.next != null) {
@@ -66,6 +67,7 @@ class HomeController extends Controller {
           .map((e) => {
                 'title': e.key.title,
                 'key': e.key.key,
+                'description': e.key.description,
               })
           .toList(),
     });

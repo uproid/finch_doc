@@ -2,7 +2,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{ title }} | Finch v{{ finchVersion }}</title>
+{% if description is defined %}
+<meta name="description" content="{{ description }}">
+{% else %}
 <meta name="description" content="Finch helps developers build scalable Dart backends with MongoDB, MySQL, SQLite, WebSockets, auto API docs, authentication, email, and deployment tools.">
+{% endif %}
 <meta name="keywords" content="Dart backend framework, Dart web development, scalable backend, MongoDB Dart, MySQL Dart, SQLite Dart, WebSockets Dart, real-time API, Swagger documentation, API authentication, email integration, microservices Dart, enterprise backend, deployment tools">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
