@@ -28,12 +28,14 @@ class HomeController extends Controller {
       rq.addParam('next', {
         'title': content.next?.title,
         'key': content.next?.key,
+        'description': content.next?.description,
       });
     }
     if (content.previous != null) {
       rq.addParam('previous', {
         'title': content.previous?.title,
         'key': content.previous?.key,
+        'description': content.previous?.description,
       });
     }
 
