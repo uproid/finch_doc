@@ -10,7 +10,7 @@
         <div class="flex w-full max-w-[1600px]">
         
             <!-- Left Sidebar - Navigation Menu -->
-            <aside id="leftSidebar" class="fixed bg-white dark:bg-gray-900 dark:lg:bg-transparent lg:bg-transparent lg:sticky top-16 left-0 h-[calc(100vh-4rem)] w-64 border-r border-gray-200 dark:border-gray-700 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40 flex-shrink-0">
+            <aside id="leftSidebar" class="fixed bg-white dark:bg-gray-800 lg:bg-transparent dark:lg:bg-transparent lg:sticky top-16 left-0 h-[calc(100vh-4rem)] w-64 border-r border-gray-200 dark:border-gray-700 overflow-y-auto transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex-shrink-0">
                 <div class="p-4">
                     <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">Documentation</h3>
                     
@@ -34,7 +34,7 @@
             </aside>
 
             <!-- Overlay for mobile -->
-            <div id="overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"></div>
+            <div id="overlay" class="hidden fixed inset-0 bg-black/50 z-30 lg:hidden"></div>
 
             <!-- Main Content Area -->
             <main class="flex-1 min-w-0 overflow-x-hidden order-2 xl:order-1 xl:mx-20 lg:mx-16 md:mx-8 sm:mx-4">
@@ -79,7 +79,7 @@
                         <!-- Navigation Buttons -->
                         <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
                             {% if previous is defined %}
-                                <a href="/{{ previous.key }}" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <a href="/{{ previous.key }}" class="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="ph-duotone ph-arrow-left flex-shrink-0 text-xl text-purple-600 dark:text-purple-400"></i>
                                     <div class="text-left min-w-0">
                                         <div class="text-xs text-gray-500">Previous</div>
@@ -87,9 +87,11 @@
                                         <div class="text-xs opacity-80">{{  $l.maxLength(previous.description, 50) }}</div>
                                     </div>
                                 </a>
+                            {% else %}
+                                <div class="flex-1"></div>
                             {% endif %}
                             {% if next is defined %}
-                                <a href="/{{ next.key }}" class="flex items-center gap-2 justify-end px-4 py-2 rounded-lg bg-blue-400 text-white hover:bg-blue-500 {{ previous is not defined ? 'ml-auto' : '' }}">
+                                <a href="/{{ next.key }}" class="flex-1 flex items-center gap-2 justify-end px-4 py-2 rounded-lg border bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <div class="text-right min-w-0">
                                         <div class="text-xs opacity-80">Next</div>
                                         <div class="font-semibold truncate">
@@ -97,8 +99,10 @@
                                         </div>
                                         <div class="text-xs opacity-80">{{  $l.maxLength(next.description, 50) }}</div>
                                     </div>
-                                    <i class="ph-duotone ph-arrow-right flex-shrink-0 text-xl text-white"></i>
+                                    <i class="ph-duotone ph-arrow-right flex-shrink-0 text-xl text-purple-600 dark:text-purple-400"></i>
                                 </a>
+                            {% else %}
+                                <div class="flex-1"></div>
                             {% endif %}
                         </div>
 

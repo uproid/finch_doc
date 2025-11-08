@@ -50,8 +50,9 @@ async function performSearch(query, resultsContainer) {
     // Show loading state
     resultsContainer.innerHTML = `
         <div class="p-4 text-center text-gray-500 dark:text-gray-400">
-            <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
-            <p>Searching...</p>
+            <div class="spinner-container">
+                <div class="spinner"></div>
+            </div>
         </div>
     `;
     resultsContainer.classList.remove('hidden');
@@ -230,20 +231,23 @@ document.addEventListener('DOMContentLoaded', function() {
         themeToggle.addEventListener('click', () => {
             const isDark = html.classList.contains('dark');
             
-            if (isDark) {
-                html.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                updatePrismTheme(false);
-                updateThemeIcons(false);
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                updatePrismTheme(true);
-                updateThemeIcons(true);
-            }
-            
-            // Force a repaint to ensure styles are updated
-            void html.offsetHeight;
+            // Use requestAnimationFrame for smoother transitions in Safari
+            requestAnimationFrame(() => {
+                if (isDark) {
+                    html.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                    updatePrismTheme(false);
+                    updateThemeIcons(false);
+                } else {
+                    html.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                    updatePrismTheme(true);
+                    updateThemeIcons(true);
+                }
+                
+                // Force a repaint to ensure styles are updated
+                void html.offsetHeight;
+            });
         });
     }
 });
