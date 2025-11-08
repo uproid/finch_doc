@@ -1,6 +1,6 @@
 {% block navbar %}
 <!-- Top Navigation Bar -->
-<nav class="fixed top-0 left-0 right-0 z-50 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+<nav class="fixed top-0 start-0 end-0 z-50 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
     <div class="max-w-[1600px] mx-auto flex items-center justify-between px-4 h-16">
         <!-- Left: Logo & Menu Toggle -->
         <div class="flex items-center gap-4">
@@ -9,7 +9,7 @@
             </button>
             <a href="/" class="flex items-center gap-2">
                 <img src="/logo.svg" alt="Finch Docs" class="h-10">
-                <span class="font-bold text-xl hidden sm:block">Finch Documentation</span>
+                <span class="font-bold text-xl hidden sm:block">{{ $t('Finch') }}</span>
                 <span class="text-gray-500 text-sm">v{{ finchVersion }}</span>
             </a>
         </div>
@@ -20,15 +20,15 @@
                 <input 
                     type="text" 
                     id="searchInput"
-                    placeholder="Search documentation..." 
-                    class="w-full px-4 py-2 pl-10 pr-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                    placeholder="{{ $t('Search documentation...') }}" 
+                    class="w-full px-4 py-2 ps-10 pe-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                     autocomplete="off"
                 >
-                <i class="ph-duotone ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-xl"></i>
-                <kbd class="absolute right-3 top-1/2 transform -translate-y-1/2 px-2 py-1 text-xs bg-gray-200 dark:bg-gray-600 rounded">Ctrl+K</kbd>
+                <i class="ph-duotone ph-magnifying-glass absolute start-3 top-1/2 transform -translate-y-1/2 text-xl"></i>
+                <kbd class="absolute end-3 top-1/2 transform -translate-y-1/2 px-2 py-1 text-xs bg-gray-200 dark:bg-gray-600 rounded">Ctrl+K</kbd>
                 
                 <!-- Search Results Dropdown -->
-                <div id="searchResults" class="hidden absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-96 overflow-y-auto z-50">
+                <div id="searchResults" class="hidden absolute top-full start-0 end-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-96 overflow-y-auto z-50">
                     <!-- Results will be inserted here -->
                 </div>
             </div>
@@ -39,23 +39,23 @@
             <!-- Tools Dropdown -->
             <div class="relative group">
                 <button id="toolsDropdown" class="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                    <span class="font-medium">Help</span>
+                    <span class="font-medium">{{ $t('Help') }}</span>
                     <i class="ph-duotone ph-caret-down text-lg"></i>
                 </button>
                 
                 <!-- Dropdown Menu -->
-                <div id="toolsMenu" class="hidden absolute right-0 mt-2 w-36 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
+                <div id="toolsMenu" class="hidden absolute end-0 mt-2 w-36 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
                     <a href="https://pub.dev/publishers/finchdart.com/packages" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <div class="font-medium text-sm">Other Packages</div>
+                        <div class="font-medium text-sm">{{ $t('Other Packages') }}</div>
                     </a>
                     <a href="{{ github }}/releases" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <div class="font-medium text-sm">Finch Releases</div>
+                        <div class="font-medium text-sm">{{ $t('Finch Releases') }}</div>
                     </a>
                     <a href="https://pub.dev/packages/finch/changelog" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <div class="font-medium text-sm">Changelog</div>
+                        <div class="font-medium text-sm">{{ $t('Changelog') }}</div>
                     </a>
                     <a href="https://github.com/sponsors/uproid" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                        <div class="font-medium text-sm">Support</div>
+                        <div class="font-medium text-sm">{{ $t('Support') }}</div>
                     </a>
                 </div>
             </div>
@@ -75,23 +75,39 @@
                 <i id="theme-icon-light" class="ph-duotone ph-moon text-2xl" style="display: inline-block;"></i>
                 <i id="theme-icon-dark" class="ph-duotone ph-sun text-2xl" style="display: none;"></i>
             </button>
+
+            <!-- Language Dropdown -->
+            <div class="relative group">
+                <button id="languageDropdown" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="ph-duotone ph-translate text-xl"></i>
+                </button>
+                
+                <!-- Language Menu -->
+                <div id="languageMenu" class="hidden absolute end-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
+                    {% for lang in languages %}
+                    <a href="/{{ lang.code }}/{{ key }}" data-lang="{{ lang.code }}" class="{{ $e.ln == lang.code ? 'text-blue-500 ' : '' }} flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <div class="font-medium text-sm">{{ lang.localName }}</div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </nav>
 
 <!-- Mobile Search Modal -->
-<div id="mobileSearchModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden">
+<div id="mobileSearchModal" class="hidden fixed inset-0 bg-black/50 z-50 md:hidden">
     <div class="bg-white dark:bg-gray-800 p-2 pb-0 pt-3">
         <div class="flex items-center gap-2 mb-4">
             <input 
                 type="text" 
                 id="mobileSearchInput"
-                placeholder="Search documentation..." 
-                class="flex-1 px-4 py-2 pl-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                placeholder="{{ $t('Search documentation...') }}" 
+                class="flex-1 px-4 py-2 ps-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                 autocomplete="off"
             >
             <button id="closeMobileSearch" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                <i class="ph-duotone ph-x text-2xl text-red-500 dark:text-red-400"></i>
+                <i class="ph-duotone ph-x text-2xl"></i>
             </button>
         </div>
         <div id="mobileSearchResults" class="bg-white dark:bg-gray-800 rounded-lg max-h-96 overflow-y-auto">

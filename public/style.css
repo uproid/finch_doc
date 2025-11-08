@@ -48,13 +48,6 @@ article,
     transition: none;
 }
 
-/* Active menu item */
-.menu-item-active {
-    background-color: rgba(59, 130, 246, 0.1);
-    border-left: 3px solid #3b82f6;
-    margin-left: -3px;
-}
-
 code:not(pre code) {
     background-color: rgba(59, 130, 246, 0.1);
     padding: 2px 6px;

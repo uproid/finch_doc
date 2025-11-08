@@ -78,7 +78,7 @@ async function performSearch(query, resultsContainer) {
             resultsContainer.innerHTML = `
                 <div class="p-4 text-center text-red-500 dark:text-red-400">
                     <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
-                    <p>Error performing search. Please try again.</p>
+                    <p>${ DS.tr('Error performing search. Please try again.') }</p>
                 </div>
             `;
         }
@@ -90,7 +90,7 @@ function displayResults(data, container, searchTerm) {
         container.innerHTML = `
             <div class="p-4 text-center text-gray-500 dark:text-gray-400">
                 <i class="fas fa-search text-3xl mb-2"></i>
-                <p>No results found for "${searchTerm}"</p>
+                <p>${ DS.tr('No results found for') } "${searchTerm}"</p>
             </div>
         `;
         container.classList.remove('hidden');
@@ -98,7 +98,7 @@ function displayResults(data, container, searchTerm) {
     }
 
     let html = '<div class="p-2">';
-    html += `<div class="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">Found ${data.count} result${data.count !== 1 ? 's' : ''}</div>`;
+    html += `<div class="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">${ DS.trParam("Found {count} results", { count: data.count }) }</div>`;
     
     data.data.forEach(item => {
         html += `
@@ -258,12 +258,14 @@ const leftSidebar = document.getElementById('leftSidebar');
 const overlay = document.getElementById('overlay');
 
 menuToggle.addEventListener('click', () => {
-    leftSidebar.classList.toggle('-translate-x-full');
+    var dir = leftSidebar.attributes['data-dir'].value;
+    leftSidebar.classList.toggle(dir);
     overlay.classList.toggle('hidden');
 });
 
 overlay.addEventListener('click', () => {
-    leftSidebar.classList.add('-translate-x-full');
+    var dir = leftSidebar.attributes['data-dir'].value;
+    leftSidebar.classList.add(dir);
     overlay.classList.add('hidden');
 });
 
@@ -352,28 +354,6 @@ if (languageDropdown && languageMenu) {
         }
     });
 
-    // Handle language selection
-    const languageLinks = languageMenu.querySelectorAll('a[data-lang]');
-    languageLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const lang = link.getAttribute('data-lang');
-            
-            // Save language preference
-            localStorage.setItem('language', lang);
-            
-            // Visual feedback
-            console.log('Language changed to:', lang);
-            
-            // Here you can add logic to change the language
-            // For now, just close the dropdown
-            languageMenu.classList.add('hidden');
-            
-            // You can reload the page or update content dynamically
-            // window.location.reload();
-        });
-    });
-
     // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
         if (!languageDropdown.contains(e.target) && !languageMenu.contains(e.target)) {
@@ -403,7 +383,7 @@ function addHeaderCopyButtons() {
         
         // Create the copy link button
         const copyButton = document.createElement('button');
-        copyButton.className = 'header-copy-link inline-flex items-center justify-center ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400';
+        copyButton.className = 'header-copy-link inline-flex items-center justify-center ms-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400';
         copyButton.innerHTML = '<i class="ph ph-hash text-sm"></i>';
         copyButton.setAttribute('aria-label', 'Copy link to this section');
         copyButton.setAttribute('title', 'Copy link');

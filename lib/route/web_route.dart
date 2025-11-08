@@ -6,7 +6,7 @@ Future<List<FinchRoute>> getFinchRoute(Request rq) async {
   final homeController = HomeController();
 
   return [
-    ...DataExtractor.routes,
+    ...Extractor.routes,
     FinchRoute(
       path: '/api',
       children: [

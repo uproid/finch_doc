@@ -1,79 +1,105 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:finch/console.dart';
 import 'package:finch_doc/controllers/home_controller.dart';
 import 'package:finch/finch_tools.dart';
 import 'package:finch/route.dart';
+import 'package:finch_doc/core/languages.dart';
+import 'package:finch_doc/core/string_extention.dart';
 import 'package:markdown/markdown.dart';
 
-class DataExtractor {
-  static Map<String, ContentModel> contents = {};
-  static List<Map<String, dynamic>> _menus = [];
-  static List<Map<String, dynamic>> get menus {
-    if (_menus.isNotEmpty) return _menus;
-    _menus = DataExtractor.contents.keys
-        .map((k) => {
-              'key': k,
-              'title': DataExtractor.contents[k]?.title ?? '',
-              'meta': DataExtractor.contents[k]?.meta ?? {},
-            })
-        .toList();
-    return _menus;
-  }
-
+class Extractor {
   static final routes = <FinchRoute>[];
+  static final contents = <String, DataExtractor>{};
 
   static void init() {
     routes.clear();
     routes.addAll(makeDynamicRoutes());
   }
 
+  static List<Map<String, dynamic>> allLanguages() {
+    Map<String, Map<String, dynamic>> res = {};
+    contents.keys.forEach((lang) {
+      var langModel = languages[lang]!;
+      res[lang] = langModel.toMap();
+    });
+    return res.values.toList();
+  }
+
   static List<FinchRoute> makeDynamicRoutes() {
     var res = <FinchRoute>[];
     Directory dir = Directory(pathTo('./content'));
-    var files = dir
-        .listSync()
-        .whereType<File>()
-        .where(
-          (f) => f.path.endsWith('.md'),
-        )
-        .toList();
 
-    files.sort((a, b) {
-      var numA = int.tryParse(a.fileName.split('.').first) ?? 0;
-      var numB = int.tryParse(b.fileName.split('.').first) ?? 0;
-      return numA.compareTo(numB);
-    });
+    var langDirs = dir.listSync().whereType<Directory>().where(
+      (d) {
+        var dirName = d.path.split(Platform.pathSeparator).last;
+        return languages.keys.contains(dirName);
+      },
+    ).toList();
+    langDirs.add(dir);
 
-    for (var file in files) {
-      var content = file.readAsStringSync();
-      var key = fileNameToKey(file.fileName);
-      if (key.toLowerCase() == 'readme') {
-        key = '';
+    for (var langDir in langDirs) {
+      String lang = langDir == dir
+          ? 'en'
+          : langDir.path.split(Platform.pathSeparator).last;
+      String langPath = langDir == dir ? '' : '$lang/';
+
+      contents.putIfAbsent(lang, () => DataExtractor());
+
+      var files = langDir
+          .listSync()
+          .whereType<File>()
+          .where(
+            (f) => f.path.endsWith('.md'),
+          )
+          .toList();
+
+      files.sort((a, b) {
+        var numA = int.tryParse(a.fileName.split('.').first) ?? 0;
+        var numB = int.tryParse(b.fileName.split('.').first) ?? 0;
+        return numA.compareTo(numB);
+      });
+
+      for (var file in files) {
+        var content = file.readAsStringSync();
+        var key = fileNameToKey(file.fileName);
+        if (key.toLowerCase() == 'readme') {
+          key = '';
+        }
+        var doc = ContentModel(
+          '$langPath${file.fileFullName}',
+          key,
+          content,
+        );
+
+        contents.putIfAbsent(lang, () => DataExtractor());
+        contents[lang]!.contents[key] = doc;
+
+        doc.previous = contents[lang]!.contents.length > 1
+            ? contents[lang]!
+                .contents
+                .values
+                .elementAt(contents[lang]!.contents.values.length - 2)
+            : null;
+
+        doc.previous?.next = doc;
+
+        res.add(FinchRoute(
+          path: '$lang/$key',
+          key: '$key',
+          extraPath: [
+            '$lang/${file.fileFullName}',
+            if (lang == 'en') ...[
+              file.fileFullName,
+              '$lang/$key' == 'en/' ? '/' : key,
+            ],
+          ],
+          methods: Methods.GET_ONLY,
+          index: () async => HomeController().renderDocument(key),
+        ));
       }
-      var doc = ContentModel(
-        file.fileFullName,
-        key,
-        content,
-      );
-
-      contents[key] = doc;
-
-      doc.previous = contents.values.length > 1
-          ? contents.values.elementAt(contents.values.length - 2)
-          : null;
-
-      doc.previous?.next = doc;
-
-      res.add(FinchRoute(
-        path: '/$key',
-        key: key,
-        extraPath: [file.fileFullName],
-        methods: Methods.GET_ONLY,
-        index: () async => HomeController().renderDocument(key),
-      ));
     }
+
     return res;
   }
 
@@ -87,6 +113,23 @@ class DataExtractor {
 
     res = res.replaceAll('-', '_')..toLowerCase();
     return res;
+  }
+}
+
+class DataExtractor {
+  Map<String, ContentModel> contents = {};
+  List<Map<String, dynamic>> _menus = [];
+
+  List<Map<String, dynamic>> get menus {
+    if (_menus.isNotEmpty) return _menus;
+    _menus = contents.keys
+        .map((k) => {
+              'key': k,
+              'title': contents[k]?.title ?? '',
+              'meta': contents[k]?.meta ?? {},
+            })
+        .toList();
+    return _menus;
   }
 }
 
@@ -143,7 +186,7 @@ class ContentModel {
       if (indexInTags != -1) {
         index.add({
           'level': indexInTags + 1,
-          'id': node.textContent.toSlug(),
+          'id': node.textContent.generateKey(),
           'title': node.textContent,
         });
       }
@@ -183,32 +226,32 @@ class ContentModel {
           case 'h1':
             node.attributes['class'] =
                 'md-header-tag text-4xl font-bold mt-8 mb-4 scroll-mt-20';
-            node.attributes['id'] = node.textContent.toSlug();
+            node.attributes['id'] = node.textContent.generateKey();
             break;
           case 'h2':
             node.attributes['class'] =
                 'md-header-tag text-3xl font-semibold mt-8 mb-4 scroll-mt-20';
-            node.attributes['id'] = node.textContent.toSlug();
+            node.attributes['id'] = node.textContent.generateKey();
             break;
           case 'h3':
             node.attributes['class'] =
                 'md-header-tag text-2xl font-semibold mt-6 mb-3 scroll-mt-20';
-            node.attributes['id'] = node.textContent.toSlug();
+            node.attributes['id'] = node.textContent.generateKey();
             break;
           case 'h4':
             node.attributes['class'] =
                 'md-header-tag text-xl font-semibold mt-6 mb-2 scroll-mt-20';
-            node.attributes['id'] = node.textContent.toSlug();
+            node.attributes['id'] = node.textContent.generateKey();
             break;
           case 'h5':
             node.attributes['class'] =
                 'md-header-tag text-lg font-semibold mt-4 mb-2 scroll-mt-20';
-            node.attributes['id'] = node.textContent.toSlug();
+            node.attributes['id'] = node.textContent.generateKey();
             break;
           case 'h6':
             node.attributes['class'] =
                 'md-header-tag text-base font-semibold mt-4 mb-1 scroll-mt-20';
-            node.attributes['id'] = node.textContent.toSlug();
+            node.attributes['id'] = node.textContent.generateKey();
           case 'p':
             node.attributes['class'] = 'mb-4 leading-7';
             break;
@@ -227,6 +270,7 @@ class ContentModel {
           case 'pre':
             node.attributes['class'] =
                 'bg-gray-100 border-2 border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-red-400 p-4 rounded mb-4 overflow-x-auto';
+            node.attributes['dir'] = 'ltr';
             break;
           case 'hr':
             node.attributes['class'] =
@@ -254,7 +298,7 @@ class ContentModel {
     }
 
     if (link.endsWith('.md')) {
-      return DataExtractor.fileNameToKey(link.replaceAll('.md', ''));
+      return Extractor.fileNameToKey(link.replaceAll('.md', ''));
     }
 
     return link;

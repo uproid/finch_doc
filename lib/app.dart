@@ -19,7 +19,7 @@ FinchConfigs configs = FinchConfigs(
 FinchApp app = FinchApp(configs: configs);
 
 void main() async {
-  DataExtractor.init();
+  Extractor.init();
   Request.localEvents.addAll(localEvents);
   app.addRouting(getFinchRoute);
   app.start().then((value) {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch/finch_app.dart';
 import 'package:finch/route.dart';
+import 'package:finch_doc/core/languages.dart';
 
 class HomeController extends Controller {
   HomeController();
@@ -13,17 +14,28 @@ class HomeController extends Controller {
   }
 
   Future<String> renderDocument(String key) async {
-    var content = DataExtractor.contents[key]!;
+    var lang = rq.getLanguage();
+    var langModel = languages[lang]!;
+    var content = Extractor.contents[lang]!.contents[key];
+
+    if (content == null) {
+      return rq.redirect('/');
+    }
+
+    var menus = Extractor.contents[lang]!.menus;
 
     rq.addParam('content', content.html);
     rq.addParam('title', content.title);
     rq.addParam('index', content.index);
-    rq.addParam('menus', DataExtractor.menus);
+    rq.addParam('menus', menus);
     rq.addParam('filename', content.filename);
+    rq.addParam('key', content.key);
     rq.addParam('github', 'https://github.com/uproid/finch');
     rq.addParam('meta', content.meta);
     rq.addParam('description', content.description);
     rq.addParam('finchVersion', FinchApp.info.version);
+    rq.addParam('language', langModel.toMap());
+    rq.addParam('languages', Extractor.allLanguages());
 
     if (content.next != null) {
       rq.addParam('next', {
@@ -53,7 +65,7 @@ class HomeController extends Controller {
     var results = <ContentModel, int>{};
 
     if (query.isNotEmpty) {
-      DataExtractor.contents.forEach((key, content) {
+      Extractor.contents[rq.getLanguage()]!.contents.forEach((key, content) {
         String combined = (content.title + content.html).toLowerCase();
         String searchQuery = query.toLowerCase();
         int count = RegExp.escape(searchQuery).allMatches(combined).length;
@@ -89,17 +101,57 @@ Sitemap: ${rq.url('/sitemap.xml')}
   }
 
   Future<String> sitemap() async {
-    var sitemapEntries = DataExtractor.contents.values.map((content) {
-      return '''  <url>
-    <loc>${rq.url('/${content.key}')}</loc>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-  </url>''';
-    }).join('\n');
+    var sitemapEntries = StringBuffer();
+
+    var allLanguages = Extractor.contents.keys;
+    var allContentsByKey = <String, Map<String, List<ContentModel>>>{};
+    for (var lang in allLanguages) {
+      var contents = Extractor.contents[lang]!.contents;
+      contents.forEach((key, content) {
+        allContentsByKey.putIfAbsent(key, () => {});
+        allContentsByKey[key]!.putIfAbsent(lang, () => []);
+        allContentsByKey[key]![lang]!.add(content);
+      });
+    }
+
+    allContentsByKey.forEach((key, contents) {
+      sitemapEntries.writeln('\t<url>');
+      sitemapEntries.writeln('\t\t<loc>${rq.url('/${key}')}</loc>');
+      contents.forEach((lang, contentList) {
+        for (var content in contentList) {
+          sitemapEntries.writeln(
+              '\t\t<xhtml:link rel="alternate" hreflang="$lang" href="${rq.url('${lang}/${content.key}')}" />');
+        }
+      });
+      sitemapEntries.writeln(
+          '\t\t<xhtml:link rel="alternate" hreflang="x-default" href="${rq.url('en/${key}')}" />');
+      sitemapEntries.writeln('\t\t<changefreq>weekly</changefreq>');
+      sitemapEntries.writeln('\t\t<priority>1.0</priority>');
+      sitemapEntries.writeln('\t</url>');
+
+      contents.forEach((lang, contentList) {
+        for (var content in contentList) {
+          sitemapEntries.writeln('\t<url>');
+          sitemapEntries.writeln('\t\t<loc>${rq.url('$lang/${key}')}</loc>');
+          contents.forEach((lang, contentList) {
+            for (var content in contentList) {
+              sitemapEntries.writeln(
+                  '\t\t<xhtml:link rel="alternate" hreflang="$lang" href="${rq.url('${lang}/${content.key}')}" />');
+            }
+          });
+          sitemapEntries.writeln(
+              '\t\t<xhtml:link rel="alternate" hreflang="x-default" href="${rq.url('en/${key}')}" />');
+          sitemapEntries.writeln('\t\t<changefreq>weekly</changefreq>');
+          sitemapEntries.writeln('\t\t<priority>1.0</priority>');
+          sitemapEntries.writeln('\t</url>');
+        }
+      });
+    });
 
     return rq.renderString(
       text: '''<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
 $sitemapEntries
 </urlset>''',
       contentType: ContentType('application', 'xml'),
