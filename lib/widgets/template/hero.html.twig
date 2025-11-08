@@ -1,0 +1,183 @@
+<!-- Hero Section -->
+<div class="mb-12 pt-12 pb-16 relative overflow-hidden">
+    <!-- Animated Network Background -->
+    <canvas id="networkCanvas" class="absolute inset-0 w-full h-full"></canvas>
+    <div class="relative z-10">
+    <!-- Logo and Title -->
+    <div class="flex items-center justify-center gap-6 mb-8">
+        <img src="/logo.svg" alt="Finch Framework" class="h-32 w-32" />
+        <div>
+            <h1 class="text-5xl font-bold text-gray-900 dark:text-white">Finch</h1>
+            <span class="text-lg text-gray-600 dark:text-gray-300">v{{ finchVersion }}</span>
+        </div>
+    </div>
+    
+    <!-- Announcement Badge -->
+    <div class="text-center mb-8">
+        <a href="https://pub.dev/packages/finch" rel="noopener noreferrer" target="_blank" class="group inline-flex items-center rounded-full border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950 px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 transition-all hover:border-blue-300 dark:hover:border-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900 hover:shadow-md">
+            <span class="text-lg mr-2 animate-bounce">🎉</span>
+            <div class="w-px h-4 bg-gray-300 dark:bg-gray-600 mx-3"></div>
+            <span class="font-semibold">v{{ finchVersion }} - Now Available on pub.dev</span>
+            <svg class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="flex flex-wrap items-center justify-center gap-4 mb-10">
+        <a href="https://github.com/uproid/finch" target="_blank" rel="noopener noreferrer">
+            <button class="h-11 px-6 group inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium transition-all hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-750 hover:shadow-lg">
+                <i class="fab fa-github text-xl mr-2.5"></i>
+                <span>View on GitHub</span>
+            </button>
+        </a>
+        <a href="https://example.uproid.com/" rel="noopener noreferrer" target="_blank">
+            <button class="h-11 px-6 group inline-flex items-center rounded-full border border-blue-500 dark:border-blue-600 bg-blue-600 dark:bg-blue-700 text-white font-medium transition-all hover:bg-blue-700 dark:hover:bg-blue-800 hover:shadow-lg">
+                <i class="fas fa-external-link-alt mr-2.5"></i>
+                <span>Live Demo</span>
+            </button>
+        </a>
+    </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const canvas = document.getElementById('networkCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationFrameId;
+    
+    // Configuration
+    const config = {
+        particleCount: 80,
+        particleSpeed: 0.2,
+        connectionDistance: 90,
+        particleSize: 3,
+    };
+    
+    // Particle class
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * config.particleSpeed;
+            this.vy = (Math.random() - 0.5) * config.particleSpeed;
+            this.radius = config.particleSize;
+        }
+        
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            
+            // Bounce off edges
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            
+            // Keep within bounds
+            this.x = Math.max(0, Math.min(canvas.width, this.x));
+            this.y = Math.max(0, Math.min(canvas.height, this.y));
+        }
+        
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = isDarkMode() ? 'rgba(96, 165, 250, 0.1)' : 'rgba(59, 130, 246, 0.1)';
+            ctx.fill();
+        }
+    }
+    
+    // Check if dark mode is enabled
+    function isDarkMode() {
+        return document.documentElement.classList.contains('dark');
+    }
+    
+    // Initialize canvas size
+    function resizeCanvas() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    }
+    
+    // Initialize particles
+    function initParticles() {
+        particles = [];
+        for (let i = 0; i < config.particleCount; i++) {
+            particles.push(new Particle());
+        }
+    }
+    
+    // Draw connections between nearby particles
+    function drawConnections() {
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy *2);
+                
+                if (distance < config.connectionDistance) {
+                    const opacity = (1 - distance / config.connectionDistance) * 0.25;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = isDarkMode() 
+                        ? `rgba(96, 165, 250, ${opacity})` 
+                        : `rgba(59, 130, 246, ${opacity})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+    
+    // Animation loop
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Update and draw particles
+        particles.forEach(particle => {
+            particle.update();
+            particle.draw();
+        });
+        
+        // Draw connections
+        drawConnections();
+        
+        animationFrameId = requestAnimationFrame(animate);
+    }
+    
+    // Initialize
+    resizeCanvas();
+    initParticles();
+    animate();
+    
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            resizeCanvas();
+            initParticles();
+        }, 250);
+    });
+    
+    // Observe dark mode changes
+    const observer = new MutationObserver(() => {
+        // Trigger a redraw when dark mode changes
+    });
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class']
+    });
+    
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+        cancelAnimationFrame(animationFrameId);
+        observer.disconnect();
+    });
+})();
+</script>
+
+<hr class="my-8 border-gray-200 dark:border-gray-700" />

@@ -30,8 +30,12 @@
             <!-- Main Content Area -->
             <main class="flex-1 min-w-0 overflow-x-hidden order-2 xl:order-1 xl:mx-20 lg:mx-16 md:mx-8 sm:mx-4">
                 <div class="flex flex-col xl:flex-row w-full relative">
+                
                     <!-- Content -->
                     <div class="flex-1 w-full py-8 px-8">
+                        {% if $e.isKey('')  %}
+                            {% include 'template/hero.html.twig' %}
+                        {% endif %}
                         
                         <!-- Breadcrumb -->
                         <nav class="flex items-center justify-between mb-6 text-sm overflow-x-auto">
@@ -57,47 +61,6 @@
                                 </ul>
                             </nav>
                         </div>
-                        {% if $e.isKey('')  %}
-                            <!-- Hero Section -->
-                            <div class="mb-12">
-                                <!-- Logo and Title -->
-                                <div class="flex items-center justify-center gap-6 mb-8">
-                                    <img src="/logo.svg" alt="Finch Framework" class="h-32 w-32">
-                                    <div>
-                                        <h1 class="text-5xl font-bold text-gray-900 dark:text-white">Finch</h1>
-                                        <span class="text-lg text-gray-600 dark:text-gray-300">v{{ finchVersion }}</span>
-                                    </div>
-                                </div>
-                                
-                                <!-- Announcement Badge -->
-                                <div class="text-center mb-8">
-                                    <a href="https://pub.dev/packages/finch" rel="noopener noreferrer" target="_blank" class="group inline-flex items-center rounded-full border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950 px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 transition-all hover:border-blue-300 dark:hover:border-blue-700 hover:bg-blue-100 dark:hover:bg-blue-900 hover:shadow-md">
-                                        <span class="text-lg mr-2 animate-bounce">🎉</span>
-                                        <div class="w-px h-4 bg-gray-300 dark:bg-gray-600 mx-3"></div>
-                                        <span class="font-semibold">v{{ finchVersion }} - Now Available on pub.dev</span>
-                                        <svg class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                        </svg>
-                                    </a>
-                                </div>
-                                
-                                <!-- Action Buttons -->
-                                <div class="flex flex-wrap items-center justify-center gap-4 mb-10">
-                                    <a href="https://github.com/uproid/finch" target="_blank" rel="noopener noreferrer">
-                                        <button class="h-11 px-6 group inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium transition-all hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-750 hover:shadow-lg">
-                                            <i class="fab fa-github text-xl mr-2.5"></i>
-                                            <span>View on GitHub</span>
-                                        </button>
-                                    </a>
-                                    <a href="https://example.uproid.com/" rel="noopener noreferrer" target="_blank">
-                                        <button class="h-11 px-6 group inline-flex items-center rounded-full border border-blue-500 dark:border-blue-600 bg-blue-600 dark:bg-blue-700 text-white font-medium transition-all hover:bg-blue-700 dark:hover:bg-blue-800 hover:shadow-lg">
-                                            <i class="fas fa-external-link-alt mr-2.5"></i>
-                                            <span>Live Demo</span>
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-                        {% endif %}
 
                         <!-- Document Content -->
                         <article class="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none overflow-x-auto">
