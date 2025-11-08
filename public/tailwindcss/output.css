@@ -1412,6 +1412,11 @@
       background-color: var(--color-blue-700);
     }
   }
+  .dark\:bg-blue-800 {
+    &:is(.dark, .dark *) {
+      background-color: var(--color-blue-800);
+    }
+  }
   .dark\:bg-blue-900 {
     &:is(.dark, .dark *) {
       background-color: var(--color-blue-900);
@@ -1420,6 +1425,16 @@
   .dark\:bg-blue-950 {
     &:is(.dark, .dark *) {
       background-color: var(--color-blue-950);
+    }
+  }
+  .dark\:bg-gray-50 {
+    &:is(.dark, .dark *) {
+      background-color: var(--color-gray-50);
+    }
+  }
+  .dark\:bg-gray-100 {
+    &:is(.dark, .dark *) {
+      background-color: var(--color-gray-100);
     }
   }
   .dark\:bg-gray-600 {

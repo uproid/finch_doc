@@ -19,7 +19,7 @@
                         <ul class="space-y-1">
                             {% for menu in menus %}
                                 <li>
-                                    <a href="{{ $l.urlLn(menu.key) }}" class="{{ $e.isKey(menu.key) ? 'border-s-3 bg-blue-50 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400' : '' }} flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <a href="{{ $l.urlLn(menu.key) }}" class="{{ $e.isKey(menu.key) ? 'border-s-3 bg-blue-50 dark:bg-gray-800 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400' : '' }} flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
                                         {% if menu.meta.icon %}
                                         <span class="menu-item-icon flex-shrink-0 leading-none">
                                             <i class="{{ menu.meta.icon }}"></i>

@@ -130,7 +130,7 @@ Sitemap: ${rq.url('/sitemap.xml')}
       sitemapEntries.writeln('\t</url>');
 
       contents.forEach((lang, contentList) {
-        for (var content in contentList) {
+        for (var _ in contentList) {
           sitemapEntries.writeln('\t<url>');
           sitemapEntries.writeln('\t\t<loc>${rq.url('$lang/${key}')}</loc>');
           contents.forEach((lang, contentList) {
