@@ -338,6 +338,57 @@ if (toolsDropdown && toolsMenu) {
     });
 }
 
+// Language Dropdown
+const languageDropdown = document.getElementById('languageDropdown');
+const languageMenu = document.getElementById('languageMenu');
+
+if (languageDropdown && languageMenu) {
+    languageDropdown.addEventListener('click', (e) => {
+        e.stopPropagation();
+        languageMenu.classList.toggle('hidden');
+        // Close tools menu if open
+        if (toolsMenu) {
+            toolsMenu.classList.add('hidden');
+        }
+    });
+
+    // Handle language selection
+    const languageLinks = languageMenu.querySelectorAll('a[data-lang]');
+    languageLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const lang = link.getAttribute('data-lang');
+            
+            // Save language preference
+            localStorage.setItem('language', lang);
+            
+            // Visual feedback
+            console.log('Language changed to:', lang);
+            
+            // Here you can add logic to change the language
+            // For now, just close the dropdown
+            languageMenu.classList.add('hidden');
+            
+            // You can reload the page or update content dynamically
+            // window.location.reload();
+        });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!languageDropdown.contains(e.target) && !languageMenu.contains(e.target)) {
+            languageMenu.classList.add('hidden');
+        }
+    });
+
+    // Close dropdown on ESC key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            languageMenu.classList.add('hidden');
+        }
+    });
+}
+
 // Add copy link button to all headers with md-header-tag class
 function addHeaderCopyButtons() {
     const headers = document.querySelectorAll('.md-header-tag[id]');
@@ -353,7 +404,7 @@ function addHeaderCopyButtons() {
         // Create the copy link button
         const copyButton = document.createElement('button');
         copyButton.className = 'header-copy-link inline-flex items-center justify-center ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400';
-        copyButton.innerHTML = '<i class="fas fa-hashtag text-sm"></i>';
+        copyButton.innerHTML = '<i class="ph ph-hash text-sm"></i>';
         copyButton.setAttribute('aria-label', 'Copy link to this section');
         copyButton.setAttribute('title', 'Copy link');
         
@@ -367,7 +418,7 @@ function addHeaderCopyButtons() {
                 
                 // Visual feedback
                 const originalHTML = copyButton.innerHTML;
-                copyButton.innerHTML = '<i class="fas fa-check text-sm"></i>';
+                copyButton.innerHTML = '<i class="ph ph-check text-sm"></i>';
                 copyButton.classList.add('text-green-600', 'dark:text-green-400');
                 
                 setTimeout(() => {
@@ -386,7 +437,7 @@ function addHeaderCopyButtons() {
                 
                 // Visual feedback
                 const originalHTML = copyButton.innerHTML;
-                copyButton.innerHTML = '<i class="fas fa-check text-sm"></i>';
+                copyButton.innerHTML = '<i class="ph ph-check text-sm"></i>';
                 copyButton.classList.add('text-green-600', 'dark:text-green-400');
                 
                 setTimeout(() => {
