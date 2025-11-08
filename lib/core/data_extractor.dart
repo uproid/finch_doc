@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:finch/console.dart';
 import 'package:finch_doc/controllers/home_controller.dart';
 import 'package:finch/finch_tools.dart';
 import 'package:finch/route.dart';
@@ -7,8 +9,20 @@ import 'package:markdown/markdown.dart';
 
 class DataExtractor {
   static Map<String, ContentModel> contents = {};
+  static List<Map<String, dynamic>> _menus = [];
+  static List<Map<String, dynamic>> get menus {
+    if (_menus.isNotEmpty) return _menus;
+    _menus = DataExtractor.contents.keys
+        .map((k) => {
+              'key': k,
+              'title': DataExtractor.contents[k]?.title ?? '',
+              'meta': DataExtractor.contents[k]?.meta ?? {},
+            })
+        .toList();
+    return _menus;
+  }
+
   static final routes = <FinchRoute>[];
-  static final menus = <String, String>{};
 
   static void init() {
     routes.clear();
@@ -52,8 +66,6 @@ class DataExtractor {
 
       doc.previous?.next = doc;
 
-      menus[key] = doc.title;
-
       res.add(FinchRoute(
         path: '/$key',
         key: key,
@@ -81,6 +93,7 @@ class DataExtractor {
 class ContentModel {
   String filename;
   String key;
+  Map<String, dynamic> meta = {};
   String title = '';
   String html = '';
   String description = '';
@@ -94,6 +107,26 @@ class ContentModel {
     this.key,
     String md,
   ) {
+    /// Extract icon from front matter
+    final frontMatterRegExp =
+        RegExp(r'^---\s*\n(.*?)\n---\s*$', multiLine: true, dotAll: true);
+    final match = frontMatterRegExp.firstMatch(md);
+
+    if (match != null) {
+      var metaString = match.group(1).toString().trim();
+      if (metaString.startsWith('@meta:')) {
+        metaString = metaString.replaceFirst('@meta:', '');
+        try {
+          meta = jsonDecode((metaString));
+        } catch (e) {
+          Console.e('Error parsing front matter JSON: $e');
+        }
+      }
+    }
+
+    /// Remove Hidden content from markdown
+    md = md.replaceAll(frontMatterRegExp, '');
+
     this.html = _initContent(md);
     _initIndex(md);
   }
@@ -138,8 +171,6 @@ class ContentModel {
 
   String _initContent(String md) {
     List<Node> doc = Document().parse(md);
-
-    // Enrich TailwindCSS styles
     _fix(doc);
 
     return renderToHtml(doc);

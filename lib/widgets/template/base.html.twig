@@ -17,8 +17,17 @@
                     <!-- Getting Started -->
                     <div class="mb-6">
                         <ul class="space-y-1">
-                            {% for (key,title) in menus %}
-                                <li><a href="/{{ key }}" class="{{ $e.isKey(key) ? 'menu-item-active text-blue-600 dark:text-blue-400' : '' }} block px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">{{ title }}</a></li>
+                            {% for menu in menus %}
+                                <li>
+                                    <a href="/{{ menu.key }}" class="{{ $e.isKey(menu.key) ? 'menu-item-active text-blue-600 dark:text-blue-400' : '' }} flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        {% if menu.meta.icon %}
+                                        <span class="menu-item-icon flex-shrink-0 leading-none">
+                                            <i class="{{ menu.meta.icon }}"></i>
+                                        </span>
+                                        {% endif %}
+                                        <span class="menu-item-text text-sm flex-1 leading-relaxed">{{ menu.title }}</span>
+                                    </a>
+                                </li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -41,11 +50,11 @@
                         <nav class="flex items-center justify-between mb-6 text-sm overflow-x-auto">
                             <ol class="flex items-center space-x-2 flex-nowrap">
                                 <li class="whitespace-nowrap"><a href="/" class="text-blue-600 dark:text-blue-400 hover:underline">Home</a></li>
-                                <li class="whitespace-nowrap"><i class="fas fa-chevron-right text-gray-400 text-xs"></i></li>
+                                <li class="whitespace-nowrap"><i class="ph-duotone ph-caret-right text-base text-gray-400"></i></li>
                                 <li class="text-gray-600 dark:text-gray-400 whitespace-nowrap">{{ title }}</li>
                             </ol>
                             <a href="{{ github }}/edit/master/doc/{{ filename }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap ml-4">
-                                <i class="fas fa-edit text-sm"></i>
+                                <i class="ph-duotone ph-pencil-simple text-lg text-blue-600 dark:text-blue-400"></i>
                                 <span class="text-xs hidden sm:inline">Edit</span>
                             </a>
                         </nav>
@@ -71,7 +80,7 @@
                         <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
                             {% if previous is defined %}
                                 <a href="/{{ previous.key }}" class="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="fas fa-arrow-left flex-shrink-0"></i>
+                                    <i class="ph-duotone ph-arrow-left flex-shrink-0 text-xl text-purple-600 dark:text-purple-400"></i>
                                     <div class="text-left min-w-0">
                                         <div class="text-xs text-gray-500">Previous</div>
                                         <div class="font-semibold truncate">{{ previous.title }}</div>
@@ -88,7 +97,7 @@
                                         </div>
                                         <div class="text-xs opacity-80">{{  $l.maxLength(next.description, 50) }}</div>
                                     </div>
-                                    <i class="fas fa-arrow-right flex-shrink-0"></i>
+                                    <i class="ph-duotone ph-arrow-right flex-shrink-0 text-xl text-white"></i>
                                 </a>
                             {% endif %}
                         </div>
@@ -115,15 +124,15 @@
                     <!-- Action Buttons -->
                     <div class="mt-6 space-y-1 pt-6 border-t border-gray-200 dark:border-gray-700">
                         <a href="{{ github }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                            <i class="fab fa-github text-sm"></i>
+                            <i class="ph-duotone ph-github-logo text-lg"></i>
                             <span class="text-xs">Star on GitHub</span>
                         </a>
                         <a href="{{ github }}/issues" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                            <i class="fas fa-exclamation-circle text-sm"></i>
+                            <i class="ph-duotone ph-warning-circle text-lg"></i>
                             <span class="text-xs">Create Issues</span>
                         </a>
                         <a href="{{ github }}/edit/master/doc/{{ filename }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                            <i class="fas fa-edit text-sm"></i>
+                            <i class="ph-duotone ph-pencil-simple text-lg"></i>
                             <span class="text-xs">Edit this page</span>
                         </a>
                     </div>
