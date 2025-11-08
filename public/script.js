@@ -190,40 +190,62 @@ document.addEventListener('keydown', (e) => {
 });
 
 // Theme Toggle
-const themeToggle = document.getElementById('themeToggle');
-const html = document.documentElement;
+document.addEventListener('DOMContentLoaded', function() {
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const themeIconLight = document.getElementById('theme-icon-light');
+    const themeIconDark = document.getElementById('theme-icon-dark');
 
-function updatePrismTheme(isDark) {
-    const prismLight = document.getElementById('prism-light');
-    const prismDark = document.getElementById('prism-dark');
-    
-    if (isDark) {
-        prismLight.disabled = true;
-        prismDark.disabled = false;
-    } else {
-        prismLight.disabled = false;
-        prismDark.disabled = true;
+    function updatePrismTheme(isDark) {
+        const prismLight = document.getElementById('prism-light');
+        const prismDark = document.getElementById('prism-dark');
+        
+        if (isDark) {
+            prismLight.disabled = true;
+            prismDark.disabled = false;
+        } else {
+            prismLight.disabled = false;
+            prismDark.disabled = true;
+        }
     }
-}
 
-// Initialize Prism theme on load
-updatePrismTheme(html.classList.contains('dark'));
-
-themeToggle.addEventListener('click', () => {
-    const isDark = html.classList.contains('dark');
-    
-    if (isDark) {
-        html.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-        updatePrismTheme(false);
-    } else {
-        html.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-        updatePrismTheme(true);
+    function updateThemeIcons(isDark) {
+        if (themeIconLight && themeIconDark) {
+            if (isDark) {
+                themeIconLight.style.display = 'none';
+                themeIconDark.style.display = 'inline-block';
+            } else {
+                themeIconLight.style.display = 'inline-block';
+                themeIconDark.style.display = 'none';
+            }
+        }
     }
-    
-    // Force a repaint to ensure styles are updated
-    void html.offsetHeight;
+
+    // Initialize Prism theme and icons on load
+    const initialDarkMode = html.classList.contains('dark');
+    updatePrismTheme(initialDarkMode);
+    updateThemeIcons(initialDarkMode);
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const isDark = html.classList.contains('dark');
+            
+            if (isDark) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                updatePrismTheme(false);
+                updateThemeIcons(false);
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                updatePrismTheme(true);
+                updateThemeIcons(true);
+            }
+            
+            // Force a repaint to ensure styles are updated
+            void html.offsetHeight;
+        });
+    }
 });
 
 // Mobile Menu Toggle

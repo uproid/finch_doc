@@ -1,33 +1,10 @@
-# Files and directories created by pub.
 .dart_tool/
 .packages/
-#pubspec.lock
 .DS_Store
-# Conventional directory for build output.
 build/
 .DS_Store.env*
 mangodb/
 .dart_tool/package_config.json
-
-### FRONTEND SSR:
-
-# Nuxt dev/build outputs
-frontend/.output/
-frontend/.data/
-frontend/.nuxt/
-frontend/.nitro/
-frontend/.cache/
-frontend/dist/
-frontend/node_modules/
-
-# Node dependencies
-# nuxt_server/node_modules
-
-# Logs
-frontend/logs/
-frontend/*.log
-
-# Misc
+node_modules/
 .DS_Store
-frontend/.fleet/
-frontend/.idea/
+package-lock.json

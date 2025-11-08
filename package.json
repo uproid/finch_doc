@@ -1,0 +1,20 @@
+{
+  "name": "webapp-doc",
+  "version": "1.0.0",
+  "description": "> **A beautiful documentation platform built with Finch, showcasing how to use Finch to display Markdown documentation**",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "tailwindcss -i ./public/tailwindcss/input.css -o ./public/tailwindcss/output.css --minify --content './lib/**/*.{dart,html,twig}' --content './content/**/*.md' --content './public/**/*.{html,js}'",
+    "watch:css": "tailwindcss -i ./public/tailwindcss/input.css -o ./public/tailwindcss/output.css --watch --content './lib/**/*.{dart,html,twig}' --content './content/**/*.md' --content './public/**/*.{html,js}'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.0.0"
+  }
+}

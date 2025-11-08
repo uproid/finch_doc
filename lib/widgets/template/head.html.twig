@@ -19,11 +19,16 @@
         if (theme === 'dark') {
             document.documentElement.classList.add('dark');
         }
-        // Set Prism theme based on current theme
+        
+        // Initialize theme icons when DOM is ready
         window.addEventListener('DOMContentLoaded', function() {
             const isDark = document.documentElement.classList.contains('dark');
             const prismLight = document.getElementById('prism-light');
             const prismDark = document.getElementById('prism-dark');
+            const themeIconLight = document.getElementById('theme-icon-light');
+            const themeIconDark = document.getElementById('theme-icon-dark');
+            
+            // Set Prism theme
             if (prismLight && prismDark) {
                 if (isDark) {
                     prismLight.disabled = true;
@@ -33,10 +38,21 @@
                     prismDark.disabled = true;
                 }
             }
+            
+            // Set theme icons
+            if (themeIconLight && themeIconDark) {
+                if (isDark) {
+                    themeIconLight.style.display = 'none';
+                    themeIconDark.style.display = 'inline-block';
+                } else {
+                    themeIconLight.style.display = 'inline-block';
+                    themeIconDark.style.display = 'none';
+                }
+            }
         });
     })();
 </script>
-<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="/tailwindcss/output.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="/style.css">
 <!-- Prism.js for syntax highlighting - Light theme -->
@@ -45,9 +61,4 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" id="prism-dark" disabled>
 <!-- Prism.js Toolbar for copy button -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
-<script>
-    tailwind.config = {
-        darkMode: 'class'
-    }
-</script>
 {% endblock %}
