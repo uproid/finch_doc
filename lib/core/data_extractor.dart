@@ -197,6 +197,10 @@ class ContentModel {
             node.attributes['class'] =
                 'bg-gray-100 border-2 border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-red-400 p-4 rounded mb-4 overflow-x-auto';
             break;
+          case 'hr':
+            node.attributes['class'] =
+                'my-8 border-t border-gray-300 dark:border-gray-700 py-2';
+            break;
           case 'blockquote':
             node.attributes['class'] =
                 'border-l-4 border-gray-300 pl-4 italic text-gray-600 mb-4';
