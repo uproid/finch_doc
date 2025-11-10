@@ -256,7 +256,8 @@ class ContentModel {
             node.attributes['class'] = 'mb-4 leading-7';
             break;
           case 'a':
-            node.attributes['class'] = 'text-blue-600 hover:underline';
+            node.attributes['class'] =
+                'text-blue-600 hover:underline dark:text-secondary-400';
             if (node.attributes['href'] != null) {
               node.attributes['href'] = fixLink(node.attributes['href']!);
             }

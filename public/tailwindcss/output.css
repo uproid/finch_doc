@@ -80,6 +80,7 @@
     --default-mono-font-family: var(--font-mono);
     --color-secondary-400: #42c1ed;
     --color-secondary-500: #1ba4d9;
+    --color-secondary-600: #1283b8;
     --color-secondary-800: #12587b;
   }
 }
@@ -956,6 +957,9 @@
   .text-rose-600 {
     color: var(--color-rose-600);
   }
+  .text-secondary-600 {
+    color: var(--color-secondary-600);
+  }
   .text-white {
     color: var(--color-white);
   }
@@ -1459,6 +1463,11 @@
   .dark\:text-red-400 {
     &:is(.dark, .dark *) {
       color: var(--color-red-400);
+    }
+  }
+  .dark\:text-secondary-400 {
+    &:is(.dark, .dark *) {
+      color: var(--color-secondary-400);
     }
   }
   .dark\:text-white {

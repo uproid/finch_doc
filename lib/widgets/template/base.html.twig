@@ -19,7 +19,7 @@
                         <ul class="space-y-1">
                             {% for menu in menus %}
                                 <li>
-                                    <a href="{{ $l.urlLn(menu.key) }}" class="{{ $e.isKey(menu.key) ? 'border-s-3 bg-blue-50 dark:bg-gray-800 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400' : '' }} flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <a href="{{ $l.urlLn(menu.key) }}" class="{{ $e.isKey(menu.key) ? 'border-s-3 bg-blue-50 dark:bg-gray-800 border-blue-500 dark:border-secondary-400 text-blue-600 dark:text-secondary-400' : '' }} flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
                                         {% if menu.meta.icon %}
                                         <span class="menu-item-icon flex-shrink-0 leading-none">
                                             <i class="{{ menu.meta.icon }}"></i>
@@ -49,7 +49,7 @@
                         <!-- Breadcrumb -->
                         <nav class="flex items-center justify-between mb-6 text-sm overflow-x-auto">
                             <ol class="flex items-center space-x-2 flex-nowrap">
-                                <li class="whitespace-nowrap"><a href="/" class="text-blue-600 dark:text-blue-400 hover:underline">{{ $t('Home') }}</a></li>
+                                <li class="whitespace-nowrap"><a href="/" class="text-blue-600 dark:text-secondary-400 hover:underline">{{ $t('Home') }}</a></li>
                                 <li class="whitespace-nowrap"><i class="ph-duotone {{ language.isRtl ? 'ph-caret-left' : 'ph-caret-right' }} text-base text-gray-400"></i></li>
                                 <li class="text-gray-600 dark:text-gray-400 whitespace-nowrap">{{ title }}</li>
                             </ol>
