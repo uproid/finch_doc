@@ -1572,6 +1572,13 @@
       }
     }
   }
+  .dark\:sm\:bg-gray-600 {
+    &:is(.dark, .dark *) {
+      @media (width >= 40rem) {
+        background-color: var(--color-gray-600);
+      }
+    }
+  }
   .dark\:lg\:bg-transparent {
     &:is(.dark, .dark *) {
       @media (width >= 64rem) {
