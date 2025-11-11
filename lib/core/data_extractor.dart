@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:finch/console.dart';
 import 'package:finch_doc/controllers/home_controller.dart';
@@ -7,6 +6,7 @@ import 'package:finch/route.dart';
 import 'package:finch_doc/core/languages.dart';
 import 'package:finch_doc/core/string_extention.dart';
 import 'package:markdown/markdown.dart';
+import 'package:yaml/yaml.dart';
 
 class Extractor {
   static final routes = <FinchRoute>[];
@@ -169,7 +169,7 @@ class DataExtractor {
 class ContentModel {
   String filename;
   String key;
-  Map<String, dynamic> meta = {};
+  Map meta = {};
   String title = '';
   String html = '';
   String description = '';
@@ -191,12 +191,12 @@ class ContentModel {
 
     if (match != null) {
       var metaString = match.group(1).toString().trim();
-      if (metaString.startsWith('@meta:')) {
-        metaString = metaString.replaceFirst('@meta:', '');
+      if (metaString.startsWith('doc_meta:')) {
+        metaString = metaString.replaceFirst('doc_meta:', '');
         try {
-          meta = jsonDecode((metaString));
+          meta = loadYaml(metaString) as Map;
         } catch (e) {
-          Console.e('Error parsing front matter JSON: $e');
+          Console.e('Error parsing front matter YAML: $e');
         }
       }
     }

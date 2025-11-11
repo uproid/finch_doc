@@ -1,9 +1,7 @@
 ---
-@meta:
-{
-    "group": "入门指南",
-    "icon": "ph-duotone ph-books"
-}
+doc_meta:
+    group: "入门指南"
+    icon: "ph-duotone ph-books"
 ---
 # Finch 文档
 

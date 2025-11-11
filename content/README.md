@@ -1,9 +1,7 @@
 ---
-@meta:
-{
-    "group": "Getting Started",
-    "icon": "ph-duotone ph-books"
-}
+doc_meta:
+    group: "Getting Started"
+    icon: "ph-duotone ph-books"
 ---
 # Finch Documentation
 
