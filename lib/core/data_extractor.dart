@@ -138,7 +138,6 @@ class DataExtractor {
 
     for (var menu in _menus) {
       if (menu['group'] != '') {
-        print(menu['group']);
         var group = groupedMenus.firstWhere(
           (g) => g['key'] == menu['group'],
           orElse: () {
