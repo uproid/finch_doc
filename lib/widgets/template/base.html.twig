@@ -10,27 +10,8 @@
         <div class="flex w-full max-w-[1600px]">
         
             <!-- Left Sidebar - Navigation Menu -->
-            <aside id="leftSidebar" data-dir="{{ language.isRtl ? 'translate-x-full' : '-translate-x-full' }}" class="fixed bg-white dark:bg-gray-900 lg:bg-transparent dark:lg:bg-transparent lg:sticky top-16 start-0 h-[calc(100vh-4rem)] w-64 border-e border-gray-200 dark:border-gray-700 overflow-y-auto transform {{ language.isRtl ? 'translate-x-full' : '-translate-x-full' }} lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 flex-shrink-0">
-                <div class="p-4">
-                    <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">{{ $t('Documentation') }}</h3>
-                    
-                    <!-- Getting Started -->
-                    <div class="mb-6">
-                        <ul class="space-y-1">
-                            {% for menu in menus %}
-                                <li>
-                                    <a href="{{ $l.urlLn(menu.key) }}" class="{{ $e.isKey(menu.key) ? 'border-s-3 bg-blue-50 dark:bg-gray-800 border-blue-500 dark:border-secondary-400 text-blue-600 dark:text-secondary-400' : '' }} flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        {% if menu.meta.icon %}
-                                        <span class="menu-item-icon flex-shrink-0 leading-none">
-                                            <i class="{{ menu.meta.icon }}"></i>
-                                        </span>
-                                        {% endif %}
-                                        <span class="menu-item-text text-sm flex-1 leading-relaxed">{{ menu.title }}</span>
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+            <aside id="leftSidebar" data-dir="{{ language.isRtl ? 'translate-x-full' : '-translate-x-full' }}" class="fixed bg-white dark:bg-gray-900 lg:bg-transparent dark:lg:bg-transparent lg:sticky top-16 start-0 h-[calc(100vh-4rem)] w-76 border-e border-gray-200 dark:border-gray-700 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:transparent_transparent] hover:[scrollbar-color:var(--color-gray-300)_transparent] dark:hover:[scrollbar-color:var(--color-gray-600)_transparent] transform {{ language.isRtl ? 'translate-x-full' : '-translate-x-full' }} lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 shrink-0">
+                {% include 'template/sidebar.html.twig' %}
             </aside>
 
             <!-- Overlay for mobile -->
@@ -41,7 +22,7 @@
                 <div class="flex flex-col xl:flex-row w-full relative">
                 
                     <!-- Content -->
-                    <div class="flex-1 w-full py-8 px-8">
+                    <div class="flex-1 w-full py-4 px-4 sm:py-8 sm:px-6 lg:px-8 xl:px-8 max-w-4xl mx-auto">
                         {% if $e.isKey('')  %}
                             {% include 'template/hero.html.twig' %}
                         {% endif %}

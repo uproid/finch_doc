@@ -1,3 +1,10 @@
+---
+@meta:
+{
+    "group": "入门指南",
+    "icon": "ph-duotone ph-books"
+}
+---
 # Finch 文档
 
 欢迎使用 Finch 文档！本文档将引导您了解如何使用 Finch，一个强大的 Dart Web 框架。无论您是经验丰富的开发人员还是刚刚起步，Finch 都提供了一套强大的工具来简化服务器端 Web 应用程序开发。

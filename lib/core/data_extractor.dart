@@ -127,8 +127,42 @@ class DataExtractor {
               'key': k,
               'title': contents[k]?.title ?? '',
               'meta': contents[k]?.meta ?? {},
+              'isGroup': false,
+              'group': contents[k]!.group,
+              'children': [],
             })
         .toList();
+
+    /// Arrange menus by group
+    List<Map<String, dynamic>> groupedMenus = [];
+
+    for (var menu in _menus) {
+      if (menu['group'] != '') {
+        print(menu['group']);
+        var group = groupedMenus.firstWhere(
+          (g) => g['key'] == menu['group'],
+          orElse: () {
+            var newGroup = {
+              'key': menu['group'],
+              'title': menu['group'],
+              'isGroup': true,
+              'children': [],
+            };
+            groupedMenus.add(newGroup);
+            return newGroup;
+          },
+        );
+        (group['children'] as List).add({
+          'key': menu['key'],
+          'title': menu['title'],
+          'meta': menu['meta'],
+        });
+      } else {
+        groupedMenus.add(menu);
+      }
+    }
+
+    _menus = groupedMenus;
     return _menus;
   }
 }
@@ -141,9 +175,10 @@ class ContentModel {
   String html = '';
   String description = '';
   List<Map<String, dynamic>> index = [];
-
+  String get group => meta['group'] ?? '';
   ContentModel? next;
   ContentModel? previous;
+  List<ContentModel> childrenGroup = [];
 
   ContentModel(
     this.filename,

@@ -101,12 +101,21 @@ function displayResults(data, container, searchTerm) {
     html += `<div class="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400">${ DS.trParam("Found {count} results", { count: data.count }) }</div>`;
     
     data.data.forEach(item => {
+        let icon = '';
+        if(item.meta && item.meta.icon) {
+            icon = `<i class="${item.meta.icon} text-blue-600 dark:text-blue-400 mt-1"></i>`
+        }
+        let group = '';
+        if(item.meta && item.meta.group) {
+            group = `<i class="text-xs text-gray-500 dark:text-gray-400">${item.meta.group}</i>`;
+        }
         html += `
             <a href="/${item.key}" class="block px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                 <div class="flex items-start gap-3">
-                    <i class="fas fa-file-alt text-blue-600 dark:text-blue-400 mt-1"></i>
+                    ${icon}
                     <div class="flex-1 min-w-0">
                         <div class="font-semibold text-gray-900 dark:text-gray-100">${highlightMatch(item.title, searchTerm)}</div>
+                        ${group}
                         <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">${item.description}</div>
                     </div>
                 </div>

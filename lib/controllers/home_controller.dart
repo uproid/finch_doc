@@ -85,6 +85,7 @@ class HomeController extends Controller {
                 'title': e.key.title,
                 'key': e.key.key,
                 'description': e.key.description,
+                'meta': e.key.meta,
               })
           .toList(),
     });

@@ -19,4 +19,13 @@ var localEvents = <String, Object>{
       return rq.url('/$lang/$path');
     }
   },
+  'set': (String key, Object value) {
+    var rq = Context.rq;
+    rq.addParam(key, value);
+    return '';
+  },
+  'get': (String key, [Object? def]) {
+    var rq = Context.rq;
+    return rq.getParam(key, def: def);
+  },
 };

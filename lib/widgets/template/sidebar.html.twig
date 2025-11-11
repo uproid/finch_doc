@@ -1,0 +1,65 @@
+<div class="p-4">
+	<h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">{{ $t('Documentation') }}</h3>
+
+	<style>
+		details.menu-group summary .menu-chevron {
+			transition: transform 0.2s ease;
+			transform-origin: center 10px;
+            margin-bottom: 5px;
+		}
+		details.menu-group[open] summary .menu-chevron {
+			transform: rotate(90deg);
+		}
+	</style>
+
+	<!-- Getting Started -->
+	<div class="mb-6">
+		<ul class="space-y-1">
+			{% for menu in menus %}
+				{% if menu.isGroup %}
+					<li>
+                        {% for submenu in menu.children %}
+                            {% if $e.isKey(submenu.key) %}
+                                {{ $l.set('activeSubMenu', true) }}
+                            {% endif %}
+                        {% endfor %}
+						<details class="menu-group" {{ $l.get('activeSubMenu') ? 'open' : '' }}>
+							<summary class="flex items-center justify-between gap-2 px-3 py-1 font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer list-none">
+								<span class="menu-item-text text-sm flex-1 leading-relaxed {{ $l.get('activeSubMenu') ? 'text-blue-500 dark:text-secondary-400' : '' }}">{{ menu.title }}</span>
+								<span class="w-4 h-4 menu-chevron" >
+									<i class="{{ $l.get('activeSubMenu') ? 'text-blue-500 dark:text-secondary-400' : '' }} ph-duotone ph-caret-right text-lg"></i>
+								</span>
+							</summary>
+							<ul class="mt-1 ms-4 space-y-1 border-s border-gray-200 dark:border-gray-700 ps-2 border-dotted">
+								{% for submenu in menu.children %}
+									<li>
+										<a href="{{ $l.urlLn(submenu.key) }}" class="{{ $e.isKey(submenu.key) ? 'border-s-3 bg-blue-50 dark:bg-gray-800 border-blue-500 dark:border-secondary-400 text-blue-600 dark:text-secondary-400' : '' }} flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+											{% if submenu.meta.icon %}
+												<span class="menu-item-icon leading-none">
+													<i class="{{ submenu.meta.icon }}"></i>
+												</span>
+											{% endif %}
+											<span class="menu-item-text text-sm flex-1 leading-relaxed">{{ submenu.title }}</span>
+										</a>
+									</li>
+								{% endfor %}
+							</ul>
+						</details>
+					</li>
+                    {{ $l.set('activeSubMenu', false) }}
+				{% else %}
+					<li>
+						<a href="{{ $l.urlLn(menu.key) }}" class="{{ $e.isKey(menu.key) ? 'border-s-3 bg-blue-50 dark:bg-gray-800 border-blue-500 dark:border-secondary-400 text-blue-600 dark:text-secondary-400' : '' }} flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+							{% if menu.meta.icon %}
+								<span class="menu-item-icon leading-none">
+									<i class="{{ menu.meta.icon }}"></i>
+								</span>
+							{% endif %}
+							<span class="menu-item-text text-sm flex-1 leading-relaxed">{{ menu.title }}</span>
+						</a>
+					</li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+	</div>
+</div>
