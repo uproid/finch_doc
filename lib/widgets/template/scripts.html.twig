@@ -1,0 +1,40 @@
+<!-- Prism.js Core -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+<!-- Prism.js Toolbar Plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js" defer></script>
+<!-- Prism.js Copy to Clipboard Plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" defer></script>
+<!-- Prism.js Dart Language Support -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-dart.min.js" defer></script>
+<!-- Prism.js Additional Languages (optional) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-nginx.min.js" defer></script>
+<script src="/script.js"></script>
+<script src="/app/includes.js" crossorigin="anonymous"></script>
+{% if not isLocalDebug %}
+<script type="speculationrules">
+	{
+        "prerender": [
+            {
+                "source": "document",
+                "where": {
+                    "and": [
+                        {"href_matches": "/*"},
+                        {"not": {"href_matches": "mailto:*"}},
+                        {"not": {"href_matches": "tel:*"}},
+                        {"not": {"href_matches": "javascript:*"}},
+                        {"not": {"href_matches": "#*"}},
+                        {"not": {"selector_matches": "a[target='_blank']"}},
+                        {"not": {"selector_matches": "a[rel~='external']"}},
+                        {"not": {"selector_matches": "a[download]"}}
+                    ]
+                },
+                "eagerness": "moderate"
+            }
+        ]
+    }
+</script>
+{% endif %}
