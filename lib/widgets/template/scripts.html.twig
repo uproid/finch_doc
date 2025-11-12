@@ -28,8 +28,9 @@
                         {"not": {"href_matches": "javascript:*"}},
                         {"not": {"href_matches": "#*"}},
                         {"not": {"selector_matches": "a[target='_blank']"}},
+                        {"not": {"selector_matches": "a[download]"}},
                         {"not": {"selector_matches": "a[rel~='external']"}},
-                        {"not": {"selector_matches": "a[download]"}}
+                        {"not": {"selector_matches": "a[data-lang]"}}
                     ]
                 },
                 "eagerness": "moderate"
