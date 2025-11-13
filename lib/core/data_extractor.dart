@@ -17,9 +17,15 @@ class Extractor {
     routes.addAll(makeDynamicRoutes());
   }
 
-  static List<Map<String, dynamic>> allLanguages() {
+  static List<Map<String, dynamic>> allLanguages({
+    ContentModel? currentContent,
+  }) {
     Map<String, Map<String, dynamic>> res = {};
     contents.keys.forEach((lang) {
+      if (currentContent != null &&
+          !contents[lang]!.contents.containsKey(currentContent.key)) {
+        return;
+      }
       var langModel = languages[lang]!;
       res[lang] = langModel.toMap();
     });
@@ -104,6 +110,7 @@ class Extractor {
   }
 
   static String fileNameToKey(String fileName) {
+    fileName = fileName.trim().toLowerCase();
     var res = '';
     if (fileName.contains('.')) {
       res = fileName.split('.').last;

@@ -61,7 +61,7 @@
                         <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
                             {% if previous is defined %}
                                 <a href="/{{ previous.key }}" class="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="ph-duotone {{ language.isRtl ? 'ph-arrow-right' : 'ph-arrow-left' }} flex-shrink-0 text-xl text-purple-600 dark:text-purple-400"></i>
+                                    <i class="ph-duotone {{ language.isRtl ? 'ph-arrow-right' : 'ph-arrow-left' }} text-xl text-purple-600 dark:text-purple-400"></i>
                                     <div class="text-start min-w-0">
                                         <div class="text-xs text-gray-500">{{ $t('Previous') }}</div>
                                         <div class="font-semibold truncate">{{ previous.title }}</div>
@@ -80,7 +80,7 @@
                                         </div>
                                         <div class="text-xs opacity-80">{{  $l.maxLength(next.description, 50) }}</div>
                                     </div>
-                                    <i class="ph-duotone {{ language.isRtl ? 'ph-arrow-left' : 'ph-arrow-right' }} flex-shrink-0 text-xl text-purple-600 dark:text-purple-400"></i>
+                                    <i class="ph-duotone {{ language.isRtl ? 'ph-arrow-left' : 'ph-arrow-right' }} text-xl text-purple-600 dark:text-purple-400"></i>
                                 </a>
                             {% else %}
                                 <div class="flex-1"></div>

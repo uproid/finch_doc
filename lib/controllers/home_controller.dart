@@ -23,6 +23,7 @@ class HomeController extends Controller {
     }
 
     var menus = Extractor.contents[lang]!.menus;
+    var contentLanguages = Extractor.allLanguages(currentContent: content);
 
     rq.addParam('content', content.html);
     rq.addParam('title', content.title);
@@ -35,7 +36,7 @@ class HomeController extends Controller {
     rq.addParam('description', content.description);
     rq.addParam('finchVersion', FinchApp.info.version);
     rq.addParam('language', langModel.toMap());
-    rq.addParam('languages', Extractor.allLanguages());
+    rq.addParam('languages', contentLanguages);
 
     if (content.next != null) {
       rq.addParam('next', {
