@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:finch/finch_console.dart';
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch/finch_app.dart';
 import 'package:finch/route.dart';
@@ -30,7 +31,14 @@ class HomeController extends Controller {
     var content = Extractor.contents[lang]!.contents[key];
 
     if (content == null) {
-      return rq.redirect('/');
+      ///content = Extractor.contents[lang]!.contents['readme']!;
+      Console.json({
+        'error': 'Content not found',
+        'key': key,
+        'language': lang,
+      });
+
+      content = Extractor.contents[lang]!.contents['readme']!;
     }
 
     var menus = Extractor.contents[lang]!.menus;
