@@ -31,13 +31,6 @@ class HomeController extends Controller {
     var content = Extractor.contents[lang]!.contents[key];
 
     if (content == null) {
-      ///content = Extractor.contents[lang]!.contents['readme']!;
-      Console.json({
-        'error': 'Content not found',
-        'key': key,
-        'language': lang,
-      });
-
       content = Extractor.contents[lang]!.contents['readme']!;
     }
 
