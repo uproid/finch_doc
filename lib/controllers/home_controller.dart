@@ -15,6 +15,14 @@ class HomeController extends Controller {
 
   Future<String> renderDocument(String key) async {
     var lang = rq.getLanguage();
+
+    /// Allowed languages only
+    var allowedLanguages = Extractor.allLanguages();
+    if (allowedLanguages.indexWhere((element) => element['code'] == lang) ==
+        -1) {
+      lang = 'en';
+    }
+
     var langModel = languages[lang] ?? languages['en']!;
     if (languages[lang] == null) {
       lang = 'en';
