@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:finch/finch_console.dart';
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch/finch_app.dart';
 import 'package:finch/route.dart';
