@@ -393,7 +393,7 @@ function addHeaderCopyButtons() {
         // Create the copy link button
         const copyButton = document.createElement('button');
         copyButton.className = 'header-copy-link inline-flex items-center justify-center ms-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400';
-        copyButton.innerHTML = '<i class="ph ph-hash text-sm"></i>';
+        copyButton.innerHTML = '<i class="ph-bold ph-hash text-sm"></i>';
         copyButton.setAttribute('aria-label', 'Copy link to this section');
         copyButton.setAttribute('title', 'Copy link');
         
@@ -407,7 +407,7 @@ function addHeaderCopyButtons() {
                 
                 // Visual feedback
                 const originalHTML = copyButton.innerHTML;
-                copyButton.innerHTML = '<i class="ph ph-check text-sm"></i>';
+                copyButton.innerHTML = '<i class="ph-bold ph-check text-sm"></i>';
                 copyButton.classList.add('text-green-600', 'dark:text-green-400');
                 
                 setTimeout(() => {
@@ -426,7 +426,7 @@ function addHeaderCopyButtons() {
                 
                 // Visual feedback
                 const originalHTML = copyButton.innerHTML;
-                copyButton.innerHTML = '<i class="ph ph-check text-sm"></i>';
+                copyButton.innerHTML = '<i class="ph-bold ph-check text-sm"></i>';
                 copyButton.classList.add('text-green-600', 'dark:text-green-400');
                 
                 setTimeout(() => {

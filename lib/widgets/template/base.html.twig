@@ -31,11 +31,11 @@
                         <nav class="flex items-center justify-between mb-6 text-sm overflow-x-auto">
                             <ol class="flex items-center space-x-2 flex-nowrap">
                                 <li class="whitespace-nowrap"><a href="/" class="text-blue-600 dark:text-secondary-400 hover:underline">{{ $t('Home') }}</a></li>
-                                <li class="whitespace-nowrap"><i class="ph-duotone {{ language.isRtl ? 'ph-caret-left' : 'ph-caret-right' }} text-base text-gray-400"></i></li>
+                                <li class="whitespace-nowrap"><i class="ph-bold {{ language.isRtl ? 'ph-caret-left' : 'ph-caret-right' }} text-base text-gray-400"></i></li>
                                 <li class="text-gray-600 dark:text-gray-400 whitespace-nowrap">{{ title }}</li>
                             </ol>
                             <a href="{{ github }}/edit/master/doc/{{ filename }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap ms-4">
-                                <i class="ph-duotone ph-pencil-simple"></i>
+                                <i class="ph-bold ph-pencil-simple"></i>
                                 <span class="text-xs hidden sm:inline">{{ $t('Edit') }}</span>
                             </a>
                         </nav>
@@ -61,7 +61,7 @@
                         <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
                             {% if previous is defined %}
                                 <a href="/{{ previous.key }}" class="flex-1 flex items-center gap-2 px-4 py-2 rounded-lg border bg-gray-50 dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="ph-duotone {{ language.isRtl ? 'ph-arrow-right' : 'ph-arrow-left' }} text-xl text-purple-600 dark:text-purple-400"></i>
+                                    <i class="ph-bold {{ language.isRtl ? 'ph-arrow-right' : 'ph-arrow-left' }} text-xl text-purple-600 dark:text-purple-400"></i>
                                     <div class="text-start min-w-0">
                                         <div class="text-xs text-gray-500">{{ $t('Previous') }}</div>
                                         <div class="font-semibold truncate">{{ previous.title }}</div>
@@ -80,7 +80,7 @@
                                         </div>
                                         <div class="text-xs opacity-80">{{  $l.maxLength(next.description, 50) }}</div>
                                     </div>
-                                    <i class="ph-duotone {{ language.isRtl ? 'ph-arrow-left' : 'ph-arrow-right' }} text-xl text-purple-600 dark:text-purple-400"></i>
+                                    <i class="ph-bold {{ language.isRtl ? 'ph-arrow-left' : 'ph-arrow-right' }} text-xl text-purple-600 dark:text-purple-400"></i>
                                 </a>
                             {% else %}
                                 <div class="flex-1"></div>
@@ -107,15 +107,15 @@
                     <!-- Action Buttons -->
                     <div class="mt-6 space-y-1 pt-6 border-t border-gray-200 dark:border-gray-700">
                         <a href="{{ github }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                            <i class="ph-duotone ph-github-logo text-lg"></i>
+                            <i class="ph-bold ph-github-logo text-lg"></i>
                             <span class="text-xs">{{ $t('Star on GitHub') }}</span>
                         </a>
                         <a href="{{ github }}/issues" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                            <i class="ph-duotone ph-warning-circle text-lg"></i>
+                            <i class="ph-bold ph-warning-circle text-lg"></i>
                             <span class="text-xs">{{ $t('Create Issues') }}</span>
                         </a>
                         <a href="{{ github }}/edit/master/doc/{{ filename }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                            <i class="ph-duotone ph-pencil-simple text-lg"></i>
+                            <i class="ph-bold ph-pencil-simple text-lg"></i>
                             <span class="text-xs">{{ $t('Edit this page') }}</span>
                         </a>
                     </div>
