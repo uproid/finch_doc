@@ -45,16 +45,16 @@
                 
                 <!-- Dropdown Menu -->
                 <div id="toolsMenu" class="hidden absolute end-0 mt-2 w-36 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
-                    <a href="https://pub.dev/publishers/finchdart.com/packages" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="{{ configs.otherPackages }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <div class="font-medium text-sm">{{ $t('Other Packages') }}</div>
                     </a>
-                    <a href="{{ github }}/releases" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="{{ configs.releases }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <div class="font-medium text-sm">{{ $t('Finch Releases') }}</div>
                     </a>
-                    <a href="https://pub.dev/packages/finch/changelog" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="{{ configs.changelog }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <div class="font-medium text-sm">{{ $t('Changelog') }}</div>
                     </a>
-                    <a href="https://github.com/sponsors/uproid" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="{{ configs.support }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <div class="font-medium text-sm">{{ $t('Support') }}</div>
                     </a>
                 </div>

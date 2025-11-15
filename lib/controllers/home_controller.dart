@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:finch_doc/core/configs.dart';
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch/finch_app.dart';
 import 'package:finch/route.dart';
@@ -41,7 +42,7 @@ class HomeController extends Controller {
     rq.addParam('menus', menus);
     rq.addParam('filename', content.filename);
     rq.addParam('key', content.key);
-    rq.addParam('github', 'https://github.com/uproid/finch');
+    rq.addParam('configs', contentConfigs);
     rq.addParam('meta', content.meta);
     rq.addParam('description', content.description);
     rq.addParam('finchVersion', FinchApp.info.version);
