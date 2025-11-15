@@ -27,15 +27,15 @@
 							<summary class="flex items-center justify-between gap-2 px-3 py-1 font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer list-none">
 								<span class="menu-item-text text-sm flex-1 leading-relaxed {{ $l.get('activeSubMenu') ? 'text-blue-500 dark:text-secondary-400' : '' }}">{{ menu.title }}</span>
 								<span class="w-4 h-4 menu-chevron" >
-									<i class="{{ $l.get('activeSubMenu') ? 'text-blue-500 dark:text-secondary-400' : '' }} ph-duotone ph-caret-right text-lg"></i>
+									<i class="{{ $l.get('activeSubMenu') ? 'text-blue-500 dark:text-secondary-400' : '' }} ph-bold ph-caret-right text-lg"></i>
 								</span>
 							</summary>
 							<ul class="mt-1 ms-4 space-y-1 border-s border-gray-200 dark:border-gray-700 ps-2 border-dotted">
 								{% for submenu in menu.children %}
 									<li>
-										<a href="{{ $l.urlLn(submenu.key) }}" class="{{ $e.isKey(submenu.key) ? 'border-s-3 bg-blue-50 dark:bg-gray-800 border-blue-500 dark:border-secondary-400 text-blue-600 dark:text-secondary-400' : '' }} flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+										<a href="{{ $l.urlLn(submenu.key) }}" class="{{ $e.isKey(submenu.key) ? 'bg-blue-50 dark:bg-gray-800 border-blue-500 dark:border-secondary-400 text-blue-600 dark:text-secondary-400' : '' }} flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
 											{% if submenu.meta.icon %}
-												<span class="menu-item-icon leading-none">
+												<span class="menu-item-icon leading-none {{$e.isKey(submenu.key) ? 'bg-blue-400 text-secondary-50 dark:text-blue-900 dark:bg-secondary-400' : 'bg-secondary-50 text-blue-900 dark:text-white dark:bg-gray-800'}} p-0.5 rounded-md">
 													<i class="{{ submenu.meta.icon }}"></i>
 												</span>
 											{% endif %}
