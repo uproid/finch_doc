@@ -83,9 +83,9 @@
                 </button>
                 
                 <!-- Language Menu -->
-                <div id="languageMenu" class="hidden absolute end-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
+                <div id="languageMenu" class="hidden absolute end-0 mt-1 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50">
                     {% for lang in languages %}
-                    <a href="/{{ lang.code }}/{{ key }}" data-lang="{{ lang.code }}" class="{{ $e.ln == lang.code ? 'text-blue-500 ' : '' }} flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="/{{ lang.code }}/{{ key }}" data-lang="{{ lang.code }}" class="{{ $e.ln == lang.code ? 'text-blue-500 bg-gray-100 dark:bg-gray-900 dark:text-secondary-500' : '' }} flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                         <div class="font-medium text-sm">{{ lang.localName }}</div>
                     </a>
                     {% endfor %}

@@ -2,7 +2,7 @@
 <footer class="mt-16 border-t border-gray-200 dark:border-gray-700">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Footer Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <!-- Logo Column -->
             <div>
                 <div class="flex items-center space-x-2 mb-4">
@@ -68,7 +68,14 @@
         <!-- Bottom Copyright Section -->
         <div class="pt-8 text-center">
             <p class="text-sm text-gray-600 dark:text-gray-400">© {{ $l.now | dateFormat("yyyy") }} {{ $t('Finch Documentation. All rights reserved.') }}</p>
-            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Built with <i class="ph-bold ph-heart text-red-500"></i> using <a class="text-secondary-600 dark:text-secondary-400 hover:underline" href="{{ configs.finchDoc }}">Finch Doc</a></p>
+            <div class="mt-4 flex justify-center" dir="ltr">
+                <a href="{{ configs.finchDoc }}" target="_blank" rel="noopener" 
+                   class="inline-flex items-center space-x-2 px-4 bg-linear-to-b from-gray-50 to-gray-200 dark:from-gray-500 dark:text-white dark:to-gray-700 rounded-full text-gray-900 text-xs font-medium transition-all shadow-md">
+                    <span>{{ $t('Built with') }}</span>
+                    <img src="/finchdoc-logo.webp" alt="Finch Doc" class="w-8 h-8"/>
+                    <span class="font-semibold text-sm">Finch Doc</span>
+                </a>
+            </div>
         </div>
     </div>
 </footer>
