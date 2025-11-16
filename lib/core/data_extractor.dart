@@ -1,12 +1,15 @@
 import 'dart:io';
 import 'package:finch/console.dart';
-import 'package:finch_doc/controllers/home_controller.dart';
 import 'package:finch/finch_tools.dart';
 import 'package:finch/route.dart';
 import 'package:finch_doc/core/languages.dart';
 import 'package:finch_doc/core/string_extention.dart';
+import 'package:finch_doc/route/web_route.dart';
 import 'package:markdown/markdown.dart';
 import 'package:yaml/yaml.dart';
+import 'package:http/http.dart' as http;
+import 'package:archive/archive.dart';
+import 'package:finch_doc/core/configs.dart';
 
 class Extractor {
   static final routes = <FinchRoute>[];
@@ -15,6 +18,120 @@ class Extractor {
   static void init() {
     routes.clear();
     routes.addAll(makeDynamicRoutes());
+  }
+
+  static Future<void> updateContents() async {
+    Directory contentDirs = Directory(pathTo('./content'));
+    Directory backupDir = await contentDirs.backupAndClean(deleteSelf: false);
+
+    /// Download repository
+    var res = await _downloadAndExtractDocs();
+    if (!res) {
+      Console.e('Failed to update contents due to download/extraction error.');
+      // Restore from backup
+      await backupDir.copyDirectory(contentDirs);
+    }
+    backupDir.deleteFull();
+    if (res) {
+      routes.clear();
+      contents.clear();
+      init();
+    }
+  }
+
+  /// Download repository ZIP and extract doc folder to ./content
+  static Future<bool> _downloadAndExtractDocs() async {
+    try {
+      // Get repository URL from config
+      String repoUrl =
+          contentConfigs['repository'] ?? 'https://github.com/uproid/finch';
+      // Convert GitHub URL to ZIP download URL
+      String zipUrl = '$repoUrl/archive/refs/heads/master.zip';
+
+      // Download ZIP file
+      final response = await http.get(Uri.parse(zipUrl));
+
+      if (response.statusCode != 200) {
+        Console.e('Failed to download repository: ${response.statusCode}');
+        return false;
+      }
+
+      // Decode ZIP archive
+      final archive = ZipDecoder().decodeBytes(response.bodyBytes);
+
+      // Extract doc folder contents to ./content
+      final contentDir = Directory(pathTo('./content'));
+      if (!await contentDir.exists()) {
+        await contentDir.create(recursive: true);
+      }
+
+      int extractedFiles = 0;
+      for (final file in archive) {
+        String? outputPath;
+        String? relativePath;
+        List<int>? fileContent;
+
+        // Look for files in doc/ folder (path will be like: finch-master/doc/...)
+        if (file.name.contains('/doc/') && file.isFile) {
+          // Extract the relative path after /doc/
+          final parts = file.name.split('/doc/');
+          if (parts.length > 1) {
+            relativePath = parts[1];
+            outputPath = pathTo('./content/$relativePath');
+            fileContent = file.content as List<int>;
+          }
+        }
+        // Also extract CHANGELOG.md and CONTRIBUTING.md from root
+        else if (file.isFile &&
+            (file.name.endsWith('/CHANGELOG.md') ||
+                file.name.endsWith('/CONTRIBUTING.md'))) {
+          final fileName = file.name.split('/').last;
+
+          // Determine the numbered filename and content
+          String numberedFileName;
+          String content = "";
+          String icon;
+
+          if (fileName == 'CHANGELOG.md') {
+            numberedFileName = '100.changelog.md';
+            icon = 'ph-bold ph-list-dashes';
+            // Replace content with just "# Changelog"
+            content = '# Changelog';
+          } else {
+            numberedFileName = '101.contributing.md';
+            icon = 'ph-bold ph-users-three';
+            // Keep original content for CONTRIBUTING
+          }
+
+          content += String.fromCharCodes(file.content as List<int>);
+          relativePath = numberedFileName;
+          outputPath = pathTo('./content/$numberedFileName');
+
+          // Add front matter with doc meta for About group
+          String metaContent = '---\n'
+              'doc_meta:\n'
+              '    group: "About"\n'
+              '    icon: "$icon"\n'
+              '---\n$content';
+          fileContent = metaContent.codeUnits;
+        }
+
+        // Write the file if we have content to write
+        if (outputPath != null && fileContent != null && relativePath != null) {
+          final outputFile = File(outputPath);
+          await outputFile.parent.create(recursive: true);
+          await outputFile.writeAsBytes(fileContent);
+          extractedFiles++;
+        }
+      }
+
+      print('Successfully extracted $extractedFiles files from doc folder');
+      return true;
+    } catch (e, stackTrace) {
+      Console.e('Error downloading/extracting repository: $e');
+      Console.e('Stack trace: $stackTrace');
+      return false;
+    }
   }
 
   static List<Map<String, dynamic>> allLanguages({
@@ -101,7 +218,7 @@ class Extractor {
             ],
           ],
           methods: Methods.GET_ONLY,
-          index: () async => HomeController().renderDocument(key),
+          index: () async => homeController.renderDocument(key),
         ));
       }
     }
@@ -344,5 +461,25 @@ class ContentModel {
     }
 
     return link;
+  }
+}
+
+extension DirExtention on Directory {
+  Future<Directory> backupAndClean({bool deleteSelf = true}) async {
+    var trash = Directory(pathTo('./temp_delete_dir'));
+    var backup = Directory(
+        pathTo('./temp_delete_dir/${DateTime.now().millisecondsSinceEpoch}'));
+    if (!await trash.exists()) {
+      await trash.create(recursive: true);
+    }
+    await backup.create(recursive: true);
+    await this.copyDirectory(backup);
+    await cleanDirectory();
+    return backup;
+  }
+
+  Future<void> deleteFull() async {
+    await cleanDirectory();
+    deleteSync(recursive: true);
   }
 }

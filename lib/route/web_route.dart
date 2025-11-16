@@ -2,9 +2,9 @@ import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch/route.dart';
 import '../controllers/home_controller.dart';
 
-Future<List<FinchRoute>> getFinchRoute(Request rq) async {
-  final homeController = HomeController();
+final homeController = HomeController();
 
+Future<List<FinchRoute>> getFinchRoute(Request rq) async {
   return [
     ...Extractor.routes,
     FinchRoute(

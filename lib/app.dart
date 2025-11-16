@@ -15,4 +15,14 @@ void main() async {
   app.start().then((value) {
     Console.p("App is running at: http://localhost:${value.port}");
   });
+
+  app.registerCron(FinchCron(
+    onCron: (_, __) async {
+      print('Updating contents...');
+      Extractor.updateContents();
+      print('Contents updated.');
+    },
+    schedule: FinchCron.evryDay(1),
+    delayFirstMoment: false,
+  ).start());
 }
