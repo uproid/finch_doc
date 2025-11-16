@@ -253,10 +253,10 @@ packages:
     dependency: transitive
     description:
       name: crypto
-      sha256: "1e445881f28f22d6140f181e07737b22f1e099a5e1ff94b0af2f9e4a463f4855"
+      sha256: c8ea0233063ba03258fbcf2ca4d6dadfefe14f02fab57702265467a19f27fadf
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.6"
+    version: "3.0.7"
   dart_console:
     dependency: transitive
     description:
@@ -325,10 +325,10 @@ packages:
     dependency: "direct main"
     description:
       name: finch
-      sha256: "30593f6a59e46b5d17453da675c1337ba6b7eff304e5eda4bab13ebde9e253c3"
+      sha256: "19e1c361282379d19d8f7bf2eefa02a391ab8ca578c9dd8368cc92827aa1f9c5"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   fixnum:
     dependency: transitive
     description:
