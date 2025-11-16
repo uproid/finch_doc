@@ -393,7 +393,7 @@ function addHeaderCopyButtons() {
         // Create the copy link button
         const copyButton = document.createElement('button');
         copyButton.className = 'header-copy-link inline-flex items-center justify-center ms-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400';
-        copyButton.innerHTML = '<i class="ph-bold ph-hash text-sm"></i>';
+        copyButton.innerHTML = '<i class="ph-bold ph-copy text-sm"></i>';
         copyButton.setAttribute('aria-label', 'Copy link to this section');
         copyButton.setAttribute('title', 'Copy link');
         
@@ -450,3 +450,166 @@ if (document.readyState === 'loading') {
 } else {
     addHeaderCopyButtons();
 }
+
+// ============================================
+// MODERN ENHANCEMENTS
+// ============================================
+
+// Reading Progress Bar (in navbar)
+function updateReadingProgress() {
+    const article = document.querySelector('.doc-content');
+    if (!article) return;
+    
+    const progressBar = document.getElementById('readingProgress');
+    if (!progressBar) return;
+    
+    const windowHeight = window.innerHeight;
+    const articleTop = article.offsetTop;
+    const articleHeight = article.offsetHeight;
+    const scrolled = window.scrollY - articleTop + windowHeight;
+    const progress = Math.min(100, Math.max(0, (scrolled / articleHeight) * 100));
+    
+    progressBar.style.width = `${progress}%`;
+}
+
+window.addEventListener('scroll', updateReadingProgress);
+window.addEventListener('resize', updateReadingProgress);
+document.addEventListener('DOMContentLoaded', updateReadingProgress);
+
+// Scroll to Top Button
+const scrollToTopBtn = document.getElementById('scrollToTop');
+if (scrollToTopBtn) {
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            scrollToTopBtn.classList.remove('hidden');
+        } else {
+            scrollToTopBtn.classList.add('hidden');
+        }
+    });
+    
+    scrollToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+// TOC Active Link Highlighting
+const tocLinks = document.querySelectorAll('.toc-link');
+const sections = Array.from(tocLinks).map(link => {
+    const id = link.getAttribute('href').substring(1);
+    return document.getElementById(id);
+}).filter(Boolean);
+
+function updateActiveTocLink() {
+    let currentSection = null;
+    const scrollPosition = window.scrollY + 100;
+    
+    for (const section of sections) {
+        if (section.offsetTop <= scrollPosition) {
+            currentSection = section;
+        }
+    }
+    
+    tocLinks.forEach(link => {
+        link.classList.remove('!border-blue-600', 'dark:!border-secondary-400', '!text-blue-600', 'dark:!text-secondary-400', 'bg-blue-50', 'dark:bg-gray-800', 'font-semibold');
+    });
+    
+    if (currentSection) {
+        const activeLink = document.querySelector(`.toc-link[href="#${currentSection.id}"]`);
+        if (activeLink) {
+            activeLink.classList.add('!border-blue-600', 'dark:!border-secondary-400', '!text-blue-600', 'dark:!text-secondary-400', 'bg-blue-50', 'dark:bg-gray-800', 'font-semibold');
+        }
+    }
+}
+
+window.addEventListener('scroll', updateActiveTocLink);
+document.addEventListener('DOMContentLoaded', updateActiveTocLink);
+
+// Copy Page Link
+const copyPageLinkBtn = document.getElementById('copyPageLink');
+if (copyPageLinkBtn) {
+    copyPageLinkBtn.addEventListener('click', async () => {
+        const url = window.location.href;
+        try {
+            await navigator.clipboard.writeText(url);
+            const icon = copyPageLinkBtn.querySelector('i');
+            const originalClass = icon.className;
+            icon.className = 'ph-bold ph-check text-base';
+            copyPageLinkBtn.classList.add('!text-green-600', 'dark:!text-green-400', '!border-green-500');
+            
+            setTimeout(() => {
+                icon.className = originalClass;
+                copyPageLinkBtn.classList.remove('!text-green-600', 'dark:!text-green-400', '!border-green-500');
+            }, 2000);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
+    });
+}
+
+// Sidebar Search Filter
+const sidebarSearch = document.getElementById('sidebarSearch');
+if (sidebarSearch) {
+    sidebarSearch.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const menuItems = document.querySelectorAll('.menu-item, .menu-group-item, .submenu-item');
+        
+        menuItems.forEach(item => {
+            const text = item.getAttribute('data-search-text') || '';
+            if (text.includes(query)) {
+                item.classList.remove('sidebar-item-hidden');
+            } else {
+                item.classList.add('sidebar-item-hidden');
+            }
+        });
+        
+        // Open all groups if searching
+        if (query.length > 0) {
+            document.querySelectorAll('.menu-group').forEach(group => {
+                group.setAttribute('open', '');
+            });
+        }
+    });
+}
+
+// Newsletter Form
+const newsletterForm = document.getElementById('newsletterForm');
+if (newsletterForm) {
+    newsletterForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = e.target.querySelector('input[type="email"]').value;
+        
+        // Show success message
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = DS.tr('Subscribed!');
+        submitBtn.classList.add('bg-green-500', 'text-white');
+        
+        setTimeout(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.classList.remove('bg-green-500', 'text-white');
+            e.target.reset();
+        }, 3000);
+        
+        // Here you would normally send to your backend
+        console.log('Newsletter subscription:', email);
+    });
+}
+
+// Performance: Lazy load images
+document.addEventListener('DOMContentLoaded', () => {
+    const images = document.querySelectorAll('img[data-src]');
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+                imageObserver.unobserve(img);
+            }
+        });
+    });
+    
+    images.forEach(img => imageObserver.observe(img));
+});
+
+console.log('✨ Finch Documentation - Enhanced & Ready!');

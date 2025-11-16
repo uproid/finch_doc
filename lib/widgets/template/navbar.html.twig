@@ -1,16 +1,24 @@
 {% block navbar %}
+<!-- Skip to content for accessibility -->
+<a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:start-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg">
+    {{ $t('Skip to content') }}
+</a>
+
 <!-- Top Navigation Bar -->
-<nav class="fixed top-0 start-0 end-0 z-50 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+<nav class="fixed top-0 start-0 end-0 z-50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-sm" role="navigation" aria-label="Main navigation">
+    <!-- Reading progress bar -->
+    <div id="readingProgress" class="absolute bottom-0 start-0 h-0.5 bg-linear-to-r from-blue-500 to-purple-500 dark:from-secondary-400 dark:to-purple-400 transition-all duration-300" style="width: 0%"></div>
+    
     <div class="max-w-[1600px] mx-auto flex items-center justify-between px-4 h-16">
         <!-- Left: Logo & Menu Toggle -->
         <div class="flex items-center gap-4">
-            <button id="menuToggle" class="lg:hidden px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                <i class="ph-bold ph-dots-three-outline-vertical text-2xl"></i>
+            <button id="menuToggle" class="lg:hidden px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="Toggle navigation menu" aria-expanded="false">
+                <i class="ph-bold ph-list text-2xl"></i>
             </button>
-            <a href="/" class="flex items-center gap-2">
-                <img src="/logo.svg" alt="Finch Docs" class="h-10">
+            <a href="/" class="flex items-center gap-2 group">
+                <img src="/logo.svg" alt="Finch Framework Logo" class="h-10 group-hover:scale-110 transition-transform">
                 <span class="font-bold text-xl hidden sm:block">{{ $t('Finch') }}</span>
-                <span class="text-gray-500 text-sm">v{{ finchVersion }}</span>
+                <span class="text-gray-500 dark:text-gray-400 text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700">v{{ finchVersion }}</span>
             </a>
         </div>
 
@@ -21,14 +29,19 @@
                     type="text" 
                     id="searchInput"
                     placeholder="{{ $t('Search documentation...') }}" 
-                    class="w-full px-4 py-2 ps-10 pe-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                    class="w-full px-4 py-2 ps-10 pe-24 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all"
                     autocomplete="off"
+                    role="searchbox"
+                    aria-label="Search documentation"
                 >
-                <i class="ph-bold ph-magnifying-glass absolute start-3 top-1/2 transform -translate-y-1/2 text-xl"></i>
-                <kbd class="absolute end-3 top-1/2 transform -translate-y-1/2 px-2 py-1 text-xs bg-gray-200 dark:bg-gray-600 rounded">Ctrl+K</kbd>
+                <i class="ph-bold ph-magnifying-glass absolute start-3 top-1/2 transform -translate-y-1/2 text-xl text-gray-400"></i>
+                <div class="absolute end-3 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
+                    <kbd class="hidden lg:inline-flex px-2 py-1 text-xs bg-gray-200 dark:bg-gray-600 rounded font-mono">Ctrl</kbd>
+                    <kbd class="hidden lg:inline-flex px-2 py-1 text-xs bg-gray-200 dark:bg-gray-600 rounded font-mono">K</kbd>
+                </div>
                 
                 <!-- Search Results Dropdown -->
-                <div id="searchResults" class="hidden absolute top-full start-0 end-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-96 overflow-y-auto z-50">
+                <div id="searchResults" class="hidden absolute top-full start-0 end-0 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 max-h-96 overflow-y-auto z-50" role="listbox">
                     <!-- Results will be inserted here -->
                 </div>
             </div>
@@ -38,55 +51,66 @@
         <div class="flex items-center gap-2">
             <!-- Tools Dropdown -->
             <div class="relative group">
-                <button id="toolsDropdown" class="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <button id="toolsDropdown" class="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-haspopup="true" aria-expanded="false">
                     <span class="font-medium">{{ $t('Help') }}</span>
-                    <i class="ph-bold ph-caret-down text-lg"></i>
+                    <i class="ph-bold ph-caret-down text-lg transition-transform group-hover:rotate-180"></i>
                 </button>
                 
                 <!-- Dropdown Menu -->
-                <div id="toolsMenu" class="hidden absolute end-0 mt-2 w-36 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
-                    <a href="{{ configs.otherPackages }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <div id="toolsMenu" class="hidden absolute end-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50" role="menu">
+                    <a href="{{ configs.otherPackages }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" role="menuitem">
+                        <i class="ph-bold ph-package text-lg"></i>
                         <div class="font-medium text-sm">{{ $t('Other Packages') }}</div>
                     </a>
-                    <a href="{{ configs.releases }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="{{ configs.releases }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" role="menuitem">
+                        <i class="ph-bold ph-git-branch text-lg"></i>
                         <div class="font-medium text-sm">{{ $t('Finch Releases') }}</div>
                     </a>
-                    <a href="{{ configs.changelog }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="{{ configs.changelog }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" role="menuitem">
+                        <i class="ph-bold ph-list-bullets text-lg"></i>
                         <div class="font-medium text-sm">{{ $t('Changelog') }}</div>
                     </a>
-                    <a href="{{ configs.support }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="{{ configs.support }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" role="menuitem">
+                        <i class="ph-bold ph-lifebuoy text-lg"></i>
                         <div class="font-medium text-sm">{{ $t('Support') }}</div>
                     </a>
                 </div>
             </div>
 
             <!-- Mobile Search -->
-            <button id="mobileSearchToggle" class="md:hidden px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+            <button id="mobileSearchToggle" class="md:hidden px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="Open search">
                 <i class="ph-bold ph-magnifying-glass text-2xl"></i>
             </button>
 
-            <!-- GitHub -->
-            <a href="{{ github }}" target="_blank" class="px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+            <!-- GitHub with star count -->
+            <a href="{{ github }}" target="_blank" rel="noopener noreferrer" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group" aria-label="View on GitHub">
                 <i class="ph-bold ph-github-logo text-2xl"></i>
             </a>
 
             <!-- Theme Toggle -->
-            <button id="themeToggle" class="px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+            <button id="themeToggle" class="px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors" aria-label="Toggle theme">
                 <i id="theme-icon-light" class="ph-bold ph-moon text-2xl" style="display: inline-block;"></i>
                 <i id="theme-icon-dark" class="ph-bold ph-sun text-2xl" style="display: none;"></i>
             </button>
 
             <!-- Language Dropdown -->
             <div class="relative group">
-                <button id="languageDropdown" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <button id="languageDropdown" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-haspopup="true" aria-expanded="false" aria-label="Select language">
                     <i class="ph-bold ph-translate text-xl"></i>
+                    <span class="hidden lg:inline text-sm font-medium uppercase">{{ $e.ln }}</span>
                 </button>
                 
                 <!-- Language Menu -->
-                <div id="languageMenu" class="hidden absolute end-0 mt-1 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50">
+                <div id="languageMenu" class="hidden absolute end-0 mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-50 overflow-hidden" role="menu">
                     {% for lang in languages %}
-                    <a href="/{{ lang.code }}/{{ key }}" data-lang="{{ lang.code }}" class="{{ $e.ln == lang.code ? 'text-blue-500 bg-gray-100 dark:bg-gray-900 dark:text-secondary-500' : '' }} flex items-center gap-3 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                        <div class="font-medium text-sm">{{ lang.localName }}</div>
+                    <a href="/{{ lang.code }}/{{ key }}" data-lang="{{ lang.code }}" class="{{ $e.ln == lang.code ? 'text-blue-600 dark:text-secondary-400 bg-blue-50 dark:bg-gray-900 font-semibold' : '' }} flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" role="menuitem">
+                        <div class="flex-1">
+                            <div class="font-medium text-sm">{{ lang.localName }}</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-400">{{ lang.name }}</div>
+                        </div>
+                        {% if $e.ln == lang.code %}
+                        <i class="ph-bold ph-check text-lg"></i>
+                        {% endif %}
                     </a>
                     {% endfor %}
                 </div>

@@ -14,5 +14,16 @@
       ],
       "console": "debugConsole"
     },
+    {
+      "name": "npm run watch:css",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "watch:css"
+      ],
+      "console": "integratedTerminal"
+    }
   ],
 }
