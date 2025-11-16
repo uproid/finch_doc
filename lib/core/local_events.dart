@@ -14,9 +14,9 @@ var localEvents = <String, Object>{
     var rq = Context.rq;
     var lang = rq.getLanguage();
     if (lang == 'en') {
-      return rq.url('/$path');
+      return url(rq, '/$path');
     } else {
-      return rq.url('/$lang/$path');
+      return url(rq, '/$lang/$path');
     }
   },
   'set': (String key, Object value) {
@@ -29,3 +29,15 @@ var localEvents = <String, Object>{
     return rq.getParam(key, def: def);
   },
 };
+
+String url(Request rq, String subPath, {Map<String, String>? params}) {
+  var pathRequest = rq.httpRequest.requestedUri.origin;
+  var uri = Uri.parse(pathRequest);
+  uri = uri.resolve(subPath);
+  if (params != null && params.isNotEmpty) {
+    uri = uri.replace(queryParameters: params);
+  }
+
+  var url = uri.toString();
+  return url;
+}
