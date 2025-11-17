@@ -26,5 +26,5 @@ Map contentConfigs = {
   'community': 'https://t.me/finchdart',
   'finchDoc': 'https://github.com/uproid/finch_doc',
   'edit': 'https://github.com/uproid/finch/edit/master/doc',
-  '{{ github }}/releases': 'https://github.com/uproid/finch/releases',
+  'releases': 'https://github.com/uproid/finch/releases',
 };

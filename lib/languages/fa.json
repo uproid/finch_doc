@@ -52,5 +52,8 @@
     "Demo": "دمو",
     "Copy": "کپی",
     "GitHub": "گیت‌هاب",
-    "Quick Start": "شروع سریع"
+    "Quick Start": "شروع سریع",
+    "Oops! Something went wrong": "اوه! مشکلی پیش آمد",
+    "Page not found, please check the URL or return to the homepage.": "صفحه پیدا نشد، لطفاً آدرس را بررسی کنید یا به صفحه اصلی بازگردید.",
+    "Back": "بازگشت"
 }

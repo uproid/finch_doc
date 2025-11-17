@@ -1,3 +1,5 @@
+import 'package:finch/finch_ui.dart';
+import 'package:finch/src/views/htmler.dart';
 import 'package:finch_doc/core/configs.dart';
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch_doc/core/local_events.dart';
@@ -16,6 +18,8 @@ void main() async {
     Console.p("App is running at: http://localhost:${value.port}");
   });
 
+  Request.errorWidget = ErrorWidget();
+
   app.registerCron(FinchCron(
     onCron: (_, __) async {
       print('Updating contents...');
@@ -25,4 +29,12 @@ void main() async {
     schedule: FinchCron.evryDay(1),
     delayFirstMoment: false,
   ).start());
+}
+
+class ErrorWidget extends FinchStringWidget {
+  @override
+  Tag Function(Map args)? get generateHtml => (Map args) {
+        homeController.error404();
+        return $Text("Error 404");
+      };
 }

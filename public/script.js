@@ -1,3 +1,8 @@
+// Disable browser's automatic scroll restoration
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+
 // Search functionality with AJAX
 let searchTimeout;
 let blurBackdrop = null;
@@ -551,7 +556,7 @@ const sidebarSearch = document.getElementById('sidebarSearch');
 if (sidebarSearch) {
     sidebarSearch.addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase();
-        const menuItems = document.querySelectorAll('.menu-item, .menu-group-item, .submenu-item');
+        const menuItems = document.querySelectorAll('.menu-item, .submenu-item');
         
         menuItems.forEach(item => {
             const text = item.getAttribute('data-search-text') || '';
@@ -561,7 +566,17 @@ if (sidebarSearch) {
                 item.classList.add('sidebar-item-hidden');
             }
         });
-        
+
+        // Hidden groups if no items match
+        document.querySelectorAll('.menu-group').forEach(group => {
+            const visibleItems = group.querySelectorAll('.menu-item:not(.sidebar-item-hidden), .submenu-item:not(.sidebar-item-hidden)');
+            if (visibleItems.length === 0) {
+                group.classList.add('sidebar-item-hidden');
+            } else {
+                group.classList.remove('sidebar-item-hidden');
+            }
+        });
+
         // Open all groups if searching
         if (query.length > 0) {
             document.querySelectorAll('.menu-group').forEach(group => {
