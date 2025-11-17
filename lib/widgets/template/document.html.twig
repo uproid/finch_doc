@@ -12,9 +12,13 @@
             {% endif %}
             
             <!-- Breadcrumb -->
-            <nav class="flex items-center justify-between mb-6 text-sm overflow-x-auto" aria-label="Breadcrumb">
+            <nav class="flex items-center justify-between mb-6 text-sm overflow-x-auto" id="breadcrumb" aria-label="Breadcrumb">
                 <ol class="flex items-center space-x-2 flex-nowrap">
                     <li class="whitespace-nowrap"><a href="/" class="text-blue-600 dark:text-secondary-400 hover:underline">{{ $t('Home') }}</a></li>
+                    {% if meta.group %}
+                        <li class="whitespace-nowrap" aria-hidden="true"><i class="ph-bold {{ language.isRtl ? 'ph-caret-left' : 'ph-caret-right' }} text-base text-gray-400"></i></li>
+                        <li class="text-gray-600 dark:text-gray-400 whitespace-nowrap" aria-current="page">{{ meta.group }}</li>
+                    {% endif %}
                     <li class="whitespace-nowrap" aria-hidden="true"><i class="ph-bold {{ language.isRtl ? 'ph-caret-left' : 'ph-caret-right' }} text-base text-gray-400"></i></li>
                     <li class="text-gray-600 dark:text-gray-400 whitespace-nowrap" aria-current="page">{{ title }}</li>
                 </ol>
