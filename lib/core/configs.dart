@@ -14,6 +14,7 @@ FinchConfigs configs = FinchConfigs(
 
 Map contentConfigs = {
   'repository': 'https://github.com/uproid/finch',
+  'newissue': 'https://github.com/uproid/finch/issues/new',
   'discord': 'https://discord.gg/YduDmJxCp9',
   'youtube': 'https://www.youtube.com/@finchdart',
   'otherPackages': 'https://pub.dev/publishers/finchdart.com/packages',
@@ -27,4 +28,5 @@ Map contentConfigs = {
   'finchDoc': 'https://github.com/uproid/finch_doc',
   'edit': 'https://github.com/uproid/finch/edit/master/doc',
   'releases': 'https://github.com/uproid/finch/releases',
+  'discussions': 'https://github.com/uproid/finch/discussions'
 };
