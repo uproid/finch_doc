@@ -18,7 +18,9 @@ void main() async {
     Console.p("App is running at: http://localhost:${value.port}");
   });
 
-  Request.errorWidget = ErrorWidget();
+  if (!Console.isDebug) {
+    Request.errorWidget = ErrorWidget();
+  }
 
   app.registerCron(FinchCron(
     onCron: (_, __) async {
