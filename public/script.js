@@ -464,16 +464,18 @@ if (document.readyState === 'loading') {
 function updateReadingProgress() {
     const article = document.querySelector('.doc-content');
     if (!article) return;
-    
     const progressBar = document.getElementById('readingProgress');
     if (!progressBar) return;
-    
     const windowHeight = window.innerHeight;
     const articleTop = article.offsetTop;
     const articleHeight = article.offsetHeight;
+    // If scroll is at or above the top of the article, progress is 0
+    if (window.scrollY + 1 <= articleTop) {
+        progressBar.style.width = '0%';
+        return;
+    }
     const scrolled = window.scrollY - articleTop + windowHeight;
     const progress = Math.min(100, Math.max(0, (scrolled / articleHeight) * 100));
-    
     progressBar.style.width = `${progress}%`;
 }
 
