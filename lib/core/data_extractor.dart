@@ -318,7 +318,7 @@ class ContentModel {
       if (metaString.startsWith('doc_meta:')) {
         metaString = metaString.replaceFirst('doc_meta:', '');
         try {
-          meta = loadYaml(metaString) as Map;
+          meta.addAll(loadYaml(metaString) as Map);
         } catch (e) {
           Console.e('Error parsing front matter YAML: $e');
         }
@@ -351,19 +351,26 @@ class ContentModel {
     }
 
     // Extract first text after first h tag as description
-    for (var i = 0; i < doc.length; i++) {
-      var node = doc[i];
-      if (tags.contains(node.tag)) {
-        // Look for next text node
-        for (var j = i + 1; j < doc.length; j++) {
-          var nextNode = doc[j];
-          if (nextNode.tag == 'p') {
-            description = nextNode.textContent.trim().removeHtmlTags();
-            return;
+    brakefor:
+    if (meta['description'] == null || meta['description'].toString().isEmpty) {
+      for (var i = 0; i < doc.length; i++) {
+        var node = doc[i];
+        if (tags.contains(node.tag)) {
+          // Look for next text node
+          for (var j = i + 1; j < doc.length; j++) {
+            var nextNode = doc[j];
+            if (nextNode.tag == 'p') {
+              description = nextNode.textContent.trim().removeHtmlTags();
+              meta['description'] = description;
+              break brakefor;
+            }
           }
         }
       }
+    } else {
+      description = meta['description'];
     }
+
     // Optimize description length
     if (description.length > 150) {
       description = description.substring(0, 150) + '...';
