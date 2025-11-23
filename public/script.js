@@ -557,13 +557,14 @@ if (copyPageLinkBtn) {
 const sidebarSearch = document.getElementById('sidebarSearch');
 if (sidebarSearch) {
     sidebarSearch.addEventListener('input', (e) => {
-        const query = e.target.value.toLowerCase();
+        const query = e.target.value.toLowerCase().trim();
         const menuItems = document.querySelectorAll('.menu-item, .submenu-item');
-        
+        var count = 0;
         menuItems.forEach(item => {
             const text = item.getAttribute('data-search-text') || '';
             if (text.includes(query)) {
                 item.classList.remove('sidebar-item-hidden');
+                count++;
             } else {
                 item.classList.add('sidebar-item-hidden');
             }
@@ -584,6 +585,12 @@ if (sidebarSearch) {
             document.querySelectorAll('.menu-group').forEach(group => {
                 group.setAttribute('open', '');
             });
+        }
+
+        if(count === 0) {
+            document.getElementById('noSidebarResults').classList.remove('hidden');
+        } else {
+            document.getElementById('noSidebarResults').classList.add('hidden');
         }
     });
 }
