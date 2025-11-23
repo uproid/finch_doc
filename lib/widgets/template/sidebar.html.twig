@@ -30,6 +30,9 @@
 
 	<!-- Getting Started -->
 	<div class="mb-6">
+		<div id="noSidebarResults" class="hidden p-4 text-center text-gray-500 dark:text-gray-400">
+			{{ $t('No results found.') }}
+		</div>
 		<ul class="space-y-1">
 			{% for menu in menus %}
 				{% if menu.isGroup %}
