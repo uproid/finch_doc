@@ -371,7 +371,10 @@ class ContentModel {
   }
 
   String _initContent(String md) {
-    List<Node> doc = Document().parse(md);
+    List<Node> doc = Document(
+      blockSyntaxes: ExtensionSet.gitHubFlavored.blockSyntaxes,
+      inlineSyntaxes: ExtensionSet.gitHubFlavored.inlineSyntaxes,
+    ).parse(md);
     _fix(doc);
 
     return renderToHtml(doc);
@@ -438,6 +441,21 @@ class ContentModel {
           case 'blockquote':
             node.attributes['class'] =
                 'border-l-4 border-gray-300 pl-4 italic text-gray-600 mb-4';
+            break;
+          case 'img':
+            node.attributes['class'] = 'my-1 flex-inline';
+            break;
+          case 'table':
+            node.attributes['class'] =
+                'w-full mx-auto !rounded-none !border-none block py-5 overflow-x-auto';
+            break;
+          case 'th':
+            node.attributes['class'] =
+                'border text-sm border-gray-50 dark:border-gray-800 px-4 pt-2 pb-3 bg-gray-200 dark:bg-gray-700 text-start';
+            break;
+          case 'td':
+            node.attributes['class'] =
+                'border text-sm border-gray-50 dark:border-gray-800 px-4 py-2 text-start';
             break;
         }
 

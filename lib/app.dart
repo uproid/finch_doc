@@ -22,15 +22,17 @@ void main() async {
     Request.errorWidget = ErrorWidget();
   }
 
-  app.registerCron(FinchCron(
-    onCron: (_, __) async {
-      print('Updating contents...');
-      Extractor.updateContents();
-      print('Contents updated.');
-    },
-    schedule: FinchCron.evryDay(1),
-    delayFirstMoment: false,
-  ).start());
+  if (!Console.isDebug) {
+    app.registerCron(FinchCron(
+      onCron: (_, __) async {
+        print('Updating contents...');
+        Extractor.updateContents();
+        print('Contents updated.');
+      },
+      schedule: FinchCron.evryDay(1),
+      delayFirstMoment: false,
+    ).start());
+  }
 }
 
 class ErrorWidget extends FinchStringWidget {
