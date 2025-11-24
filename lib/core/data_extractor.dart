@@ -182,7 +182,12 @@ class Extractor {
         var numB = int.tryParse(b.fileName.split('.').first) ?? 0;
         return numA.compareTo(numB);
       });
-
+      if (lang == 'en') {
+        for (int i = 0; i < files.length; i++) {
+          var content = files[i]!.fileName;
+          print("$i: ${content}");
+        }
+      }
       for (var file in files) {
         var content = file.readAsStringSync();
         var key = fileNameToKey(file.fileName);
@@ -198,15 +203,6 @@ class Extractor {
         contents.putIfAbsent(lang, () => DataExtractor());
         contents[lang]!.contents[key] = doc;
 
-        doc.previous = contents[lang]!.contents.length > 1
-            ? contents[lang]!
-                .contents
-                .values
-                .elementAt(contents[lang]!.contents.values.length - 2)
-            : null;
-
-        doc.previous?.next = doc;
-
         res.add(FinchRoute(
           path: '$lang/$key',
           key: '$key',
@@ -221,7 +217,38 @@ class Extractor {
           index: () async => homeController.renderDocument(key),
         ));
       }
+
+      contents[lang]!.contents = sortContents(contents[lang]!);
     }
+
+    return res;
+  }
+
+  static sortContents(DataExtractor extractor) {
+    var sorted = <ContentModel>[];
+    for (var i = 0; i < extractor.contents.length; i++) {
+      var content = extractor.contents.values.elementAt(i);
+
+      if (content.group.isEmpty) {
+        sorted.add(content);
+      } else {
+        var index = sorted.lastIndexWhere((c) => c.group == content.group);
+        if (index == -1) {
+          sorted.add(content);
+        } else {
+          sorted.insert(index + 1, content);
+        }
+      }
+    }
+
+    var res = <String, ContentModel>{};
+    sorted.forEach((content) {
+      content.previous = sorted.indexOf(content) > 0
+          ? sorted[sorted.indexOf(content) - 1]
+          : null;
+      content.previous?.next = content;
+      res[content.key] = content;
+    });
 
     return res;
   }
