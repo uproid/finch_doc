@@ -182,12 +182,7 @@ class Extractor {
         var numB = int.tryParse(b.fileName.split('.').first) ?? 0;
         return numA.compareTo(numB);
       });
-      if (lang == 'en') {
-        for (int i = 0; i < files.length; i++) {
-          var content = files[i]!.fileName;
-          print("$i: ${content}");
-        }
-      }
+
       for (var file in files) {
         var content = file.readAsStringSync();
         var key = fileNameToKey(file.fileName);
