@@ -14,6 +14,16 @@ class HomeController extends Controller {
   }
 
   Future<String> error404() async {
+    if (rq.isApiEndpoint) {
+      return rq.renderData(
+        data: {
+          'error': 404,
+          'message': 'error.notfound',
+        },
+        status: 404,
+      );
+    }
+
     rq.addParam('content',
         '<h1>404 - Page Not Found</h1><p>The page you are looking for does not exist.</p>');
     rq.addParam('title', '404 - Page Not Found');
@@ -31,6 +41,7 @@ class HomeController extends Controller {
 
     return rq.renderView(
       path: 'template/error',
+      status: 404,
     );
   }
 
