@@ -36,13 +36,14 @@ jobs:
                   name: finch-build
                   path: ./build
 
-            - name: create release
-              uses: tauri-apps/tauri-action@dev
+            - name: Create GitHub Release
+              uses: softprops/action-gh-release@v2
               env:
-                  GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+                GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
               with:
-                tagName: finch-doc-linux-v1.${{ github.run_number }}
-                releaseName: "Finch Doc v1.${{ github.run_number }}"
-                releaseBody: "Download the latest version of Finch Doc for Linux."
-                releaseDraft: true
+                tag_name: finch-doc-linux-v1.${{ github.run_number }}
+                name: "Finch Doc v1.${{ github.run_number }}"
+                body: "Download the latest version of Finch Doc for Linux."
+                draft: false
                 prerelease: false
+                files: ./build/**
