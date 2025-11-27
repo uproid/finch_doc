@@ -73,7 +73,9 @@ jobs:
 
   relase:
     runs-on: ubuntu-latest
-    needs: finch_build_linux
+    needs: 
+      - finch_build_linux
+      - finch_build_macos
     steps:
       - uses: actions/checkout@v4
       - name: Download Linux build artifact
