@@ -37,7 +37,9 @@ jobs:
                   path: ./build
             
             - name: create release
+              if: github.event_name == 'push'
               uses: ncipollo/release-action@v1
               with:
                   artifacts: finch-build
                   tag: finch-doc-build-linux-v${{ github.run_number }}
+                  token: ${{ secrets.XXXX }}
