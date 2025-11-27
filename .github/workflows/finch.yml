@@ -21,11 +21,13 @@ jobs:
       - name: Install dependencies
         run: dart pub get
       - name: Install Finch CLI
-        run: dart pub global activate finch && export PATH="$PATH":"$HOME/.pub-cache/bin"
+        run: |
+          dart pub global activate finch
+          export PATH="$PATH:$HOME/.pub-cache/bin"
       - name: Build finch project
         run: finch build -a ./lib/app.dart -t zip -o ./build
       - name: Upload Finch build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: finch-build
           path: ./build
