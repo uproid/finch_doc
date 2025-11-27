@@ -29,7 +29,7 @@ jobs:
                 finch build -a ./lib/app.dart -t exe -o ./build
                 cp -r ./content ./build/
             - name: Test Finch_doc app in background
-              run: ./build/app.exe & sleep 60 && kill %1
+              run: cd ./build/lib/ && ./app.exe & sleep 60 && kill %1 && cd ../../
             - name: Upload Finch build artifacts
               uses: actions/upload-artifact@v4
               with:
