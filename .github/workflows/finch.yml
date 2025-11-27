@@ -40,19 +40,20 @@ jobs:
           rm -rf temp_delete_dir
           zip -r ../finch-build-linux-v1.${{ github.run_number }}.zip .
           cd ..
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-        with:
-          tag_name: finch-doc-linux-v1.${{ github.run_number }}
-          name: "Finch Doc v1.${{ github.run_number }}"
-          body: "Download the latest version of Finch Doc for Linux."
-          draft: false
-          prerelease: false
-          files: finch-build-linux-v1.${{ github.run_number }}.zip
+      # - name: Create GitHub Release
+      #   uses: softprops/action-gh-release@v2
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      #   with:
+      #     tag_name: finch-doc-linux-v1.${{ github.run_number }}
+      #     name: "Finch Doc Linux v1.${{ github.run_number }}"
+      #     body: "Download the latest version of Finch Doc for Linux."
+      #     draft: false
+      #     prerelease: false
+      #     files: finch-build-linux-v1.${{ github.run_number }}.zip
 
   finch_build_macos:
+    needs: finch_build_linux
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -80,14 +81,16 @@ jobs:
           rm -rf temp_delete_dir
           zip -r ../finch-build-macos-v1.${{ github.run_number }}.zip .
           cd ..
-      - name: Create GitHub Release
+      - name: Create GitHub Release MACOS
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           tag_name: finch-doc-macos-v1.${{ github.run_number }}
-          name: "Finch Doc v1.${{ github.run_number }}"
+          name: "Finch Doc macOS v1.${{ github.run_number }}"
           body: "Download the latest version of Finch Doc for macOS."
           draft: false
           prerelease: false
-          files: finch-build-macos-v1.${{ github.run_number }}.zip
+          files: finch-build-macos-v1.${{ github.run_number }}.zip,finch-build-linux-v1.${{ github.run_number }}.zip
+
+    
