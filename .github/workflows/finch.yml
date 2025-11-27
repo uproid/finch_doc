@@ -91,8 +91,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           tag_name: finch-doc-macos-v1.${{ github.run_number }}
-          name: "Finch Doc macOS v1.${{ github.run_number }}"
-          body: "Download the latest version of Finch Doc for macOS."
+          name: "Finch Doc v1.${{ github.run_number }}"
+          body: "Download the latest version of Finch."
           draft: false
           prerelease: false
           files: finch-build-macos-v1.${{ github.run_number }}.zip,finch-build-linux-v1.${{ github.run_number }}.zip
