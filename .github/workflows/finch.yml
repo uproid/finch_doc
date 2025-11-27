@@ -1,0 +1,31 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Dart
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  finch_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+      - name: Install dependencies
+        run: dart pub get
+      - name: Install Finch CLI
+        run: dart pub global activate finch && export PATH="$PATH":"$HOME/.pub-cache/bin"
+      - name: Build finch project
+        run: finch build -a ./lib/app.dart -t zip -o ./build
+      - name: Upload Finch build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: finch-build
+          path: ./build
