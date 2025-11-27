@@ -23,20 +23,20 @@ jobs:
         run: |
           dart pub global activate finch
           export PATH="$PATH:$HOME/.pub-cache/bin"
-      - name: Build finch project
+      - name: Build finch project for Linux
         run: |
-          finch build -a ./lib/app.dart -t exe -o ./build
-          cp -r ./content ./build/
+          finch build -a ./lib/app.dart -t exe -o ./build_linux
+          cp -r ./content ./build_linux/
       - name: Test Finch_doc app in background
-        run: cd ./build/lib/ && ./app.exe & sleep 60 && kill %1 && cd ../../
-      - name: Upload Finch build artifacts
+        run: cd ./build_linux/lib/ && ./app.exe & sleep 60 && kill %1 && cd ../../
+      - name: Upload Finch build artifacts 
         uses: actions/upload-artifact@v4
         with:
-          name: finch-build
-          path: ./build
+          name: finch-build-linux
+          path: ./build_linux
       - name: Zip build directory
         run: |
-          cd build
+          cd build_linux
           rm -rf temp_delete_dir
           zip -r ../finch-build-linux-v1.${{ github.run_number }}.zip .
           cd ..
@@ -65,18 +65,18 @@ jobs:
           export PATH="$PATH:$HOME/.pub-cache/bin"
       - name: Build finch project
         run: |
-          finch build -a ./lib/app.dart -t exe -o ./build
-          cp -r ./content ./build/
+          finch build -a ./lib/app.dart -t exe -o ./build_macos
+          cp -r ./content ./build_macos/
       - name: Test Finch_doc app in background
-        run: cd ./build/lib/ && ./app.exe & sleep 60 && kill %1 && cd ../../
+        run: cd ./build_macos/lib/ && ./app.exe & sleep 60 && kill %1 && cd ../../
       - name: Upload Finch build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: finch-build
-          path: ./build
+          name: finch-build-macos
+          path: ./build_macos
       - name: Zip build directory
         run: |
-          cd build
+          cd build_macos
           rm -rf temp_delete_dir
           zip -r ../finch-build-macos-v1.${{ github.run_number }}.zip .
           cd ..
