@@ -38,7 +38,7 @@ jobs:
             
             - name: create release
               if: github.event_name == 'push'
-              uses: ncipollo/release-action@v1
+              uses: ncipollo/release-action@v1.14.0
               with:
                   artifacts: finch-build
                   tag: finch-doc-build-linux-v${{ github.run_number }}
