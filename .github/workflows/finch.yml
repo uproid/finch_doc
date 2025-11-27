@@ -39,7 +39,8 @@ jobs:
             - name: Zip build directory
               run: |
                 cd build
-                zip -r ../finch-build.zip .
+                rm -rf temp_delete_dir
+                zip -r ../finch-build-linux-v1.${{ github.run_number }}.zip .
                 cd ..
 
             - name: Create GitHub Release
@@ -52,4 +53,4 @@ jobs:
                 body: "Download the latest version of Finch Doc for Linux."
                 draft: false
                 prerelease: false
-                files: finch-build.zip
+                files: finch-build-linux-v1.${{ github.run_number }}.zip
