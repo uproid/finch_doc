@@ -34,13 +34,6 @@ jobs:
         with:
           name: finch-build-linux
           path: ./build_linux
-      - name: Zip build directory
-        run: |
-          cd build_linux
-          rm -rf temp_delete_dir
-          zip -r ../finch-build-linux-v1.${{ github.run_number }}.zip .
-          cd ..
-
   finch_build_macos:
     runs-on: macos-latest
     steps:
@@ -88,6 +81,17 @@ jobs:
         with:
           name: finch-build-macos
           path: .
+
+      - name: Zip build directory
+        run: |
+          cd build_linux
+          rm -rf temp_delete_dir
+          zip -r ../finch-build-linux-v1.${{ github.run_number }}.zip .
+          cd ..
+          cd build_macos
+          rm -rf temp_delete_dir
+          zip -r ../finch-build-macos-v1.${{ github.run_number }}.zip .
+          cd ..
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         env:
