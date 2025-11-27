@@ -36,6 +36,12 @@ jobs:
                   name: finch-build
                   path: ./build
 
+            - name: Zip build directory
+              run: |
+                cd build
+                zip -r ../finch-build.zip .
+                cd ..
+
             - name: Create GitHub Release
               uses: softprops/action-gh-release@v2
               env:
@@ -46,4 +52,4 @@ jobs:
                 body: "Download the latest version of Finch Doc for Linux."
                 draft: false
                 prerelease: false
-                files: ./build/**
+                files: finch-build.zip
