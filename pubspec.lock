@@ -333,10 +333,10 @@ packages:
     dependency: "direct main"
     description:
       name: finch
-      sha256: "4b53b39c199d1a4534024aaf5255f4d9b3b8a5ebaee70ab4b151c20950f165eb"
+      sha256: "58903c429b1391aeeeffc34fca3ee880660301d975122c654d7c2443deaeda2d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   fixnum:
     dependency: transitive
     description:
