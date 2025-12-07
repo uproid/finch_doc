@@ -4,7 +4,9 @@ import 'package:finch/finch_tools.dart';
 
 const repository = 'https://github.com/uproid/finch';
 
-FinchConfigs configs = FinchConfigs(
+const enableApi = true;
+
+final FinchConfigs configs = FinchConfigs(
   widgetsPath: pathTo(env['WIDGETS_PATH'] ?? "./lib/widgets"),
   widgetsType: env['WIDGETS_TYPE'] ?? 'html.twig',
   languagePath: pathTo(env['LANGUAGE_PATH'] ?? "./lib/languages"),

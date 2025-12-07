@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:finch_doc/core/configs.dart';
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch/finch_app.dart';
 import 'package:finch/route.dart';
@@ -46,6 +47,7 @@ class HomeController extends Controller {
 
   Future<String> renderDocument(String key) async {
     var lang = rq.getLanguage();
+    var isApi = enableApi && (rq.isApiEndpoint || rq.endpoint == 'api');
 
     /// Allowed languages only
     var allowedLanguages = Extractor.allLanguages();
@@ -99,6 +101,7 @@ class HomeController extends Controller {
 
     return rq.renderView(
       path: 'template/document',
+      toData: isApi,
     );
   }
 

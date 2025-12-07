@@ -8,14 +8,9 @@ Future<List<FinchRoute>> getFinchRoute(Request rq) async {
   return [
     ...Extractor.routes,
     FinchRoute(
-      path: '/api',
-      children: [
-        FinchRoute(
-          path: '/search',
-          methods: Methods.GET_POST,
-          index: homeController.search,
-        ),
-      ],
+      path: '/api/search',
+      methods: Methods.GET_POST,
+      index: homeController.search,
     ),
     FinchRoute(
       path: '/app/includes.js',

@@ -66,6 +66,8 @@ content/
   └── ...                          # Your custom docs here!
 ```
 
+### EPI
+
 **Pro tip**: Follow the numbering convention (1., 2., 3., etc.) to maintain a logical order in your documentation.
 
 ## 🎨 Features
@@ -75,6 +77,8 @@ content/
 - **Fast & Lightweight**: Powered by Finch's efficient routing and templating
 - **Easy to Customize**: Simple structure makes it easy to theme and extend
 - **Docker Ready**: One command deployment with Docker Compose
+- **RESTful API**: JSON API endpoints for programmatic access to documentation
+- **Multi-language Support**: Built-in language switching with query parameters
 
 ## 🛠️ Technology Stack
 
@@ -124,6 +128,122 @@ Want to dive deeper into Finch? Check out:
 
 - [Official Finch Documentation](https://github.com/uproid/finch_doc)
 - [Finch Framework Repository](https://github.com/uproid/finch)
+
+## 🔌 API Access
+
+This documentation platform provides a RESTful API for programmatic access to all documentation content in JSON format.
+
+### API Endpoints
+
+#### Get Documentation Page (JSON)
+
+Access any documentation page in JSON format by prefixing the URL with `/api/`:
+
+```
+GET /api/{page-key}
+```
+
+**Example:**
+```bash
+curl http://localhost:9902/api/
+curl http://localhost:9902/api/install_finch
+```
+
+**Response Format:**
+```json
+{
+  "content": "<html>...</html>",
+  "title": "Page Title",
+  "index": [...],
+  "filename": "1.install_finch.md",
+  "key": "install_finch",
+  "configs": {...},
+  "meta": {...},
+  "description": "Page description",
+  "finchVersion": "1.0.0",
+  "language": {...},
+  "languages": [...],
+  "menus": [...]
+}
+```
+
+#### Language Support
+
+All API endpoints support multi-language content via the `lang` query parameter:
+
+```
+GET /api/{page-key}?lang={language-code}
+```
+
+**Supported Languages:**
+- `en` - English (default)
+- `fa` - Persian (فارسی)
+- `zh` - Chinese (中文)
+- Any other languages added to the `content` folder
+
+**Examples:**
+```bash
+# Get documentation in English (default)
+curl http://localhost:9902/api/install_finch
+
+# Get documentation in Persian
+curl http://localhost:9902/api/install_finch?lang=fa
+
+# Get documentation in Chinese
+curl http://localhost:9902/api/install_finch?lang=zh
+```
+
+#### Search API
+
+Search through documentation content:
+
+```
+GET /api/search?q={query}
+```
+
+**Example:**
+```bash
+curl http://localhost:9902/api/search?q=routing
+```
+
+**Response Format:**
+```json
+{
+  "count": 3,
+  "data": [
+    {
+      "title": "Routing",
+      "key": "routing",
+      "description": "Learn about routing in Finch",
+      "meta": {...}
+    }
+  ]
+}
+```
+
+### API Configuration
+
+API access is controlled via the `enableApi` constant in `lib/core/configs.dart`:
+
+```dart
+const enableApi = true;  // Set to false to disable API endpoints
+```
+
+When API is enabled:
+- All documentation pages are accessible via `/api/{page-key}`
+- Language switching works with `?lang={code}` parameter
+- Search functionality is available at `/api/search`
+
+### Use Cases
+
+The JSON API enables powerful integrations:
+
+- **Mobile Applications**: Build native mobile apps that consume documentation
+- **IDE Plugins**: Integrate documentation directly into development environments
+- **Static Site Generators**: Fetch and render documentation in other frameworks
+- **Documentation Bots**: Create chatbots that reference documentation
+- **CI/CD Pipelines**: Validate documentation structure and content
+- **Analytics**: Track documentation usage and popular pages
 
 ## 📜 License
 

@@ -223,6 +223,9 @@ class Extractor {
               file.fileFullName,
               '$lang/$key' == 'en/' ? '/' : key,
             ],
+            if (enableApi) ...[
+              'api/$key',
+            ],
           ],
           methods: Methods.GET_ONLY,
           index: () async => homeController.renderDocument(key),
