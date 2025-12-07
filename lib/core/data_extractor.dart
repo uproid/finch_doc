@@ -169,7 +169,6 @@ class Extractor {
         if (yamlMap['configs'] != null && yamlMap['configs'] is Map) {
           Extractor.configs.clear();
           Extractor.configs.addAll(yamlMap['configs']);
-          Console.e(yamlMap['configs']);
         }
       } catch (e) {
         Console.e('Error parsing finch_doc.yaml: $e');
