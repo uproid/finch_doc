@@ -12,6 +12,7 @@ import 'package:archive/archive.dart';
 import 'package:finch_doc/core/configs.dart';
 
 class Extractor {
+  static final configs = {};
   static final routes = <FinchRoute>[];
   static final contents = <String, DataExtractor>{};
 
@@ -43,8 +44,7 @@ class Extractor {
   static Future<bool> _downloadAndExtractDocs() async {
     try {
       // Get repository URL from config
-      String repoUrl =
-          contentConfigs['repository'] ?? 'https://github.com/uproid/finch';
+      String repoUrl = repository;
       // Convert GitHub URL to ZIP download URL
       String zipUrl = '$repoUrl/archive/refs/heads/master.zip';
 
@@ -159,6 +159,23 @@ class Extractor {
         return languages.keys.contains(dirName);
       },
     ).toList();
+
+    File finchDocConfigs =
+        File(dir.path + Platform.pathSeparator + 'finch_doc.yaml');
+    if (finchDocConfigs.existsSync()) {
+      var yamlContent = finchDocConfigs.readAsStringSync();
+      try {
+        var yamlMap = loadYaml(yamlContent) as Map;
+        if (yamlMap['configs'] != null && yamlMap['configs'] is Map) {
+          Extractor.configs.clear();
+          Extractor.configs.addAll(yamlMap['configs']);
+          Console.e(yamlMap['configs']);
+        }
+      } catch (e) {
+        Console.e('Error parsing finch_doc.yaml: $e');
+      }
+    }
+
     langDirs.add(dir);
 
     for (var langDir in langDirs) {

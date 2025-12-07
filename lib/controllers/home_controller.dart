@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:finch_doc/core/configs.dart';
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch/finch_app.dart';
 import 'package:finch/route.dart';
@@ -30,7 +29,7 @@ class HomeController extends Controller {
     rq.addParam('index', []);
     rq.addParam('filename', "content.filename");
     rq.addParam('key', "content.key");
-    rq.addParam('configs', contentConfigs);
+    rq.addParam('configs', Extractor.configs);
     rq.addParam('meta', {});
     rq.addParam('description', "content.description");
     rq.addParam('finchVersion', FinchApp.info.version);
@@ -73,7 +72,7 @@ class HomeController extends Controller {
     rq.addParam('index', content.index);
     rq.addParam('filename', content.filename);
     rq.addParam('key', content.key);
-    rq.addParam('configs', contentConfigs);
+    rq.addParam('configs', Extractor.configs);
     rq.addParam('meta', content.meta);
     rq.addParam('description', content.description);
     rq.addParam('finchVersion', FinchApp.info.version);
