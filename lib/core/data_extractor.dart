@@ -227,7 +227,7 @@ class Extractor {
               'api/$key',
             ],
           ],
-          methods: Methods.GET_ONLY,
+          methods: [Methods.GET, Methods.HEAD],
           index: () async => homeController.renderDocument(key),
         ));
       }
