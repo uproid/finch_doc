@@ -13,8 +13,41 @@ class HomeController extends Controller {
     return rq.renderHtml(html: "Hello world from Home Controller");
   }
 
+  Future<String> error404() async {
+    if (rq.isApiEndpoint) {
+      return rq.renderData(
+        data: {
+          'error': 404,
+          'message': 'error.notfound',
+        },
+        status: 404,
+      );
+    }
+
+    rq.addParam('content',
+        '<h1>404 - Page Not Found</h1><p>The page you are looking for does not exist.</p>');
+    rq.addParam('title', '404 - Page Not Found');
+    rq.addParam('index', []);
+    rq.addParam('filename', "content.filename");
+    rq.addParam('key', "content.key");
+    rq.addParam('configs', Extractor.configs);
+    rq.addParam('meta', {});
+    rq.addParam('description', "content.description");
+    rq.addParam('finchVersion', FinchApp.info.version);
+    var menus = Extractor.contents['en']!.menus;
+    rq.addParam('language', languages[rq.getLanguage()]!.toMap());
+    rq.addParam('languages', Extractor.allLanguages());
+    rq.addParam('menus', menus);
+
+    return rq.renderView(
+      path: 'template/error',
+      status: 404,
+    );
+  }
+
   Future<String> renderDocument(String key) async {
     var lang = rq.getLanguage();
+    var isApi = enableApi && (rq.isApiEndpoint || rq.endpoint == 'api');
 
     /// Allowed languages only
     var allowedLanguages = Extractor.allLanguages();
@@ -39,15 +72,15 @@ class HomeController extends Controller {
     rq.addParam('content', content.html);
     rq.addParam('title', content.title);
     rq.addParam('index', content.index);
-    rq.addParam('menus', menus);
     rq.addParam('filename', content.filename);
     rq.addParam('key', content.key);
-    rq.addParam('configs', contentConfigs);
+    rq.addParam('configs', Extractor.configs);
     rq.addParam('meta', content.meta);
     rq.addParam('description', content.description);
     rq.addParam('finchVersion', FinchApp.info.version);
     rq.addParam('language', langModel.toMap());
     rq.addParam('languages', contentLanguages);
+    rq.addParam('menus', menus);
 
     if (content.next != null) {
       rq.addParam('next', {
@@ -68,6 +101,7 @@ class HomeController extends Controller {
 
     return rq.renderView(
       path: 'template/document',
+      toData: isApi,
     );
   }
 

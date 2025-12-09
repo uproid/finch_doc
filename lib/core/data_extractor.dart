@@ -1,20 +1,137 @@
 import 'dart:io';
 import 'package:finch/console.dart';
-import 'package:finch_doc/controllers/home_controller.dart';
 import 'package:finch/finch_tools.dart';
 import 'package:finch/route.dart';
 import 'package:finch_doc/core/languages.dart';
 import 'package:finch_doc/core/string_extention.dart';
+import 'package:finch_doc/route/web_route.dart';
 import 'package:markdown/markdown.dart';
 import 'package:yaml/yaml.dart';
+import 'package:http/http.dart' as http;
+import 'package:archive/archive.dart';
+import 'package:finch_doc/core/configs.dart';
 
 class Extractor {
+  static final configs = {};
   static final routes = <FinchRoute>[];
   static final contents = <String, DataExtractor>{};
 
   static void init() {
     routes.clear();
     routes.addAll(makeDynamicRoutes());
+  }
+
+  static Future<void> updateContents() async {
+    Directory contentDirs = Directory(pathTo('./content'));
+    Directory backupDir = await contentDirs.backupAndClean(deleteSelf: false);
+
+    /// Download repository
+    var res = await _downloadAndExtractDocs();
+    if (!res) {
+      Console.e('Failed to update contents due to download/extraction error.');
+      // Restore from backup
+      await backupDir.copyDirectory(contentDirs);
+    }
+    backupDir.deleteFull();
+    if (res) {
+      routes.clear();
+      contents.clear();
+      init();
+    }
+  }
+
+  /// Download repository ZIP and extract doc folder to ./content
+  static Future<bool> _downloadAndExtractDocs() async {
+    try {
+      // Get repository URL from config
+      String repoUrl = repository;
+      // Convert GitHub URL to ZIP download URL
+      String zipUrl = '$repoUrl/archive/refs/heads/master.zip';
+
+      // Download ZIP file
+      final response = await http.get(Uri.parse(zipUrl));
+
+      if (response.statusCode != 200) {
+        Console.e('Failed to download repository: ${response.statusCode}');
+        return false;
+      }
+
+      // Decode ZIP archive
+      final archive = ZipDecoder().decodeBytes(response.bodyBytes);
+
+      // Extract doc folder contents to ./content
+      final contentDir = Directory(pathTo('./content'));
+      if (!await contentDir.exists()) {
+        await contentDir.create(recursive: true);
+      }
+
+      int extractedFiles = 0;
+      for (final file in archive) {
+        String? outputPath;
+        String? relativePath;
+        List<int>? fileContent;
+
+        // Look for files in doc/ folder (path will be like: finch-master/doc/...)
+        if (file.name.contains('/doc/') && file.isFile) {
+          // Extract the relative path after /doc/
+          final parts = file.name.split('/doc/');
+          if (parts.length > 1) {
+            relativePath = parts[1];
+            outputPath = pathTo('./content/$relativePath');
+            fileContent = file.content as List<int>;
+          }
+        }
+        // Also extract CHANGELOG.md and CONTRIBUTING.md from root
+        else if (file.isFile &&
+            (file.name.endsWith('/CHANGELOG.md') ||
+                file.name.endsWith('/CONTRIBUTING.md'))) {
+          final fileName = file.name.split('/').last;
+
+          // Determine the numbered filename and content
+          String numberedFileName;
+          String content = "";
+          String icon;
+
+          if (fileName == 'CHANGELOG.md') {
+            numberedFileName = '100.changelog.md';
+            icon = 'ph-bold ph-list-dashes';
+            // Replace content with just "# Changelog"
+            content = '# Changelog';
+          } else {
+            numberedFileName = '101.contributing.md';
+            icon = 'ph-bold ph-users-three';
+            // Keep original content for CONTRIBUTING
+          }
+
+          content += String.fromCharCodes(file.content as List<int>);
+          relativePath = numberedFileName;
+          outputPath = pathTo('./content/$numberedFileName');
+
+          // Add front matter with doc meta for About group
+          String metaContent = '---\n'
+              'doc_meta:\n'
+              '    group: "About"\n'
+              '    icon: "$icon"\n'
+              '---\n$content';
+          fileContent = metaContent.codeUnits;
+        }
+
+        // Write the file if we have content to write
+        if (outputPath != null && fileContent != null && relativePath != null) {
+          final outputFile = File(outputPath);
+          await outputFile.parent.create(recursive: true);
+          await outputFile.writeAsBytes(fileContent);
+          extractedFiles++;
+        }
+      }
+
+      print('Successfully extracted $extractedFiles files from doc folder');
+      return true;
+    } catch (e, stackTrace) {
+      Console.e('Error downloading/extracting repository: $e');
+      Console.e('Stack trace: $stackTrace');
+      return false;
+    }
   }
 
   static List<Map<String, dynamic>> allLanguages({
@@ -42,6 +159,22 @@ class Extractor {
         return languages.keys.contains(dirName);
       },
     ).toList();
+
+    File finchDocConfigs =
+        File(dir.path + Platform.pathSeparator + 'finch_doc.yaml');
+    if (finchDocConfigs.existsSync()) {
+      var yamlContent = finchDocConfigs.readAsStringSync();
+      try {
+        var yamlMap = loadYaml(yamlContent) as Map;
+        if (yamlMap['configs'] != null && yamlMap['configs'] is Map) {
+          Extractor.configs.clear();
+          Extractor.configs.addAll(yamlMap['configs']);
+        }
+      } catch (e) {
+        Console.e('Error parsing finch_doc.yaml: $e');
+      }
+    }
+
     langDirs.add(dir);
 
     for (var langDir in langDirs) {
@@ -81,15 +214,6 @@ class Extractor {
         contents.putIfAbsent(lang, () => DataExtractor());
         contents[lang]!.contents[key] = doc;
 
-        doc.previous = contents[lang]!.contents.length > 1
-            ? contents[lang]!
-                .contents
-                .values
-                .elementAt(contents[lang]!.contents.values.length - 2)
-            : null;
-
-        doc.previous?.next = doc;
-
         res.add(FinchRoute(
           path: '$lang/$key',
           key: '$key',
@@ -99,12 +223,46 @@ class Extractor {
               file.fileFullName,
               '$lang/$key' == 'en/' ? '/' : key,
             ],
+            if (enableApi) ...[
+              'api/$key',
+            ],
           ],
-          methods: Methods.GET_ONLY,
-          index: () async => HomeController().renderDocument(key),
+          methods: [Methods.GET, Methods.HEAD],
+          index: () async => homeController.renderDocument(key),
         ));
       }
+
+      contents[lang]!.contents = sortContents(contents[lang]!);
     }
+
+    return res;
+  }
+
+  static sortContents(DataExtractor extractor) {
+    var sorted = <ContentModel>[];
+    for (var i = 0; i < extractor.contents.length; i++) {
+      var content = extractor.contents.values.elementAt(i);
+
+      if (content.group.isEmpty) {
+        sorted.add(content);
+      } else {
+        var index = sorted.lastIndexWhere((c) => c.group == content.group);
+        if (index == -1) {
+          sorted.add(content);
+        } else {
+          sorted.insert(index + 1, content);
+        }
+      }
+    }
+
+    var res = <String, ContentModel>{};
+    sorted.forEach((content) {
+      content.previous = sorted.indexOf(content) > 0
+          ? sorted[sorted.indexOf(content) - 1]
+          : null;
+      content.previous?.next = content;
+      res[content.key] = content;
+    });
 
     return res;
   }
@@ -201,7 +359,7 @@ class ContentModel {
       if (metaString.startsWith('doc_meta:')) {
         metaString = metaString.replaceFirst('doc_meta:', '');
         try {
-          meta = loadYaml(metaString) as Map;
+          meta.addAll(loadYaml(metaString) as Map);
         } catch (e) {
           Console.e('Error parsing front matter YAML: $e');
         }
@@ -234,19 +392,26 @@ class ContentModel {
     }
 
     // Extract first text after first h tag as description
-    for (var i = 0; i < doc.length; i++) {
-      var node = doc[i];
-      if (tags.contains(node.tag)) {
-        // Look for next text node
-        for (var j = i + 1; j < doc.length; j++) {
-          var nextNode = doc[j];
-          if (nextNode.tag == 'p') {
-            description = nextNode.textContent.trim().removeHtmlTags();
-            return;
+    brakefor:
+    if (meta['description'] == null || meta['description'].toString().isEmpty) {
+      for (var i = 0; i < doc.length; i++) {
+        var node = doc[i];
+        if (tags.contains(node.tag)) {
+          // Look for next text node
+          for (var j = i + 1; j < doc.length; j++) {
+            var nextNode = doc[j];
+            if (nextNode.tag == 'p') {
+              description = nextNode.textContent.trim().removeHtmlTags();
+              meta['description'] = description;
+              break brakefor;
+            }
           }
         }
       }
+    } else {
+      description = meta['description'];
     }
+
     // Optimize description length
     if (description.length > 150) {
       description = description.substring(0, 150) + '...';
@@ -254,7 +419,10 @@ class ContentModel {
   }
 
   String _initContent(String md) {
-    List<Node> doc = Document().parse(md);
+    List<Node> doc = Document(
+      blockSyntaxes: ExtensionSet.gitHubFlavored.blockSyntaxes,
+      inlineSyntaxes: ExtensionSet.gitHubFlavored.inlineSyntaxes,
+    ).parse(md);
     _fix(doc);
 
     return renderToHtml(doc);
@@ -322,6 +490,21 @@ class ContentModel {
             node.attributes['class'] =
                 'border-l-4 border-gray-300 pl-4 italic text-gray-600 mb-4';
             break;
+          case 'img':
+            node.attributes['class'] = 'my-1 flex-inline';
+            break;
+          case 'table':
+            node.attributes['class'] =
+                'w-full mx-auto !rounded-none !border-none block py-5 overflow-x-auto';
+            break;
+          case 'th':
+            node.attributes['class'] =
+                'border text-sm border-gray-50 dark:border-gray-800 px-4 pt-2 pb-3 bg-gray-200 dark:bg-gray-700 text-start';
+            break;
+          case 'td':
+            node.attributes['class'] =
+                'border text-sm border-gray-50 dark:border-gray-800 px-4 py-2 text-start';
+            break;
         }
 
         if (node.children != null && node.children!.isNotEmpty) {
@@ -344,5 +527,25 @@ class ContentModel {
     }
 
     return link;
+  }
+}
+
+extension DirExtention on Directory {
+  Future<Directory> backupAndClean({bool deleteSelf = true}) async {
+    var trash = Directory(pathTo('./temp_delete_dir'));
+    var backup = Directory(
+        pathTo('./temp_delete_dir/${DateTime.now().millisecondsSinceEpoch}'));
+    if (!await trash.exists()) {
+      await trash.create(recursive: true);
+    }
+    await backup.create(recursive: true);
+    await this.copyDirectory(backup);
+    await cleanDirectory();
+    return backup;
+  }
+
+  Future<void> deleteFull() async {
+    await cleanDirectory();
+    deleteSync(recursive: true);
   }
 }

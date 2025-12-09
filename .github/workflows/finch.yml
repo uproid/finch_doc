@@ -1,0 +1,102 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Build Finch Doc for Linux
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  finch_build_linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+      - name: Install dependencies
+        run: dart pub get
+      - name: Install Finch CLI
+        run: |
+          dart pub global activate finch
+          export PATH="$PATH:$HOME/.pub-cache/bin"
+      - name: Build finch project for Linux
+        run: |
+          finch build -a ./lib/app.dart -t exe -o ./build_linux
+          cp -r ./content ./build_linux/
+      - name: Test Finch_doc app in background
+        run: cd ./build_linux/lib/ && ./app.exe & sleep 15 && kill %1 && cd ../../
+      - name: Upload Finch build artifacts 
+        uses: actions/upload-artifact@v4
+        with:
+          name: finch-build-linux
+          path: ./build_linux
+  finch_build_macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+      - name: Install dependencies
+        run: dart pub get
+      - name: Install Finch CLI
+        run: |
+          dart pub global activate finch
+          export PATH="$PATH:$HOME/.pub-cache/bin"
+      - name: Build finch project
+        run: |
+          finch build -a ./lib/app.dart -t exe -o ./build_macos
+          cp -r ./content ./build_macos/
+      - name: Test Finch_doc app in background
+        run: cd ./build_macos/lib/ && ./app.exe & sleep 15 && kill %1 && cd ../../
+      - name: Upload Finch build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: finch-build-macos
+          path: ./build_macos
+
+  relase:
+    runs-on: ubuntu-latest
+    needs: 
+      - finch_build_linux
+      - finch_build_macos
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Linux build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: finch-build-linux
+          path: ./build_linux
+      - name: Download macOS build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: finch-build-macos
+          path: ./build_macos
+
+      - name: Zip build directory
+        run: |
+          cd build_linux
+          rm -rf temp_delete_dir
+          zip -r ../finch-build-linux-v1.${{ github.run_number }}.zip .
+          cd ..
+          cd build_macos
+          rm -rf temp_delete_dir
+          zip -r ../finch-build-macos-v1.${{ github.run_number }}.zip .
+          cd ..
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          tag_name: finch-doc-macos-v1.${{ github.run_number }}
+          name: "Finch Doc v1.${{ github.run_number }}"
+          body: "Download the latest version of Finch."
+          draft: false
+          prerelease: false
+          files: finch-build-macos-v1.${{ github.run_number }}.zip,finch-build-linux-v1.${{ github.run_number }}.zip
+
+
+
+    

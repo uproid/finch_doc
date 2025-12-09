@@ -1,49 +1,121 @@
 <!-- Hero Section -->
-<div class="mb-12 pt-12 p-5 relative overflow-hidden border border-gray-200 dark:border-gray-700 rounded-lg">
+<div class="mb-12 pt-12 p-5 md:p-8 relative overflow-hidden bg-linear-to-br from-blue-50 via-white to-purple-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border-2 border-blue-200 dark:border-gray-700 rounded-2xl shadow-xl">
     <!-- Animated Network Background -->
-    <canvas id="networkCanvas" class="absolute inset-0 w-full h-full"></canvas>
+    <canvas id="networkCanvas" class="absolute inset-0 w-full h-full opacity-50"></canvas>
     <div class="relative z-10">
         <!-- Logo and Title -->
-        <div class="flex items-center justify-center gap-6 pt-10 pb-15">
-            <img src="/logo.svg" alt="Finch Framework" class="h-32 w-32" />
-            <div>
-                <h1 class="text-5xl font-bold text-gray-900 dark:text-white">{{ $t('Finch') }}</h1>
-                <span class="text-lg text-gray-600 dark:text-gray-300">v{{ finchVersion }}</span>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-6 pt-10 pb-8">
+            <img src="/logo.svg" alt="Finch Framework" class="h-32 w-32 drop-shadow-lg" />
+            <div class="text-center md:text-left">
+                <h1 class="text-5xl md:text-5xl py-2 my-1 font-bold bg-linear-to-r from-blue-600 to-purple-600 dark:from-secondary-400 dark:to-purple-400 bg-clip-text text-transparent">{{ $t('Finch') }}</h1>
+                <div class="flex items-center justify-center md:justify-start gap-2 mt-3">
+                    <span class="px-3 py-1 rounded-full bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-secondary-400 text-sm font-semibold">v{{ finchVersion }}</span>
+                </div>
             </div>
         </div>
         
+        <!-- Feature Pills -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8">
+            <span class="px-4 py-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                <i class="ph-bold ph-lightning text-yellow-500"></i>
+                {{ $t('Fast & Efficient') }}
+            </span>
+            <span class="px-4 py-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                <i class="ph-bold ph-shield-check text-green-500"></i>
+                {{ $t('Type-Safe') }}
+            </span>
+            <span class="px-4 py-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                <i class="ph-bold ph-puzzle-piece text-blue-500"></i>
+                {{ $t('Modular') }}
+            </span>
+            <span class="px-4 py-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                <i class="ph-bold ph-rocket-launch text-purple-500"></i>
+                {{ $t('Production Ready') }}
+            </span>
+        </div>
+        
         <!-- Hero Actions -->
-        <div class="flex flex-col gap-2 w-full max-w-sm mx-auto">
+        <div class="flex flex-col gap-4 w-full max-w-2xl mx-auto">
             <!-- Announcement Badge - First Row -->
             <div class="w-full">
-                <a href="{{ configs.pubDev }}" rel="noopener noreferrer" target="_blank" class="flex p-2 group items-center justify-center rounded-full border border-blue-900 dark:border-secondary-400 bg-blue-900 dark:bg-secondary-400 text-sm font-medium text-white dark:text-black transition-all hover:border-blue-800 dark:hover:border-blue-300 hover:bg-blue-800 dark:hover:bg-secondary-500">
-                    <i class="ph-bold ph-confetti text-2xl me-2 animate-bounce text-white dark:text-black"></i>
-                    <div class="w-px h-4 mx-3"></div>
-                    <span class="text-xs sm:text-sm text-center">v{{ finchVersion }} - {{ $t('Now Available on pub.dev') }}</span>
-                    <i class="ph-bold ph-caret-{{ language.isRtl ? 'left' : 'right' }} ms-2 text-lg transition-transform group-hover:translate-x-1"></i>
+                <a href="{{ configs.pubDev }}" rel="noopener noreferrer" target="_blank" class="flex p-3 group items-center justify-center rounded-xl bg-linear-to-r from-blue-600 to-purple-600 dark:from-secondary-400 dark:to-purple-400 text-sm font-medium text-white dark:text-black transition-all hover:shadow-2xl hover:scale-105 transform">
+                    <i class="ph-bold ph-confetti text-2xl me-3 animate-bounce"></i>
+                    <span class="text-sm sm:text-base text-center font-semibold">v{{ finchVersion }} - {{ $t('Now Available on pub.dev') }}</span>
+                    <i class="ph-bold ph-caret-{{ language.isRtl ? 'left' : 'right' }} ms-3 text-lg transition-transform group-hover:translate-x-1"></i>
                 </a>
             </div>
             
-            <!-- Action Buttons - Second Row with Two Columns -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
+            <!-- Quick Start Command -->
+            <div  dir="ltr" class="p-4 bg-gray-900 dark:bg-gray-950 rounded-xl border border-gray-700">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider">{{ $t('Quick Start') }}</span>
+                    <button onclick="copyToClipboard('dart pub add finch')" class="px-2 py-1 rounded text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors">
+                        <i class="ph-bold ph-copy"></i> {{ $t('Copy') }}
+                    </button>
+                </div>
+                <code class="text-green-400 font-mono text-sm">$ dart pub add finch</code>
+            </div>
+            
+            <!-- Action Buttons Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
                 <a class="flex w-full" href="{{ configs.repository }}" target="_blank" rel="noopener noreferrer">
-                    <button class="cursor-pointer flex w-full h-11 px-6 group items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium transition-all hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-750 hover:shadow-lg">
-                        <i class="ph-bold ph-github-logo text-2xl me-2.5"></i>
-                        <span class="text-xs">{{ $t('View on GitHub') }}</span>
+                    <button class="cursor-pointer flex w-full h-12 px-6 group items-center justify-center rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-semibold transition-all hover:border-blue-500 dark:hover:border-secondary-400 hover:bg-blue-50 dark:hover:bg-gray-750 hover:shadow-lg transform hover:-translate-y-0.5">
+                        <i class="ph-bold ph-github-logo text-2xl me-2 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-sm">{{ $t('GitHub') }}</span>
                     </button>
                 </a>
                 <a class="flex w-full" href="{{ configs.demo }}" rel="noopener noreferrer" target="_blank">
-                    <button class="cursor-pointer flex w-full h-11 px-6 group items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium transition-all hover:border-gray-400 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-750 hover:shadow-lg">
-                        <i class="ph-bold ph-arrow-square-out text-xl me-2.5"></i>
-                        <span class="text-xs">{{ $t('Live Demo') }}</span>
+                    <button class="cursor-pointer flex w-full h-12 px-6 group items-center justify-center rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-semibold transition-all hover:border-purple-500 dark:hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-gray-750 hover:shadow-lg transform hover:-translate-y-0.5">
+                        <i class="ph-bold ph-play-circle text-2xl me-2 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-sm">{{ $t('Demo') }}</span>
+                    </button>
+                </a>
+                <a class="flex w-full" href="/#breadcrumb">
+                    <button class="cursor-pointer flex w-full h-12 px-6 group items-center justify-center rounded-xl border-2 border-blue-500 dark:border-secondary-400 bg-blue-500 dark:bg-secondary-400 text-white dark:text-black font-semibold transition-all hover:bg-blue-600 dark:hover:bg-secondary-500 hover:shadow-lg transform hover:-translate-y-0.5">
+                        <i class="ph-bold ph-book-open text-2xl me-2 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-sm">{{ $t('Get Started') }}</span>
                     </button>
                 </a>
             </div>
         </div>
+        
+        <!-- Stats Section -->
+        {# <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <div class="text-center">
+                <div class="text-3xl font-bold text-blue-600 dark:text-secondary-400 mb-1">10K+</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">{{ $t('Downloads') }}</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-1">50+</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">{{ $t('Contributors') }}</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">100%</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">{{ $t('Free & Open') }}</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">24/7</div>
+                <div class="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">{{ $t('Community') }}</div>
+            </div>
+        </div> #}
     </div>
 </div>
 
 <script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Show success feedback
+        const btn = event.target.closest('button');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="ph-bold ph-check"></i> {{ $t("Copied!") }}';
+        btn.classList.add('bg-green-600');
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.classList.remove('bg-green-600');
+        }, 2000);
+    });
+}
+
 (function() {
     const canvas = document.getElementById('networkCanvas');
     if (!canvas) return;
@@ -54,7 +126,7 @@
     
     // Configuration
     const config = {
-        particleCount: 80,
+        particleCount: 120,
         particleSpeed: 0.2,
         connectionDistance: 90,
         particleSize: 3,
@@ -86,7 +158,7 @@
         draw() {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = isDarkMode() ? 'rgba(96, 165, 250, 0.1)' : 'rgba(59, 130, 246, 0.1)';
+            ctx.fillStyle = isDarkMode() ? 'rgba(96, 165, 250, 0.2)' : 'rgba(59, 130, 246, 0.2)';
             ctx.fill();
         }
     }
