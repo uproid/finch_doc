@@ -1,7 +1,7 @@
 import 'package:finch/finch_route.dart';
 
 var localEvents = <String, Object>{
-  'now': DateTime.now(),
+  'now': () => DateTime.now(),
   'maxLength': (String? text, int maxLength) {
     text ??= '';
     if (text.length <= maxLength) {
