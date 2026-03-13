@@ -1,6 +1,9 @@
 import 'package:finch/console.dart';
 import 'package:finch/finch_app.dart';
 import 'package:finch/finch_tools.dart';
+import 'package:finch/model.dart';
+import 'package:finch_doc/languages/language_dart.g.dart';
+import 'package:finch_doc/widgets/widget_dart.g.dart';
 
 const repository = 'https://github.com/uproid/finch';
 
@@ -14,4 +17,7 @@ final FinchConfigs configs = FinchConfigs(
   dbConfig: FinchDBConfig(enable: false),
   port: 9902,
   enableLocalDebugger: Console.isDebug,
+  languageSource: LanguageSource.dart,
+  dartLanguages: languageDart,
+  jinjaMapTemplate: mapTemplates,
 );

@@ -23,9 +23,9 @@ dependencies:
 
 finch:
   # Main path of the application
-  app: ./lib/app.dart
+  app: ./bin/app.dart
   # Path of serve file while developing
-  serve: ./lib/serve.dart
+  serve: ./bin/serve.dart
   # Path of languages files
   languages_path: ./lib/languages
   # Type of languages files

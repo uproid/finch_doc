@@ -6,7 +6,7 @@ import 'package:finch_doc/core/local_events.dart';
 import 'package:finch/app.dart';
 import 'package:finch/finch_console.dart';
 import 'package:finch/route.dart';
-import 'route/web_route.dart';
+import 'package:finch_doc/route/web_route.dart';
 
 FinchApp app = FinchApp(configs: configs);
 

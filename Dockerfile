@@ -12,8 +12,9 @@ COPY . .
 
 RUN dart pub get 
 RUN dart pub get --offline 
-RUN chmod -R a+rxw ./lib
-RUN dart compile exe /www/lib/app.dart -o /www/lib/app.exe
+RUN dart build cli -t ./bin/app.dart -o ./build
+RUN cp -r ./build/bundle/bin/ ./
+#RUN chmod -R a+rxw ./bin
 
 EXPOSE 9902 9901
-CMD ["/www/lib/app.exe"]
+CMD ["/www/bin/app"]
