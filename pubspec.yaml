@@ -13,11 +13,34 @@ dev_dependencies:
   json_serializable:
 
 dependencies:
-  finch: 1.0.4
+  finch: 1.1.0
     # path: ../dart/dweb
   markdown: ^7.3.0
   watcher: 1.2.0
   yaml: ^3.1.3
   http: ^1.6.0
   archive: ^4.0.7
+
+finch:
+  # Main path of the application
+  app: ./lib/app.dart
+  # Path of serve file while developing
+  serve: ./lib/serve.dart
+  # Path of languages files
+  languages_path: ./lib/languages
+  # Type of languages files
+  languages_type: json
+  # Path of templates (widgets) files
+  widgets_path: ./lib/widgets
+  # Type of templates (widgets) files
+  widgets_type: j2.twig
+  # Path of migrations files for different databases
+  mysql_migrate:
+    path: ./lib/mysql/migrations
+  # Path of migrations files for different databases
+  sqlite_migrate:
+    path: ./lib/sqlite/
+  build_output: ./finch_build
+  public_path: ./public
+  
   

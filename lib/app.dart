@@ -10,11 +10,11 @@ import 'route/web_route.dart';
 
 FinchApp app = FinchApp(configs: configs);
 
-void main() async {
+void main(List<String>? args) async {
   Extractor.init();
   Request.localEvents.addAll(localEvents);
   app.addRouting(getFinchRoute);
-  app.start().then((value) {
+  app.start(args).then((value) {
     Console.p("App is running at: http://localhost:${value.port}");
   });
 
