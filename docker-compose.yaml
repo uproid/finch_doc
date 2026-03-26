@@ -3,7 +3,7 @@ services:
   finchdoc:
     hostname: finchdoc
     container_name: finchdoc
-    image: dart:stable
+    image: uproid/finch:latest
     restart: always
     ports:
       - "9902:9902"

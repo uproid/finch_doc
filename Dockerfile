@@ -1,4 +1,4 @@
-FROM dart:stable AS build
+FROM uproid/finch:latest AS build
 WORKDIR /www
 
 
