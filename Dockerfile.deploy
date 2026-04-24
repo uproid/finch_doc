@@ -1,0 +1,42 @@
+FROM uproid/finch:latest AS build
+WORKDIR /www
+
+
+ENV WIDGETS_TYPE='html.twig'
+ENV LANGUAGE_TYPE='./lib/languages'
+ENV WIDGETS_PATH='./lib/widgets'
+ENV PUBLIC_DIR='./public'
+
+
+COPY . .
+
+RUN dart pub get 
+RUN dart pub get --offline 
+RUN dart build cli -t ./bin/app.dart -o ./build
+#RUN cp -r ./build/bundle/bin/ ./
+#RUN chmod -R a+rxw ./bin
+
+
+FROM nginx:latest AS nginx
+
+WORKDIR /www
+
+ENV NGINX_HOST=localhost
+
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./public/ /var/www/html/public 
+COPY --from=build /www/build/bundle/bin/ ./bin/
+
+# Replice finchdoc with localhost in nginx.conf
+RUN sed -i "s/finchdoc/${NGINX_HOST}/g" /etc/nginx/nginx.conf
+
+RUN mkdir -p /www/content
+
+# START SCRIPT
+RUN echo '#!/bin/sh\n chmod -R a+rxw /var/www/html/public/ &\n /www/bin/app &\nnginx -g "daemon off;"\n' > /start.sh && chmod +x /start.sh
+
+EXPOSE 9900
+CMD ["/start.sh"]
+
+
+
