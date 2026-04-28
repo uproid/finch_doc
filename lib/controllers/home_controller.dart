@@ -63,7 +63,7 @@ class HomeController extends Controller {
     var content = Extractor.contents[lang]!.contents[key];
 
     if (content == null) {
-      content = Extractor.contents[lang]!.contents['readme']!;
+      content = Extractor.contents[lang]!.contents.entries.first.value;
     }
 
     var menus = Extractor.contents[lang]!.menus;
