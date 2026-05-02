@@ -1,8 +1,10 @@
+import 'package:finch_doc/controllers/mcp_doc_controller.dart';
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch/route.dart';
 import '../controllers/home_controller.dart';
 
 final homeController = HomeController();
+final mcpDocController = McpDocController();
 
 Future<List<FinchRoute>> getFinchRoute(Request rq) async {
   return [
@@ -26,6 +28,11 @@ Future<List<FinchRoute>> getFinchRoute(Request rq) async {
       path: '/sitemap.xml',
       methods: Methods.ALL,
       index: homeController.sitemap,
+    ),
+    FinchRoute(
+      path: '/mcp',
+      methods: Methods.ALL,
+      index: mcpDocController.index,
     ),
   ];
 }

@@ -337,6 +337,7 @@ class ContentModel {
   Map meta = {};
   String title = '';
   String html = '';
+  String md = '';
   String description = '';
   List<Map<String, dynamic>> index = [];
   String get group => meta['group'] ?? '';
@@ -368,7 +369,7 @@ class ContentModel {
 
     /// Remove Hidden content from markdown
     md = md.replaceAll(frontMatterRegExp, '');
-
+    this.md = md;
     this.html = _initContent(md);
     _initIndex(md);
   }

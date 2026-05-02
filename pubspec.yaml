@@ -25,7 +25,7 @@ finch:
   # Main path of the application
   app: ./bin/app.dart
   # Path of serve file while developing
-  serve: ./bin/serve.dart
+  serve: ./bin/watcher.dart
   # Path of languages files
   languages_path: ./lib/languages
   # Type of languages files

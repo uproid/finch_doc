@@ -1,0 +1,8 @@
+{
+    "servers": {
+        "mcp-finch-doc": {
+            "url": "http://localhost:9902/mcp",
+            "type": "http"
+        }
+    }
+}
