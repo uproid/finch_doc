@@ -27,9 +27,25 @@ class McpDocController extends McpController {
   McpMethodAction get methodActions => {
         'tools/call': handleToolCall,
         'prompts/list': promptList,
+        'resources/list': resourcesList,
         // 'tools/list': (payload) async => toolsResult,
         // 'initialize': this.index(),
       };
+
+  Future<McpModel> resourcesList(McpModel payload) async {
+    var enContent = Extractor.contents['en'];
+    List<McpResource> resources = [];
+    enContent?.contents.forEach((key, doc) {
+      McpResource resource = McpResource(
+        name: key,
+        title: doc.title,
+        description: doc.description,
+        uri: rq.url(key),
+      );
+      resources.add(resource);
+    });
+    return McpListResourcesResult(resources: resources);
+  }
 
   @override
   McpCallAction get callAction {
