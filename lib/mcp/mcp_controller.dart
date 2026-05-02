@@ -24,7 +24,7 @@ abstract class McpController extends Controller {
       params: requestData['params'] as Map<String, dynamic>?,
       jsonrpc: requestData['jsonrpc'] as String? ?? '2.0',
     );
-
+    Print.info(request.method);
     try {
       if (request.method == 'initialize') {
         final result = McpInitializeResult(

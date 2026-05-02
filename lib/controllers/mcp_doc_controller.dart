@@ -26,6 +26,7 @@ class McpDocController extends McpController {
   @override
   McpMethodAction get methodActions => {
         'tools/call': handleToolCall,
+        'prompts/list': promptList,
         // 'tools/list': (payload) async => toolsResult,
         // 'initialize': this.index(),
       };
@@ -43,5 +44,20 @@ class McpDocController extends McpController {
     });
 
     return res;
+  }
+
+  Future<McpModel> promptList(McpModel payload) async {
+    var enContent = Extractor.contents['en'];
+    List<McpPrompt> prompts = [];
+    enContent?.contents.forEach((key, doc) {
+      McpPrompt prompt = McpPrompt(
+        name: key,
+        title: doc.title,
+        description: doc.description,
+      );
+      prompts.add(prompt);
+    });
+
+    return McpListPromptsResult(prompts: prompts);
   }
 }
