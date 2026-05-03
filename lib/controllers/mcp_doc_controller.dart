@@ -13,7 +13,6 @@ class McpDocController extends McpController {
         name: key.isEmpty ? 'readme' : key,
         title: doc.title,
         description: doc.description,
-        inputSchema: McpInputSchema(),
       );
       tools.add(tool);
     });

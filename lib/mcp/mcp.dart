@@ -2729,7 +2729,7 @@ class McpTool extends McpModel {
     required String name,
     String? title,
     String? description,
-    required McpInputSchema inputSchema,
+    McpInputSchema? inputSchema,
     McpToolExecution? execution,
     McpOutputSchema? outputSchema,
     McpToolAnnotations? annotations,
