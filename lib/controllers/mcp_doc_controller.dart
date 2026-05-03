@@ -10,7 +10,7 @@ class McpDocController extends McpController {
     var enContent = Extractor.contents['en'];
     enContent?.contents.forEach((key, doc) {
       McpTool tool = McpTool(
-        name: key,
+        name: key.isEmpty ? 'readme' : key,
         title: doc.title,
         description: doc.description,
         inputSchema: McpInputSchema(),
@@ -65,7 +65,7 @@ class McpDocController extends McpController {
     List<McpPrompt> prompts = [];
     enContent?.contents.forEach((key, doc) {
       McpPrompt prompt = McpPrompt(
-        name: key,
+        name: key.isEmpty ? 'readme' : key,
         title: doc.title,
         description: doc.description,
       );
@@ -84,7 +84,7 @@ class McpDocController extends McpController {
       id: id,
       method: method,
       params: McpCallToolRequestParams(
-        name: paramsMap?['name'] as String? ?? '',
+        name: paramsMap?['name'] as String? ?? 'readme',
         arguments: paramsMap?['arguments'] as Map<String, dynamic>?,
       ),
     );
