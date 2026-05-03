@@ -36,6 +36,7 @@ class McpDocController extends McpController {
         'tools/call': handleToolCall,
         'prompts/list': promptList,
         'resources/list': resourcesList,
+        'resources/read': handleToolCall,
       };
 
   Future<McpModel> resourcesList(McpModel payload) async {
