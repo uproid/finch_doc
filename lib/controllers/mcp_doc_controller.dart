@@ -36,7 +36,7 @@ class McpDocController extends McpController {
         'tools/call': handleToolCall,
         'prompts/list': promptList,
         'resources/list': resourcesList,
-        'resources/read': handleToolCall,
+        'resources/read': handleResourceRead,
       };
 
   Future<McpModel> resourcesList(McpModel payload) async {
@@ -105,6 +105,37 @@ class McpDocController extends McpController {
       return McpJSONRPCErrorResponse(
         error: McpError(
             code: -32601, message: 'Tool not found: ${request.params.name}'),
+      );
+    }
+  }
+
+  Future<McpModel> handleResourceRead(McpModel payload) async {
+    final method = payload.get<String>('method', def: 'resources/read');
+    final id = payload.get<dynamic>('id', def: '-1');
+    final paramsMap = payload.get<Map<String, dynamic>?>('params', def: null);
+
+    final request = McpReadResourceRequest(
+      id: id,
+      method: method,
+      params: McpReadResourceRequestParams(
+        uri: paramsMap?['uri'] as String? ?? (rq.url('readme')),
+      ),
+    );
+
+    var uri = Uri.parse(request.params.uri);
+    var key = uri.path;
+    if (Extractor.contents['en']!.contents.containsKey(key)) {
+      var doc = Extractor.contents['en']!.contents[key]!;
+      return McpReadResourceResult(
+        contents: [
+          McpTextContent(text: doc.md).toMap(),
+        ],
+        meta: doc.meta.cast<String, dynamic>(),
+      );
+    } else {
+      return McpJSONRPCErrorResponse(
+        error: McpError(
+            code: -32601, message: 'Resource not found: ${request.params.uri}'),
       );
     }
   }
