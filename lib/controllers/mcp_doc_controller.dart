@@ -59,6 +59,7 @@ class McpDocController extends McpController {
     var enContent = Extractor.contents['en'];
     McpCallAction res = {};
     enContent?.contents.forEach((key, doc) {
+      key = key.isEmpty ? 'readme' : key;
       res[key] = (req) async {
         return McpCallToolResult(content: [
           McpTextContent(text: doc.md),
