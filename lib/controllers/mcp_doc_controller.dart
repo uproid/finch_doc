@@ -28,8 +28,6 @@ class McpDocController extends McpController {
         'tools/call': handleToolCall,
         'prompts/list': promptList,
         'resources/list': resourcesList,
-        // 'tools/list': (payload) async => toolsResult,
-        // 'initialize': this.index(),
       };
 
   Future<McpModel> resourcesList(McpModel payload) async {
@@ -75,5 +73,29 @@ class McpDocController extends McpController {
     });
 
     return McpListPromptsResult(prompts: prompts);
+  }
+
+  Future<McpModel> handleToolCall(McpModel payload) async {
+    final method = payload.get<String>('method', def: 'tools/call');
+    final id = payload.get<dynamic>('id', def: null);
+    final paramsMap = payload.get<Map<String, dynamic>?>('params', def: null);
+
+    final request = McpCallToolRequest(
+      id: id,
+      method: method,
+      params: McpCallToolRequestParams(
+        name: paramsMap?['name'] as String? ?? '',
+        arguments: paramsMap?['arguments'] as Map<String, dynamic>?,
+      ),
+    );
+
+    if (callAction.containsKey(request.params.name)) {
+      return await callAction[request.params.name]!(request);
+    } else {
+      return McpJSONRPCErrorResponse(
+        error: McpError(
+            code: -32601, message: 'Tool not found: ${request.params.name}'),
+      );
+    }
   }
 }
