@@ -127,7 +127,14 @@ class McpDocController extends McpController {
       var doc = Extractor.contents['en']!.contents[key]!;
       return McpReadResourceResult(
         contents: [
-          McpTextContent(text: doc.md).toMap(),
+          McpTextResourceContents(
+            text: doc.md,
+            uri: rq.url(key),
+            mimeType: 'text/markdown',
+            meta: {
+              ...doc.meta.cast<String, dynamic>(),
+            },
+          ).toMap(),
         ],
         meta: {
           ...doc.meta.cast<String, dynamic>(),
