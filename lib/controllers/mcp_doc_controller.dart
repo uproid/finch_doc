@@ -37,6 +37,7 @@ class McpDocController extends McpController {
         'prompts/list': promptList,
         'resources/list': resourcesList,
         'resources/read': handleResourceRead,
+        'prompts/get': handlePromptGet,
       };
 
   Future<McpModel> resourcesList(McpModel payload) async {
@@ -146,6 +147,46 @@ class McpDocController extends McpController {
       return McpJSONRPCErrorResponse(
         error: McpError(
             code: -32601, message: 'Resource not found: ${request.params.uri}'),
+      );
+    }
+  }
+
+  //////////
+  Future<McpModel> handlePromptGet(McpModel payload) async {
+    final method = payload.get<String>('method', def: 'prompts/get');
+    final id = payload.get<dynamic>('id', def: '-1');
+    final paramsMap = payload.get<Map<String, dynamic>?>('params', def: null);
+
+    final request = McpGetPromptRequest(
+      id: id,
+      method: method,
+      params: McpGetPromptRequestParams(
+        name: paramsMap?['name'] as String? ?? 'readme',
+      ),
+    );
+
+    var key = request.params.name;
+    if (Extractor.contents['en']!.contents.containsKey(key)) {
+      var doc = Extractor.contents['en']!.contents[key]!;
+      return McpGetPromptResult(
+        description: doc.description,
+        messages: [
+          McpPromptMessage(
+            role: 'assistant',
+            content: [
+              McpTextContent(text: doc.md).toMap(),
+            ],
+          )
+        ],
+        meta: {
+          ...doc.meta.cast<String, dynamic>(),
+          'name': request.params.name,
+          'url': rq.url(key),
+        },
+      );
+    } else {
+      return McpJSONRPCErrorResponse(
+        error: McpError(code: -32601, message: 'Prompt not found: ${key}'),
       );
     }
   }
