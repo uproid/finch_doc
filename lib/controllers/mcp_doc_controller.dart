@@ -13,6 +13,16 @@ class McpDocController extends McpController {
         name: key.isEmpty ? 'readme' : key,
         title: doc.title,
         description: doc.description,
+        inputSchema: McpInputSchema(
+          type: 'object',
+          properties: {
+            'lang': McpProperty(
+              type: 'string',
+              description: 'Language code (en, fa, nl, zh)',
+            ),
+          },
+          required: [],
+        ),
       );
       tools.add(tool);
     });
