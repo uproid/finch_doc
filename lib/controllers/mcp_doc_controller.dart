@@ -122,8 +122,7 @@ class McpDocController extends McpController {
       ),
     );
 
-    var uri = Uri.parse(request.params.uri);
-    var key = uri.path;
+    var key = request.params.uri.split('/').last;
     if (Extractor.contents['en']!.contents.containsKey(key)) {
       var doc = Extractor.contents['en']!.contents[key]!;
       return McpReadResourceResult(
