@@ -51,9 +51,9 @@ abstract class McpController extends Controller {
         );
         return SSE(data: jsonEncode(response.toMap()));
       } else {
-        handleMcpMethod(method, request);
+        var result = await handleMcpMethod(method, request);
+        return SSE(data: jsonEncode(result.toMap()));
       }
-      return SSE(data: jsonEncode({}));
     }));
     return rq.renderSSE(stream);
   }
