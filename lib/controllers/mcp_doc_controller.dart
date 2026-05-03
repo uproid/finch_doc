@@ -35,7 +35,7 @@ class McpDocController extends McpController {
     List<McpResource> resources = [];
     enContent?.contents.forEach((key, doc) {
       McpResource resource = McpResource(
-        name: key,
+        name: key.isEmpty ? 'readme' : key,
         title: doc.title,
         description: doc.description,
         uri: rq.url(key),

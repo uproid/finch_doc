@@ -2697,7 +2697,7 @@ class McpToolExecution extends McpModel {
 /// Definition for a tool the client can call.
 class McpTool extends McpModel {
   List<McpIcon>? get icons => get<List<McpIcon>?>('icons', def: null);
-  String get name => get('name');
+  String get name => get('name', def: '');
   String? get title => get('title', def: null);
   String? get description => get('description', def: null);
 
