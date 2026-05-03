@@ -130,7 +130,11 @@ class McpDocController extends McpController {
         contents: [
           McpTextContent(text: doc.md).toMap(),
         ],
-        meta: doc.meta.cast<String, dynamic>(),
+        meta: {
+          ...doc.meta.cast<String, dynamic>(),
+          'uri': request.params.uri,
+          'url': rq.url(key),
+        },
       );
     } else {
       return McpJSONRPCErrorResponse(
