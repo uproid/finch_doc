@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:finch/console.dart';
 import 'package:finch/finch_route.dart';
 import 'package:finch/finch_tools.dart';
 import 'package:finch_doc/mcp/mcp.dart';
@@ -15,114 +15,78 @@ abstract class McpController extends Controller {
   McpListToolsResult get toolsResult;
   McpMethodAction get methodActions;
   McpCallAction get callAction;
-  late StreamController<SSE> _controller;
 
   @override
   Future<String> index() async {
-    _controller = StreamController<SSE>();
-
-    _handleInitialRequest();
-
-    return rq.renderSSE(_controller.stream);
-  }
-
-  void _handleInitialRequest() {
-    Future.microtask(() async {
-      try {
-        final requestData = rq.getAll().removeAll(['POST', 'GET', 'FILE']);
-        var method = requestData['method'] as String? ?? '';
-        final request = McpJSONRPCRequest(
-          method: method,
-          id: requestData['id'],
-          params: requestData['params'] as Map<String, dynamic>?,
-          jsonrpc: requestData['jsonrpc'] as String? ?? '2.0',
+    final requestData = rq.getAll().removeAll(['POST', 'GET', 'FILE']);
+    Stream<SSE> stream = Stream.fromFuture(Future(() async {
+      var method = requestData['method'] as String? ?? '';
+      final request = McpJSONRPCRequest(
+        method: method,
+        id: requestData['id'],
+        params: requestData['params'] as Map<String, dynamic>?,
+        jsonrpc: requestData['jsonrpc'] as String? ?? '2.0',
+      );
+      if (request.method == 'initialize') {
+        final result = McpInitializeResult(
+          protocolVersion: '2024-11-05',
+          capabilities: McpServerCapabilities(
+            tools: toolsResult.toMap(),
+          ),
+          serverInfo: McpImplementation(
+            name: 'finch-doc-mcp-server',
+            version: '1.0.0',
+          ),
         );
 
-        final response = await _handleRequest(request);
-        if (!_controller.isClosed) {
-          _controller.add(SSE(data: jsonEncode(response.toMap())));
-        }
-
-        _listenForRequests();
-      } catch (e) {
-        if (!_controller.isClosed) {
-          _controller.addError(e);
-          _controller.close();
-        }
-      }
-    });
-  }
-
-  Future<void> _listenForRequests() async {
-    try {
-      while (!_controller.isClosed) {
-        final requestData = await _readNextRequest();
-        if (requestData != null) {
-          var method = requestData['method'] as String? ?? '';
-          final request = McpJSONRPCRequest(
-            method: method,
-            id: requestData['id'],
-            params: requestData['params'] as Map<String, dynamic>?,
-            jsonrpc: requestData['jsonrpc'] as String? ?? '2.0',
-          );
-
-          final response = await _handleRequest(request);
-          if (!_controller.isClosed) {
-            _controller.add(SSE(data: jsonEncode(response.toMap())));
+        final response = McpJSONRPCResponse(
+          id: request.id,
+          result: result.toMap(),
+        );
+        return SSE(data: jsonEncode(response.toMap()));
+      } else if (request.method == 'tools/list') {
+        final response = McpJSONRPCResponse(
+          id: request.id,
+          result: toolsResult.toMap(),
+        );
+        return SSE(data: jsonEncode(response.toMap()));
+      } else {
+        var result = await handleMcpMethod(method, request);
+        var resultMap = result.toMap();
+        Map<String, dynamic> responseMap;
+        if (resultMap.containsKey('jsonrpc')) {
+          // Already a full JSON-RPC response (e.g. McpJSONRPCErrorResponse)
+          responseMap = resultMap;
+          if (!responseMap.containsKey('id')) {
+            responseMap['id'] = request.id;
           }
         } else {
-          break;
+          // Raw result (e.g. McpCallToolResult) — wrap in a proper JSON-RPC response
+          final response = McpJSONRPCResponse(
+            id: request.id,
+            result: resultMap,
+          );
+          responseMap = response.toMap();
         }
+        Console.json(responseMap);
+        var sse = SSE(data: jsonEncode(responseMap));
+        return sse;
       }
-    } catch (e) {
-      if (!_controller.isClosed) {
-        _controller.addError(e);
-      }
-    } finally {
-      if (!_controller.isClosed) {
-        _controller.close();
-      }
-    }
-  }
-
-  Future<Map<String, dynamic>?> _readNextRequest() async {
-    try {
-      final data = rq.getAll().removeAll(['POST', 'GET', 'FILE']);
-      return data.isNotEmpty ? data : null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<McpModel> _handleRequest(McpJSONRPCRequest request) async {
-    if (request.method == 'initialize') {
-      final result = McpInitializeResult(
-        protocolVersion: '2024-11-05',
-        capabilities: McpServerCapabilities(
-          tools: toolsResult.toMap(),
-        ),
-        serverInfo: McpImplementation(
-          name: 'finch-doc-mcp-server',
-          version: '1.0.0',
-        ),
-      );
-
-      return McpJSONRPCResponse(
-        id: request.id,
-        result: result.toMap(),
-      );
-    } else if (request.method == 'tools/list') {
-      return McpJSONRPCResponse(
-        id: request.id,
-        result: toolsResult.toMap(),
-      );
-    } else {
-      return await handleMcpMethod(request.method, request);
-    }
+    }));
+    return await rq.renderSSE(stream);
   }
 
   Future<McpModel> handleMcpMethod(String method, McpModel payload) async {
+    if (method.isEmpty) {
+      return McpJSONRPCErrorResponse(
+        error: McpError(
+          code: -32600,
+          message: "Invalid Request",
+        ),
+      );
+    }
     final action = methodActions[method];
+
     if (action == null) {
       return McpJSONRPCErrorResponse(
         error: McpError(
@@ -131,6 +95,7 @@ abstract class McpController extends Controller {
         ),
       );
     }
+
     return await action(payload);
   }
 }

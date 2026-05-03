@@ -10,20 +10,19 @@ class McpDocController extends McpController {
     var enContent = Extractor.contents['en'];
     enContent?.contents.forEach((key, doc) {
       McpTool tool = McpTool(
-        name: key.isEmpty ? 'readme' : key,
-        title: doc.title,
-        description: doc.description,
-        inputSchema: McpInputSchema(
-          type: 'object',
-          properties: {
-            'lang': McpProperty(
-              type: 'string',
-              description: 'Language code (en, fa, nl, zh)',
-            ),
-          },
-          required: [],
-        ),
-      );
+          name: key.isEmpty ? 'readme' : key,
+          title: doc.title,
+          description: doc.description,
+          inputSchema: McpInputSchema(
+            type: 'object',
+            properties: {},
+            required: [],
+          ),
+          outputSchema: McpOutputSchema(
+            type: "object",
+            properties: {'text': McpProperty(type: 'text')},
+            required: ['text'],
+          ));
       tools.add(tool);
     });
 
@@ -87,7 +86,7 @@ class McpDocController extends McpController {
 
   Future<McpModel> handleToolCall(McpModel payload) async {
     final method = payload.get<String>('method', def: 'tools/call');
-    final id = payload.get<dynamic>('id', def: null);
+    final id = payload.get<dynamic>('id', def: '-1');
     final paramsMap = payload.get<Map<String, dynamic>?>('params', def: null);
 
     final request = McpCallToolRequest(
