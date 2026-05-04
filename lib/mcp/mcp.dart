@@ -317,7 +317,7 @@ class McpJSONRPCRequest extends McpModel {
 
 /// Text provided to or from an LLM.
 class McpTextContent extends McpContent {
-  String get type => get('type', def: 'text');
+  String get type => get('type', def: 'string');
   String get text => get('text');
   McpAnnotations? get annotations =>
       get<McpAnnotations?>('annotations', def: null);
@@ -330,7 +330,7 @@ class McpTextContent extends McpContent {
   set meta(Map<String, dynamic>? value) => set('_meta', value);
 
   McpTextContent({
-    String type = 'text',
+    String type = 'string',
     required String text,
     McpAnnotations? annotations,
     Map<String, dynamic>? meta,

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch_doc/mcp/mcp.dart';
 import 'package:finch_doc/mcp/mcp_controller.dart';
@@ -90,9 +88,10 @@ class McpDocController extends McpController {
     enContent?.contents.forEach((key, doc) {
       key = key.isEmpty ? 'readme' : key;
       res[key] = (req) async {
-        return McpCallToolResult(content: [
-          McpTextContent(text: doc.md),
-        ]);
+        return McpCallToolResult(
+          content: [],
+          structuredContent: {"text": doc.md},
+        );
       };
     });
 

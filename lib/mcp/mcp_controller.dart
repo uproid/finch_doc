@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:finch/console.dart';
 import 'package:finch/finch_route.dart';
 import 'package:finch/finch_tools.dart';
 import 'package:finch_doc/mcp/mcp.dart';
