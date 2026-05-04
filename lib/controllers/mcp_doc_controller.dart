@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch_doc/mcp/mcp.dart';
 import 'package:finch_doc/mcp/mcp_controller.dart';
@@ -12,7 +14,9 @@ class McpDocController extends McpController {
       McpTool tool = McpTool(
           name: key.isEmpty ? 'readme' : key,
           title: doc.title,
-          description: doc.description,
+          description: doc.description.isNotEmpty
+              ? doc.description
+              : 'No description available.',
           inputSchema: McpInputSchema(
             type: 'object',
             properties: {},
@@ -20,7 +24,7 @@ class McpDocController extends McpController {
           ),
           outputSchema: McpOutputSchema(
             type: "object",
-            properties: {'text': McpProperty(type: 'text')},
+            properties: {'text': McpProperty(type: 'string')},
             required: ['text'],
           ));
       tools.add(tool);
@@ -38,6 +42,28 @@ class McpDocController extends McpController {
         'resources/list': resourcesList,
         'resources/read': handleResourceRead,
         'prompts/get': handlePromptGet,
+        'resources/templates/list': (payload) async {
+          return McpListResourceTemplatesResult(resourceTemplates: [
+            McpResourceTemplate(
+              name: 'default',
+              title: 'Default Template',
+              description: 'A default template for rendering resources.',
+              uriTemplate: '{+url}',
+            )
+          ]);
+        },
+        'notifications/initialized': (payload) async {
+          return McpJSONRPCNotification(
+            method: 'notifications/initialized',
+          );
+        },
+        'logging/setLevel': (payload) async {
+          return McpModel().fillMap({
+            "jsonrpc": "2.0",
+            "id": 1,
+            "result": {},
+          });
+        },
       };
 
   Future<McpModel> resourcesList(McpModel payload) async {
@@ -47,7 +73,9 @@ class McpDocController extends McpController {
       McpResource resource = McpResource(
         name: key.isEmpty ? 'readme' : key,
         title: doc.title,
-        description: doc.description,
+        description: doc.description.isNotEmpty
+            ? doc.description
+            : 'No description available.',
         uri: rq.url(key),
       );
       resources.add(resource);
@@ -78,7 +106,9 @@ class McpDocController extends McpController {
       McpPrompt prompt = McpPrompt(
         name: key.isEmpty ? 'readme' : key,
         title: doc.title,
-        description: doc.description,
+        description: doc.description.isNotEmpty
+            ? doc.description
+            : 'No description available.',
       );
       prompts.add(prompt);
     });
@@ -169,7 +199,9 @@ class McpDocController extends McpController {
     if (Extractor.contents['en']!.contents.containsKey(key)) {
       var doc = Extractor.contents['en']!.contents[key]!;
       return McpGetPromptResult(
-        description: doc.description,
+        description: doc.description.isNotEmpty
+            ? doc.description
+            : 'No description available.',
         messages: [
           McpPromptMessage(
             role: 'assistant',

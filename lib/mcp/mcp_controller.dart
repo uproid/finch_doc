@@ -68,7 +68,6 @@ abstract class McpController extends Controller {
           );
           responseMap = response.toMap();
         }
-        Console.json(responseMap);
         var sse = SSE(data: jsonEncode(responseMap));
         return sse;
       }
@@ -78,12 +77,11 @@ abstract class McpController extends Controller {
 
   Future<McpModel> handleMcpMethod(String method, McpModel payload) async {
     if (method.isEmpty) {
-      return McpJSONRPCErrorResponse(
-        error: McpError(
-          code: -32600,
-          message: "Invalid Request",
-        ),
-      );
+      return McpModel().fillMap({
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": {},
+      });
     }
     final action = methodActions[method];
 
