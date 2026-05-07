@@ -1,34 +1,34 @@
 import 'package:finch_doc/core/data_extractor.dart';
-import 'package:finch_doc/mcp/mcp.dart';
+import 'package:finch_doc/mcp/mc_base.dart';
 import 'package:finch_doc/mcp/mcp_controller.dart';
 
 class McpDocController extends McpController {
   @override
-  McpListToolsResult get toolsResult {
-    List<McpTool> tools = [];
+  ListToolsResult get toolsResult {
+    List<Tool> tools = [];
 
     var enContent = Extractor.contents['en'];
     enContent?.contents.forEach((key, doc) {
-      McpTool tool = McpTool(
+      Tool tool = Tool(
           name: key.isEmpty ? 'readme' : key,
           title: doc.title,
           description: doc.description.isNotEmpty
               ? doc.description
               : 'No description available.',
-          inputSchema: McpInputSchema(
+          inputSchema: ToolSchema(
             type: 'object',
-            properties: {},
-            required: [],
           ),
-          outputSchema: McpOutputSchema(
+          outputSchema: ToolSchema(
             type: "object",
-            properties: {'text': McpProperty(type: 'string')},
+            properties: {
+              'text': {'type': 'string'}
+            },
             required: ['text'],
           ));
       tools.add(tool);
     });
 
-    return McpListToolsResult(
+    return ListToolsResult(
       tools: tools,
     );
   }
@@ -41,8 +41,8 @@ class McpDocController extends McpController {
         'resources/read': handleResourceRead,
         'prompts/get': handlePromptGet,
         'resources/templates/list': (payload) async {
-          return McpListResourceTemplatesResult(resourceTemplates: [
-            McpResourceTemplate(
+          return ListResourceTemplatesResult(resourceTemplates: [
+            ResourceTemplate(
               name: 'default',
               title: 'Default Template',
               description: 'A default template for rendering resources.',
@@ -51,24 +51,20 @@ class McpDocController extends McpController {
           ]);
         },
         'notifications/initialized': (payload) async {
-          return McpJSONRPCNotification(
+          return JSONRPCNotification(
             method: 'notifications/initialized',
           );
         },
         'logging/setLevel': (payload) async {
-          return McpModel().fillMap({
-            "jsonrpc": "2.0",
-            "id": 1,
-            "result": {},
-          });
+          return SetLevelResultResponse(id: '1', result: Result());
         },
       };
 
-  Future<McpModel> resourcesList(McpModel payload) async {
+  Future<MC> resourcesList(Map<String, Object?> payload) async {
     var enContent = Extractor.contents['en'];
-    List<McpResource> resources = [];
+    List<Resource> resources = [];
     enContent?.contents.forEach((key, doc) {
-      McpResource resource = McpResource(
+      Resource resource = Resource(
         name: key.isEmpty ? 'readme' : key,
         title: doc.title,
         description: doc.description.isNotEmpty
@@ -78,7 +74,7 @@ class McpDocController extends McpController {
       );
       resources.add(resource);
     });
-    return McpListResourcesResult(resources: resources);
+    return ListResourcesResult(resources: resources);
   }
 
   @override
@@ -88,7 +84,7 @@ class McpDocController extends McpController {
     enContent?.contents.forEach((key, doc) {
       key = key.isEmpty ? 'readme' : key;
       res[key] = (req) async {
-        return McpCallToolResult(
+        return CallToolResult(
           content: [],
           structuredContent: {"text": doc.md},
         );
@@ -98,11 +94,11 @@ class McpDocController extends McpController {
     return res;
   }
 
-  Future<McpModel> promptList(McpModel payload) async {
+  Future<MC> promptList(Map<String, Object?> payload) async {
     var enContent = Extractor.contents['en'];
-    List<McpPrompt> prompts = [];
+    List<Prompt> prompts = [];
     enContent?.contents.forEach((key, doc) {
-      McpPrompt prompt = McpPrompt(
+      Prompt prompt = Prompt(
         name: key.isEmpty ? 'readme' : key,
         title: doc.title,
         description: doc.description.isNotEmpty
@@ -112,18 +108,16 @@ class McpDocController extends McpController {
       prompts.add(prompt);
     });
 
-    return McpListPromptsResult(prompts: prompts);
+    return ListPromptsResult(prompts: prompts);
   }
 
-  Future<McpModel> handleToolCall(McpModel payload) async {
-    final method = payload.get<String>('method', def: 'tools/call');
-    final id = payload.get<dynamic>('id', def: '-1');
-    final paramsMap = payload.get<Map<String, dynamic>?>('params', def: null);
+  Future<MC> handleToolCall(Map<String, Object?> payload) async {
+    final id = payload['id'] ?? '-1';
+    final paramsMap = payload['params'] as Map<String, dynamic>?;
 
-    final request = McpCallToolRequest(
-      id: id,
-      method: method,
-      params: McpCallToolRequestParams(
+    final request = CallToolRequest(
+      id: id.toString(),
+      params: CallToolRequestParams(
         name: paramsMap?['name'] as String? ?? 'readme',
         arguments: paramsMap?['arguments'] as Map<String, dynamic>?,
       ),
@@ -132,22 +126,22 @@ class McpDocController extends McpController {
     if (callAction.containsKey(request.params.name)) {
       return await callAction[request.params.name]!(request);
     } else {
-      return McpJSONRPCErrorResponse(
-        error: McpError(
-            code: -32601, message: 'Tool not found: ${request.params.name}'),
+      return JSONRPCErrorResponse(
+        error: Error(
+          code: -32601,
+          message: 'Tool not found: ${request.params.name}',
+        ),
       );
     }
   }
 
-  Future<McpModel> handleResourceRead(McpModel payload) async {
-    final method = payload.get<String>('method', def: 'resources/read');
-    final id = payload.get<dynamic>('id', def: '-1');
-    final paramsMap = payload.get<Map<String, dynamic>?>('params', def: null);
+  Future<MC> handleResourceRead(Map<String, Object?> payload) async {
+    final id = payload['id'] ?? '-1';
+    final paramsMap = payload['params'] as Map<String, dynamic>?;
 
-    final request = McpReadResourceRequest(
-      id: id,
-      method: method,
-      params: McpReadResourceRequestParams(
+    final request = ReadResourceRequest(
+      id: id.toString(),
+      params: ReadResourceRequestParams(
         uri: paramsMap?['uri'] as String? ?? (rq.url('readme')),
       ),
     );
@@ -155,41 +149,37 @@ class McpDocController extends McpController {
     var key = request.params.uri.split('/').last;
     if (Extractor.contents['en']!.contents.containsKey(key)) {
       var doc = Extractor.contents['en']!.contents[key]!;
-      return McpReadResourceResult(
+      return ReadResourceResult(
         contents: [
-          McpTextResourceContents(
+          TextResourceContents(
             text: doc.md,
             uri: rq.url(key),
             mimeType: 'text/markdown',
-            meta: {
-              ...doc.meta.cast<String, dynamic>(),
-            },
-          ).toMap(),
+            $meta: MetaObject(doc.meta.cast()),
+          ),
         ],
-        meta: {
+        $meta: MetaObject({
           ...doc.meta.cast<String, dynamic>(),
           'uri': request.params.uri,
           'url': rq.url(key),
-        },
+        }),
       );
     } else {
-      return McpJSONRPCErrorResponse(
-        error: McpError(
-            code: -32601, message: 'Resource not found: ${request.params.uri}'),
-      );
+      return JSONRPCErrorResponse(
+          error: Error(
+              code: -32601,
+              message: 'Resource not found: ${request.params.uri}'));
     }
   }
 
   //////////
-  Future<McpModel> handlePromptGet(McpModel payload) async {
-    final method = payload.get<String>('method', def: 'prompts/get');
-    final id = payload.get<dynamic>('id', def: '-1');
-    final paramsMap = payload.get<Map<String, dynamic>?>('params', def: null);
+  Future<MC> handlePromptGet(Map<String, Object?> payload) async {
+    final id = payload['id'] ?? '-1';
+    final paramsMap = payload['params'] as Map<String, dynamic>?;
 
-    final request = McpGetPromptRequest(
-      id: id,
-      method: method,
-      params: McpGetPromptRequestParams(
+    final request = GetPromptRequest(
+      id: id.toString(),
+      params: GetPromptRequestParams(
         name: paramsMap?['name'] as String? ?? 'readme',
       ),
     );
@@ -197,27 +187,25 @@ class McpDocController extends McpController {
     var key = request.params.name;
     if (Extractor.contents['en']!.contents.containsKey(key)) {
       var doc = Extractor.contents['en']!.contents[key]!;
-      return McpGetPromptResult(
+      return GetPromptResult(
         description: doc.description.isNotEmpty
             ? doc.description
             : 'No description available.',
         messages: [
-          McpPromptMessage(
-            role: 'assistant',
-            content: [
-              McpTextContent(text: doc.md).toMap(),
-            ],
+          PromptMessage(
+            role: Role.assistant,
+            content: TextContent(text: doc.md, mimeType: 'text/markdown'),
           )
         ],
-        meta: {
+        $meta: MetaObject({
           ...doc.meta.cast<String, dynamic>(),
           'name': request.params.name,
           'url': rq.url(key),
-        },
+        }),
       );
     } else {
-      return McpJSONRPCErrorResponse(
-        error: McpError(code: -32601, message: 'Prompt not found: ${key}'),
+      return JSONRPCErrorResponse(
+        error: Error(code: -32601, message: 'Prompt not found: ${key}'),
       );
     }
   }
