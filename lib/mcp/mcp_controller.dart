@@ -2,14 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:finch/finch_route.dart';
 import 'package:finch/finch_tools.dart';
-import 'package:finch_doc/mcp/mc_base.dart';
-import 'package:finch_doc/mcp/mcp_builder.dart';
+import 'package:mcp_models/mcp_models.dart';
 
-/// Abstract base for MCP-compatible controllers in the Finch framework.
+/// Abstract base for MCPP-compatible controllers in the Finch framework.
 ///
 /// Extend this class and implement [configure] to declaratively register
-/// all MCP capabilities using [McpBuilder]. The controller handles all
-/// standard MCP JSON-RPC routing automatically.
+/// all MCPP capabilities using [McpBuilder]. The controller handles all
+/// standard MCPP JSON-RPC routing automatically.
 ///
 /// ```dart
 /// class MyMcpController extends McpController {
@@ -49,7 +48,7 @@ abstract class McpController extends Controller {
     return _mcpBuilder!;
   }
 
-  /// Register all MCP capabilities for this server.
+  /// Register all MCPP capabilities for this server.
   ///
   /// Implement this method to register tools, resources, prompts, resource
   /// templates, and custom method handlers via [McpBuilder].
@@ -58,7 +57,7 @@ abstract class McpController extends Controller {
   @override
   Future<String> index() async {
     final payload = rq.getAll().removeAll(['POST', 'GET', 'FILE']);
-    final JSONRPCRequest rpcRequest = JSONRPCRequest.toMC(payload);
+    final JSONRPCRequest rpcRequest = JSONRPCRequest.toMCP(payload);
 
     final stream = Stream.fromFuture(Future(() async {
       final response = await _dispatch(
@@ -74,7 +73,7 @@ abstract class McpController extends Controller {
 
   // ── Central dispatcher ────────────────────────────────────────────────────
 
-  Future<MC> _dispatch(
+  Future<MCP> _dispatch(
     String method,
     String id,
     Map<String, Object?> payload,
@@ -133,7 +132,7 @@ abstract class McpController extends Controller {
 
   // ── Built-in handlers ────────────────────────────────────────────────────
 
-  MC _buildInitializeResponse(String id, McpBuilder registry) {
+  MCP _buildInitializeResponse(String id, McpBuilder registry) {
     return InitializeResultResponse(
       id: id,
       result: InitializeResult(
@@ -150,12 +149,12 @@ abstract class McpController extends Controller {
     );
   }
 
-  Future<MC> _dispatchToolCall(
+  Future<MCP> _dispatchToolCall(
     Map<String, Object?> payload,
     String id,
     McpBuilder registry,
   ) async {
-    final request = CallToolRequest.toMC(payload);
+    final request = CallToolRequest.toMCP(payload);
     final handler = registry.toolHandler(request.params.name);
     if (handler == null) {
       return JSONRPCErrorResponse(
@@ -167,12 +166,12 @@ abstract class McpController extends Controller {
     return CallToolResultResponse(id: id, result: await handler(request));
   }
 
-  Future<MC> _dispatchResourceRead(
+  Future<MCP> _dispatchResourceRead(
     Map<String, Object?> payload,
     String id,
     McpBuilder registry,
   ) async {
-    final request = ReadResourceRequest.toMC(payload);
+    final request = ReadResourceRequest.toMCP(payload);
     final handler = registry.resourceHandlerByUri(request.params.uri);
     if (handler == null) {
       return JSONRPCErrorResponse(
@@ -184,12 +183,12 @@ abstract class McpController extends Controller {
     return ReadResourceResultResponse(id: id, result: await handler(request));
   }
 
-  Future<MC> _dispatchPromptGet(
+  Future<MCP> _dispatchPromptGet(
     Map<String, Object?> payload,
     String id,
     McpBuilder registry,
   ) async {
-    final request = GetPromptRequest.toMC(payload);
+    final request = GetPromptRequest.toMCP(payload);
     final handler = registry.promptHandler(request.params.name);
     if (handler == null) {
       return JSONRPCErrorResponse(

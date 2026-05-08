@@ -1,7 +1,6 @@
 import 'package:finch_doc/core/data_extractor.dart';
-import 'package:finch_doc/mcp/mc_base.dart';
-import 'package:finch_doc/mcp/mcp_builder.dart';
 import 'package:finch_doc/mcp/mcp_controller.dart';
+import 'package:mcp_models/mcp_models.dart';
 
 class McpDocController extends McpController {
   @override
