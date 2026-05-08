@@ -57,18 +57,28 @@ abstract class McpController extends Controller {
   @override
   Future<String> index() async {
     final payload = rq.getAll().removeAll(['POST', 'GET', 'FILE']);
-    final JSONRPCRequest rpcRequest = JSONRPCRequest.toMCP(payload);
+    try {
+      final JSONRPCRequest rpcRequest = JSONRPCRequest.toMCP(payload);
 
-    final stream = Stream.fromFuture(Future(() async {
-      final response = await _dispatch(
-        rpcRequest.method,
-        rpcRequest.id,
-        payload,
+      final stream = Stream.fromFuture(Future(() async {
+        final response = await _dispatch(
+          rpcRequest.method,
+          rpcRequest.id,
+          payload,
+        );
+        return SSE(data: jsonEncode(response.toMap()));
+      }));
+      return await rq.renderSSE(stream);
+    } catch (e) {
+      final errorResponse = JSONRPCErrorResponse(
+        id: payload['id']?.toString() ?? '-1',
+        error: Error(code: -32600, message: 'Invalid Request: $e'),
       );
-      return SSE(data: jsonEncode(response.toMap()));
-    }));
-
-    return await rq.renderSSE(stream);
+      final stream = Stream.fromIterable([
+        SSE(data: jsonEncode(errorResponse.toMap())),
+      ]);
+      return await rq.renderSSE(stream);
+    }
   }
 
   // ── Central dispatcher ────────────────────────────────────────────────────
