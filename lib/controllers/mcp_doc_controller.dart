@@ -62,6 +62,7 @@ class McpDocController extends McpController {
 
   Future<MC> resourcesList(Map<String, Object?> payload) async {
     var enContent = Extractor.contents['en'];
+    //var request = ListResourcesRequest.toMC(payload);
     List<Resource> resources = [];
     enContent?.contents.forEach((key, doc) {
       Resource resource = Resource(
@@ -96,6 +97,7 @@ class McpDocController extends McpController {
 
   Future<MC> promptList(Map<String, Object?> payload) async {
     var enContent = Extractor.contents['en'];
+    //var request = ListPromptsRequest.toMC(payload);
     List<Prompt> prompts = [];
     enContent?.contents.forEach((key, doc) {
       Prompt prompt = Prompt(
@@ -112,17 +114,7 @@ class McpDocController extends McpController {
   }
 
   Future<MC> handleToolCall(Map<String, Object?> payload) async {
-    final id = payload['id'] ?? '-1';
-    final paramsMap = payload['params'] as Map<String, dynamic>?;
-
-    final request = CallToolRequest(
-      id: id.toString(),
-      params: CallToolRequestParams(
-        name: paramsMap?['name'] as String? ?? 'readme',
-        arguments: paramsMap?['arguments'] as Map<String, dynamic>?,
-      ),
-    );
-
+    var request = CallToolRequest.toMC(payload);
     if (callAction.containsKey(request.params.name)) {
       return await callAction[request.params.name]!(request);
     } else {
@@ -136,19 +128,13 @@ class McpDocController extends McpController {
   }
 
   Future<MC> handleResourceRead(Map<String, Object?> payload) async {
-    final id = payload['id'] ?? '-1';
-    final paramsMap = payload['params'] as Map<String, dynamic>?;
-
-    final request = ReadResourceRequest(
-      id: id.toString(),
-      params: ReadResourceRequestParams(
-        uri: paramsMap?['uri'] as String? ?? (rq.url('readme')),
-      ),
-    );
-
-    var key = request.params.uri.split('/').last;
+    final request = ReadResourceRequest.toMC(payload);
+    var key =
+        (Uri.tryParse(request.params.uri)?.path ?? '').replaceAll('/', '');
     if (Extractor.contents['en']!.contents.containsKey(key)) {
-      var doc = Extractor.contents['en']!.contents[key]!;
+      var doc = key.isEmpty
+          ? Extractor.contents['en']!.contents.values.first
+          : Extractor.contents['en']!.contents[key]!;
       return ReadResourceResult(
         contents: [
           TextResourceContents(
@@ -172,17 +158,8 @@ class McpDocController extends McpController {
     }
   }
 
-  //////////
   Future<MC> handlePromptGet(Map<String, Object?> payload) async {
-    final id = payload['id'] ?? '-1';
-    final paramsMap = payload['params'] as Map<String, dynamic>?;
-
-    final request = GetPromptRequest(
-      id: id.toString(),
-      params: GetPromptRequestParams(
-        name: paramsMap?['name'] as String? ?? 'readme',
-      ),
-    );
+    final request = GetPromptRequest.toMC(payload);
 
     var key = request.params.name;
     if (Extractor.contents['en']!.contents.containsKey(key)) {

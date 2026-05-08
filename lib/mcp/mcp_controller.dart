@@ -31,6 +31,14 @@ abstract class McpController extends Controller {
           capabilities: ServerCapabilities(
             {
               'tools': toolsResult.toMap(),
+              'resources': {
+                'list': true,
+                'read': true,
+              },
+              'prompts': {
+                'list': true,
+                'get': true,
+              },
             },
           ),
           serverInfo: Implementation(

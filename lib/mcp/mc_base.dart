@@ -23,7 +23,7 @@ class JSONRPCErrorResponse extends JSONRPCMessage {
   factory JSONRPCErrorResponse.toMC(Map<String, Object?> map) {
     return JSONRPCErrorResponse(
       jsonrpc: map['jsonrpc'] as String,
-      id: map['id'] as String?,
+      id: map['id']?.toString() ?? '-1',
       error: Error.toMC(map['error'] as Map<String, Object?>),
     );
   }
@@ -94,7 +94,7 @@ class JSONRPCResultResponse extends JSONRPCResponse {
   factory JSONRPCResultResponse.toMC(Map<String, Object?> map) {
     return JSONRPCResultResponse(
       jsonrpc: map['jsonrpc'] as String,
-      id: map['id'] as String?,
+      id: map['id']?.toString() ?? '-1',
       result: Result.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -292,7 +292,7 @@ class RequestMetaObject extends MapMC<String, Object?> {
   }
 
   factory RequestMetaObject.toMC(Map<String, Object?> map) {
-    return RequestMetaObject(progressToken: map['progressToken'] as String?);
+    return RequestMetaObject(progressToken: map['progressToken']?.toString());
   }
 }
 
@@ -766,7 +766,7 @@ class CompleteRequest extends MC {
 
   factory CompleteRequest.toMC(Map<String, Object?> map) {
     return CompleteRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: CompleteRequestParams.toMC(map['params'] as Map<String, Object?>),
     );
   }
@@ -786,7 +786,7 @@ class CompleteResultResponse extends MC {
 
   factory CompleteResultResponse.toMC(Map<String, Object?> map) {
     return CompleteResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: CompleteResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -860,7 +860,7 @@ class ElicitRequest extends MC {
 
   factory ElicitRequest.toMC(Map<String, Object?> map) {
     return ElicitRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: ElicitRequestParams.toMC(map['params'] as Map<String, Object?>),
     );
   }
@@ -880,7 +880,7 @@ class ElicitRequestParams extends MC {
 
   factory ElicitRequestParams.toMC(Map<String, Object?> map) {
     return ElicitRequestParams(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: ElicitResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -1421,7 +1421,7 @@ class InitializeRequest extends MC {
 
   factory InitializeRequest.toMC(Map<String, Object?> map) {
     return InitializeRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: InitializeRequestParams.toMC(
         map['params'] as Map<String, Object?>,
       ),
@@ -1543,7 +1543,7 @@ class InitializeResultResponse extends MC {
 
   factory InitializeResultResponse.toMC(Map<String, Object?> map) {
     return InitializeResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: InitializeResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -1636,7 +1636,7 @@ class SetLevelRequest extends MC {
 
   factory SetLevelRequest.toMC(Map<String, Object?> map) {
     return SetLevelRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: SetLevelRequestParams.toMC(map['params'] as Map<String, Object?>),
     );
   }
@@ -1680,7 +1680,7 @@ class SetLevelResultResponse extends MC {
 
   factory SetLevelResultResponse.toMC(Map<String, Object?> map) {
     return SetLevelResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: Result.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -2136,7 +2136,7 @@ class PingRequest extends MC {
 
   factory PingRequest.toMC(Map<String, Object?> map) {
     return PingRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: map['params'] != null
           ? RequestParams.toMC(map['params'] as Map<String, Object?>)
           : null,
@@ -2210,7 +2210,7 @@ class PingResultResponse extends MC {
 
   factory PingResultResponse.toMC(Map<String, Object?> map) {
     return PingResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: Result.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -2230,7 +2230,7 @@ class CreateTaskResultResponse extends MC {
 
   factory CreateTaskResultResponse.toMC(Map<String, Object?> map) {
     return CreateTaskResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: CreateTaskResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -2308,7 +2308,7 @@ class GetTaskRequest extends MC {
 
   factory GetTaskRequest.toMC(Map<String, Object?> map) {
     return GetTaskRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: GetTaskRequestParams.toMC(map['params'] as Map<String, Object?>),
     );
   }
@@ -2357,7 +2357,7 @@ class GetTaskPayloadRequest extends MC {
 
   factory GetTaskPayloadRequest.toMC(Map<String, Object?> map) {
     return GetTaskPayloadRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: GetTaskRequestParams.toMC(map['params'] as Map<String, Object?>),
     );
   }
@@ -2384,7 +2384,7 @@ class GetTaskPayloadResultResponse extends MC {
 
   factory GetTaskPayloadResultResponse.toMC(Map<String, Object?> map) {
     return GetTaskPayloadResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: GetTaskPayloadResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -2449,7 +2449,7 @@ class ListTasksRequest extends MC {
 
   factory ListTasksRequest.toMC(Map<String, Object?> map) {
     return ListTasksRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: map['params'] != null
           ? PaginatedRequestParams.toMC(map['params'] as Map<String, Object?>)
           : null,
@@ -2471,7 +2471,7 @@ class ListTasksResultResponse extends MC {
 
   factory ListTasksResultResponse.toMC(Map<String, Object?> map) {
     return ListTasksResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: ListTasksResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -2560,7 +2560,7 @@ class CancelTaskRequest extends MC {
 
   factory CancelTaskRequest.toMC(Map<String, Object?> map) {
     return CancelTaskRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: GetTaskRequestParams.toMC(map['params'] as Map<String, Object?>),
     );
   }
@@ -2586,7 +2586,7 @@ class CancelTaskResultResponse extends MC {
 
   factory CancelTaskResultResponse.toMC(Map<String, Object?> map) {
     return CancelTaskResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: CancelTaskResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -2633,7 +2633,7 @@ class GetPromptRequest extends MC {
 
   factory GetPromptRequest.toMC(Map<String, Object?> map) {
     return GetPromptRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: GetPromptRequestParams.toMC(
         map['params'] as Map<String, Object?>,
       ),
@@ -2715,7 +2715,7 @@ class GetPromptResultResponse extends MC {
 
   factory GetPromptResultResponse.toMC(Map<String, Object?> map) {
     return GetPromptResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: GetPromptResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -2837,7 +2837,7 @@ class ListPromptsRequest extends MC {
 
   factory ListPromptsRequest.toMC(Map<String, Object?> map) {
     return ListPromptsRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: map['params'] != null
           ? PaginatedRequestParams.toMC(map['params'] as Map<String, Object?>)
           : null,
@@ -2865,7 +2865,7 @@ class ListPromptsResultResponse extends MC {
 
   factory ListPromptsResultResponse.toMC(Map<String, Object?> map) {
     return ListPromptsResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: ListPromptsResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -3057,7 +3057,7 @@ class ListResourcesRequest extends MC {
 
   factory ListResourcesRequest.toMC(Map<String, Object?> map) {
     return ListResourcesRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: map['params'] != null
           ? PaginatedRequestParams.toMC(map['params'] as Map<String, Object?>)
           : null,
@@ -3086,7 +3086,7 @@ class ListResourcesResultResponse extends MC {
 
   factory ListResourcesResultResponse.toMC(Map<String, Object?> map) {
     return ListResourcesResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: ListResourcesResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -3254,7 +3254,7 @@ class ReadResourceRequest extends MC {
 
   factory ReadResourceRequest.toMC(Map<String, Object?> map) {
     return ReadResourceRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: ReadResourceRequestParams.toMC(
         map['params'] as Map<String, Object?>,
       ),
@@ -3324,7 +3324,7 @@ class ReadResourceResultResponse extends MC {
 
   factory ReadResourceResultResponse.toMC(Map<String, Object?> map) {
     return ReadResourceResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: ReadResourceResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -3459,7 +3459,7 @@ class ListResourceTemplatesRequest extends MC {
 
   factory ListResourceTemplatesRequest.toMC(Map<String, Object?> map) {
     return ListResourceTemplatesRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: map['params'] != null
           ? PaginatedRequestParams.toMC(map['params'] as Map<String, Object?>)
           : null,
@@ -3481,7 +3481,7 @@ class ListResourceTemplatesResultResponse extends MC {
 
   factory ListResourceTemplatesResultResponse.toMC(Map<String, Object?> map) {
     return ListResourceTemplatesResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: ListResourceTemplatesResult.toMC(
         map['result'] as Map<String, Object?>,
       ),
@@ -3586,7 +3586,7 @@ class SubscribeRequest extends MC {
 
   factory SubscribeRequest.toMC(Map<String, Object?> map) {
     return SubscribeRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: SubscribeRequestParams.toMC(
         map['params'] as Map<String, Object?>,
       ),
@@ -3608,7 +3608,7 @@ class SubscribeResultResponse extends MC {
 
   factory SubscribeResultResponse.toMC(Map<String, Object?> map) {
     return SubscribeResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: Result.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -3649,7 +3649,7 @@ class UnsubscribeResultResponse extends MC {
 
   factory UnsubscribeResultResponse.toMC(Map<String, Object?> map) {
     return UnsubscribeResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: Result.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -3889,7 +3889,7 @@ class ToolUseContent extends ContentBlock {
 
   factory ToolUseContent.toMC(Map<String, Object?> map) {
     return ToolUseContent(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       name: map['name'] as String,
       input: map['input'] as Map<String, Object?>,
       annotations: map['annotations'] != null
@@ -4244,7 +4244,7 @@ class CallToolRequest extends MC {
 
   factory CallToolRequest.toMC(Map<String, Object?> map) {
     return CallToolRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: CallToolRequestParams.toMC(map['params'] as Map<String, Object?>),
     );
   }
@@ -4327,7 +4327,7 @@ class CallToolResultResponse extends MC {
 
   factory CallToolResultResponse.toMC(Map<String, Object?> map) {
     return CallToolResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: CallToolResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
@@ -4353,7 +4353,7 @@ class ListToolsRequest extends MC {
 
   factory ListToolsRequest.toMC(Map<String, Object?> map) {
     return ListToolsRequest(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       params: map['params'] != null
           ? PaginatedRequestParams.toMC(map['params'] as Map<String, Object?>)
           : null,
@@ -4375,7 +4375,7 @@ class ListToolsResultResponse extends MC {
 
   factory ListToolsResultResponse.toMC(Map<String, Object?> map) {
     return ListToolsResultResponse(
-      id: map['id'] as String,
+      id: map['id']?.toString() ?? '-1',
       result: ListToolsResult.toMC(map['result'] as Map<String, Object?>),
     );
   }
