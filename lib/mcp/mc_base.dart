@@ -139,12 +139,18 @@ class JSONRPCRequest extends MC {
   String method;
   Map<String, Object?>? params;
   String jsonrpc;
+  String id;
 
-  JSONRPCRequest({this.jsonrpc = '2.0', required this.method, this.params});
+  JSONRPCRequest({
+    this.jsonrpc = '2.0',
+    required this.method,
+    this.params,
+    required this.id,
+  });
 
   @override
   Map<String, Object?> toMap() {
-    return {'jsonrpc': jsonrpc, 'method': method, 'params': params};
+    return {'jsonrpc': jsonrpc, 'method': method, 'params': params, 'id': id};
   }
 
   factory JSONRPCRequest.toMC(Map<String, Object?> map) {
@@ -152,6 +158,7 @@ class JSONRPCRequest extends MC {
       jsonrpc: map['jsonrpc'] as String,
       method: map['method'] as String,
       params: map['params'] as Map<String, Object?>?,
+      id: map['id']?.toString() ?? '-1',
     );
   }
 }
@@ -1569,7 +1576,7 @@ class InitializeResult extends MapMC<String, Object?> {
 
   InitializeResult({
     MetaObject? $meta,
-    required String protocolVersion,
+    String? protocolVersion = '2025-11-25',
     required ServerCapabilities capabilities,
     required Implementation serverInfo,
     String? instructions,

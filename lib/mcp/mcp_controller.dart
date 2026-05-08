@@ -3,102 +3,201 @@ import 'dart:convert';
 import 'package:finch/finch_route.dart';
 import 'package:finch/finch_tools.dart';
 import 'package:finch_doc/mcp/mc_base.dart';
+import 'package:finch_doc/mcp/mcp_builder.dart';
 
-typedef McpMethodAction
-    = Map<String, Future<MC> Function(Map<String, Object?> payload)>;
-
-typedef McpCallAction
-    = Map<String, Future<CallToolResult> Function(CallToolRequest payload)>;
-
+/// Abstract base for MCP-compatible controllers in the Finch framework.
+///
+/// Extend this class and implement [configure] to declaratively register
+/// all MCP capabilities using [McpBuilder]. The controller handles all
+/// standard MCP JSON-RPC routing automatically.
+///
+/// ```dart
+/// class MyMcpController extends McpController {
+///   @override
+///   void configure(McpBuilder mcp) {
+///     mcp.tool(
+///       name: 'hello',
+///       description: 'Says hello',
+///       handler: (req) async =>
+///           CallToolResult(content: [TextContent(text: 'Hello!')]),
+///     );
+///
+///     mcp.resource(
+///       name: 'readme',
+///       uri: rq.url(''),
+///       handler: (req) async => ReadResourceResult(contents: [...]),
+///     );
+///
+///     // Override or extend built-in method routing:
+///     mcp.method('notifications/initialized', (p) async =>
+///         JSONRPCNotification(method: 'notifications/initialized'));
+///   }
+/// }
+/// ```
 abstract class McpController extends Controller {
-  ListToolsResult get toolsResult;
-  McpMethodAction get methodActions;
-  McpCallAction get callAction;
+  McpBuilder? _mcpBuilder;
+
+  /// Lazily built once per controller instance.
+  /// Since Finch controllers are per-request, [configure] is always called
+  /// with the live [rq] object, making request-scoped values (e.g. `rq.url()`)
+  /// safe to use inside [configure].
+  McpBuilder get _registry {
+    if (_mcpBuilder == null) {
+      _mcpBuilder = McpBuilder();
+      configure(_mcpBuilder!);
+    }
+    return _mcpBuilder!;
+  }
+
+  /// Register all MCP capabilities for this server.
+  ///
+  /// Implement this method to register tools, resources, prompts, resource
+  /// templates, and custom method handlers via [McpBuilder].
+  void configure(McpBuilder mcp);
 
   @override
   Future<String> index() async {
-    final requestData = rq.getAll().removeAll(['POST', 'GET', 'FILE']);
-    Stream<SSE> stream = Stream.fromFuture(Future(() async {
-      var method = requestData['method'] as String? ?? '';
-      final request = JSONRPCRequest(
-        method: method,
-        params: requestData['params'] as Map<String, dynamic>?,
-        jsonrpc: requestData['jsonrpc'] as String? ?? '2.0',
-      );
-      if (request.method == 'initialize') {
-        final result = InitializeResult(
-          protocolVersion: '2024-11-05',
-          capabilities: ServerCapabilities(
-            {
-              'tools': toolsResult.toMap(),
-              'resources': {
-                'list': true,
-                'read': true,
-              },
-              'prompts': {
-                'list': true,
-                'get': true,
-              },
-            },
-          ),
-          serverInfo: Implementation(
-            name: 'finch-doc-mcp-server',
-            version: '1.0.0',
-          ),
-        );
+    final payload = rq.getAll().removeAll(['POST', 'GET', 'FILE']);
+    final JSONRPCRequest rpcRequest = JSONRPCRequest.toMC(payload);
 
-        final response = InitializeResultResponse(
-          id: (requestData['id'] ?? '-1').toString(),
-          result: result,
-        );
-        return SSE(data: jsonEncode(response.toMap()));
-      } else if (request.method == 'tools/list') {
-        final response = ListToolsResultResponse(
-          id: (requestData['id'] ?? '-1').toString(),
-          result: toolsResult,
-        );
-        return SSE(data: jsonEncode(response.toMap()));
-      } else {
-        var result = await handleMcpMethod(method, requestData);
-        var resultMap = result.toMap();
-        Map<String, dynamic> responseMap;
-        if (resultMap.containsKey('jsonrpc')) {
-          // Already a full JSON-RPC response (e.g. McpJSONRPCErrorResponse)
-          responseMap = resultMap;
-          if (!responseMap.containsKey('id')) {
-            responseMap['id'] = (requestData['id'] ?? '-1').toString();
-          }
-        } else {
-          // Raw result (e.g. McpCallToolResult) — wrap in a proper JSON-RPC response
-          final response = CallToolResultResponse(
-            id: (requestData['id'] ?? '-1').toString(),
-            result: CallToolResult.toMC(resultMap),
-          );
-          responseMap = response.toMap();
-        }
-        var sse = SSE(data: jsonEncode(responseMap));
-        return sse;
-      }
+    final stream = Stream.fromFuture(Future(() async {
+      final response = await _dispatch(
+        rpcRequest.method,
+        rpcRequest.id,
+        payload,
+      );
+      return SSE(data: jsonEncode(response.toMap()));
     }));
+
     return await rq.renderSSE(stream);
   }
 
-  Future<MC> handleMcpMethod(
-      String method, Map<String, Object?> payload) async {
-    if (method.isEmpty) {
-      return JSONRPCResultResponse(result: EmptyResult());
-    }
-    final action = methodActions[method];
+  // ── Central dispatcher ────────────────────────────────────────────────────
 
-    if (action == null) {
-      return JSONRPCErrorResponse(
-        error: Error(
-          code: -32601,
-          message: 'Method not found: $method',
+  Future<MC> _dispatch(
+    String method,
+    String id,
+    Map<String, Object?> payload,
+  ) async {
+    final registry = _registry;
+
+    // Custom handlers registered via mcp.method() take priority.
+    final customHandler = registry.methodHandler(method);
+    if (customHandler != null) return await customHandler(payload);
+
+    switch (method) {
+      case '':
+        return JSONRPCResultResponse(result: EmptyResult());
+
+      case 'initialize':
+        return _buildInitializeResponse(id, registry);
+
+      case 'tools/list':
+        return ListToolsResultResponse(
+            id: id, result: registry.buildToolsResult());
+
+      case 'tools/call':
+        return await _dispatchToolCall(payload, id, registry);
+
+      case 'resources/list':
+        return ListResourcesResultResponse(
+            id: id, result: registry.buildResourcesResult());
+
+      case 'resources/read':
+        return await _dispatchResourceRead(payload, id, registry);
+
+      case 'resources/templates/list':
+        return ListResourceTemplatesResultResponse(
+            id: id, result: registry.buildResourceTemplatesResult());
+
+      case 'prompts/list':
+        return ListPromptsResultResponse(
+            id: id, result: registry.buildPromptsResult());
+
+      case 'prompts/get':
+        return await _dispatchPromptGet(payload, id, registry);
+
+      case 'notifications/initialized':
+        return JSONRPCNotification(method: 'notifications/initialized');
+
+      case 'logging/setLevel':
+        return SetLevelResultResponse(id: id, result: Result());
+
+      default:
+        return JSONRPCErrorResponse(
+          id: id,
+          error: Error(code: -32601, message: 'Method not found: $method'),
+        );
+    }
+  }
+
+  // ── Built-in handlers ────────────────────────────────────────────────────
+
+  MC _buildInitializeResponse(String id, McpBuilder registry) {
+    return InitializeResultResponse(
+      id: id,
+      result: InitializeResult(
+        capabilities: ServerCapabilities({
+          'tools': registry.buildToolsResult().toMap(),
+          'resources': {'list': true, 'read': true},
+          'prompts': {'list': true, 'get': true},
+        }),
+        serverInfo: Implementation(
+          name: 'finch-mcp-server',
+          version: '1.0.0',
         ),
+      ),
+    );
+  }
+
+  Future<MC> _dispatchToolCall(
+    Map<String, Object?> payload,
+    String id,
+    McpBuilder registry,
+  ) async {
+    final request = CallToolRequest.toMC(payload);
+    final handler = registry.toolHandler(request.params.name);
+    if (handler == null) {
+      return JSONRPCErrorResponse(
+        id: id,
+        error: Error(
+            code: -32601, message: 'Tool not found: ${request.params.name}'),
       );
     }
+    return CallToolResultResponse(id: id, result: await handler(request));
+  }
 
-    return await action(payload);
+  Future<MC> _dispatchResourceRead(
+    Map<String, Object?> payload,
+    String id,
+    McpBuilder registry,
+  ) async {
+    final request = ReadResourceRequest.toMC(payload);
+    final handler = registry.resourceHandlerByUri(request.params.uri);
+    if (handler == null) {
+      return JSONRPCErrorResponse(
+        id: id,
+        error: Error(
+            code: -32601, message: 'Resource not found: ${request.params.uri}'),
+      );
+    }
+    return ReadResourceResultResponse(id: id, result: await handler(request));
+  }
+
+  Future<MC> _dispatchPromptGet(
+    Map<String, Object?> payload,
+    String id,
+    McpBuilder registry,
+  ) async {
+    final request = GetPromptRequest.toMC(payload);
+    final handler = registry.promptHandler(request.params.name);
+    if (handler == null) {
+      return JSONRPCErrorResponse(
+        id: id,
+        error: Error(
+            code: -32601, message: 'Prompt not found: ${request.params.name}'),
+      );
+    }
+    return GetPromptResultResponse(id: id, result: await handler(request));
   }
 }
