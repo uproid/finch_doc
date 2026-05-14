@@ -155,6 +155,37 @@ div.code-toolbar {
     margin: 1.5em 0;
 }
 
+.copy-to-clipboard-button span {
+    font-size: 0;
+    border: none !important;
+    background: none !important;
+}
+
+.copy-to-clipboard-button span::before {
+    content: "📋" !important;
+    font-size: 16px !important;
+}
+
+.code-toolbar pre{
+    background: #f8faff !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+.code-toolbar code {
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 0.95rem !important;
+}
+
+div.code-toolbar {
+    position: relative;
+    margin: 1.5em 0;
+}
+
+.dark .code-toolbar pre{
+    background: rgba(34, 57, 86, 0.2) !important;
+    border: 1px solid #313a4c !important;
+}
+
 div.code-toolbar > .toolbar {
     position: absolute;
     top: 0.5em;
