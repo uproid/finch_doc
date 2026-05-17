@@ -18,3 +18,19 @@ RUN cp -r ./build/bundle/bin/ ./
 
 EXPOSE 9902 9901
 CMD ["/www/bin/app"]
+
+FROM uproid/finch:latest AS dev
+WORKDIR /www
+
+
+ENV WIDGETS_TYPE='html.twig'
+ENV LANGUAGE_TYPE='./lib/languages'
+ENV WIDGETS_PATH='./lib/widgets'
+ENV PUBLIC_DIR='./public'
+
+
+RUN dart pub get 
+RUN dart pub get --offline
+
+EXPOSE 9902 9901
+CMD ["finch", "serve", "-p", "/www/bin/watcher.dart"]
