@@ -1,4 +1,359 @@
 var mapTemplates = {
+	r"template/sidebar.html.twig": r"""<div class="p-4">
+	<!-- Search filter for sidebar -->
+	<div class="mb-3 ms-3">
+		<div class="relative">
+			<input 
+				type="text" 
+				id="sidebarSearch" 
+				placeholder="{{ $t('Filter...') }}" 
+				class="w-full px-3 py-1 ps-9 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-blue-500 dark:focus:ring-blue-400"
+				autocomplete="off"
+			>
+			<i class="ph-bold ph-funnel-simple absolute start-3 top-1/2 transform -translate-y-1/2 text-base text-gray-400"></i>
+		</div>
+	</div>
+	
+	<style>
+		details.menu-group summary .menu-chevron {
+			transition: transform 0.2s ease;
+			transform-origin: center 10px;
+            margin-bottom: 5px;
+		}
+		details.menu-group[open] summary .menu-chevron {
+			transform: rotate(90deg);
+		}
+		
+		.sidebar-item-hidden {
+			display: none !important;
+		}
+	</style>
+
+	<!-- Getting Started -->
+	<div class="mb-6">
+		<div id="noSidebarResults" class="hidden p-4 text-center text-gray-500 dark:text-gray-400">
+			{{ $t('No results found.') }}
+		</div>
+		<ul class="space-y-1">
+			{% for menu in menus %}
+				{% if menu.isGroup %}
+					<li class="menu-group-item" data-search-text="{{ menu.title | lower }}">
+                        {% for submenu in menu.children %}
+                            {% if $e.isKey(submenu.key) %}
+                                {{ $l.set('activeSubMenu', true) }}
+                            {% endif %}
+                        {% endfor %}
+						<details class="menu-group" {{ $l.get('activeSubMenu') ? 'open' : '' }}>
+							<summary class="flex items-center justify-between gap-2 px-3 py-2 font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer list-none transition-colors">
+								<span class="menu-item-text text-sm flex-1 leading-relaxed {{ $l.get('activeSubMenu') ? 'text-blue-600 dark:text-secondary-400' : '' }}">{{ menu.title }}</span>
+								<span class="w-4 h-4 menu-chevron" >
+									<i class="{{ $l.get('activeSubMenu') ? 'text-blue-600 dark:text-secondary-400' : '' }} ph-bold ph-caret-right text-lg"></i>
+								</span>
+							</summary>
+							<ul class="mt-1 ms-4 space-y-1 border-s-2 border-gray-200 dark:border-gray-700 ps-2">
+								{% for submenu in menu.children %}
+									<li class="submenu-item" data-search-text="{{ submenu.title | lower }}">
+										<a href="{{ $l.urlLn(submenu.key) }}" class="{{ $e.isKey(submenu.key) ? 'bg-blue-50 dark:bg-gray-800 border-s-2 border-blue-500 dark:border-secondary-400 text-blue-600 dark:text-secondary-400 -ms-0.5' : 'border-s-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 -ms-0.5' }} flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+											{% if submenu.meta.icon %}
+												<span class="menu-item-icon leading-none {{$e.isKey(submenu.key) ? 'text-blue-600 dark:text-secondary-400' : 'text-gray-500 dark:text-gray-400'}}">
+													<i class="{{ submenu.meta.icon }} text-base"></i>
+												</span>
+											{% endif %}
+											<span class="menu-item-text text-sm flex-1 leading-relaxed">{{ submenu.title }}</span>
+										</a>
+									</li>
+								{% endfor %}
+							</ul>
+						</details>
+					</li>
+                    {{ $l.set('activeSubMenu', false) }}
+				{% else %}
+					<li class="menu-item" data-search-text="{{ menu.title | lower }}">
+						<a href="{{ $l.urlLn(menu.key) }}" class="{{ $e.isKey(menu.key) ? 'bg-blue-50 dark:bg-gray-800 border-s-2 border-blue-500 dark:border-secondary-400 text-blue-600 dark:text-secondary-400 -ms-0.5' : 'border-s-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 -ms-0.5' }} flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+							{% if menu.meta.icon %}
+								<span class="menu-item-icon leading-none {{$e.isKey(menu.key) ? 'text-blue-600 dark:text-secondary-400' : 'text-gray-500 dark:text-gray-400'}}">
+									<i class="{{ menu.meta.icon }} text-base"></i>
+								</span>
+							{% endif %}
+							<span class="menu-item-text text-sm flex-1 leading-relaxed">{{ menu.title }}</span>
+						</a>
+					</li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+""",
+	r"template/head.html.twig": r"""{% block head %}
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D6J35LTEMC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-D6J35LTEMC');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ title }} | Finch</title>
+{% if description is defined %}
+<meta name="description" content="{{ description }}">
+{% else %}
+<meta name="description" content="Finch helps developers build scalable Dart backends with MongoDB, MySQL, SQLite, WebSockets, auto API docs, authentication, email, and deployment tools.">
+{% endif %}
+<meta name="keywords" content="Dart backend framework, Dart web development, scalable backend, MongoDB Dart, MySQL Dart, SQLite Dart, WebSockets Dart, real-time API, Swagger documentation, API authentication, email integration, microservices Dart, enterprise backend, deployment tools">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
+<meta name="robots" content="index, follow">
+<script>
+    (function () {
+        const theme = localStorage.getItem('theme') || 'light';
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+        
+        // Initialize theme icons when DOM is ready
+        window.addEventListener('DOMContentLoaded', function() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const prismLight = document.getElementById('prism-light');
+            const prismDark = document.getElementById('prism-dark');
+            const themeIconLight = document.getElementById('theme-icon-light');
+            const themeIconDark = document.getElementById('theme-icon-dark');
+            
+            // Set Prism theme
+            if (prismLight && prismDark) {
+                if (isDark) {
+                    prismLight.disabled = true;
+                    prismDark.disabled = false;
+                } else {
+                    prismLight.disabled = false;
+                    prismDark.disabled = true;
+                }
+            }
+            
+            // Set theme icons
+            if (themeIconLight && themeIconDark) {
+                if (isDark) {
+                    themeIconLight.style.display = 'none';
+                    themeIconDark.style.display = 'inline-block';
+                } else {
+                    themeIconLight.style.display = 'inline-block';
+                    themeIconDark.style.display = 'none';
+                }
+            }
+        });
+    })();
+</script>
+<link rel="stylesheet" href="/tailwindcss/output.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
+<link rel="stylesheet" href="/style.css">
+<!-- Prism.js for syntax highlighting - Light theme -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" id="prism-light">
+<!-- Prism.js for syntax highlighting - Dark theme -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" id="prism-dark" disabled>
+<!-- Prism.js Toolbar for copy button -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
+{% endblock %}""",
+	r"template/hero.html.twig": r"""<!-- Hero Section -->
+<div class="mb-12 relative overflow-hidden rounded-2xl border border-slate-200 dark:border-gray-800/60 bg-slate-50 dark:bg-gray-950">
+
+    <!-- Ambient glows -->
+    <div class="pointer-events-none absolute -top-24 left-1/3 w-72 h-72 bg-blue-500/10 dark:bg-blue-500/20 rounded-full blur-3xl"></div>
+    <div class="pointer-events-none absolute -bottom-16 right-1/4 w-56 h-56 bg-violet-500/8 dark:bg-violet-500/15 rounded-full blur-3xl"></div>
+
+    <!-- Dot grid -->
+    <div class="absolute inset-0 [background-image:radial-gradient(circle,#cbd5e1_1px,transparent_1px)] dark:[background-image:radial-gradient(circle,#1e293b_1px,transparent_1px)] [background-size:24px_24px]"></div>
+    <!-- Vignette to fade dot edges -->
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_100%_at_50%_50%,transparent_30%,#f8fafc_100%)] dark:bg-[radial-gradient(ellipse_80%_100%_at_50%_50%,transparent_30%,#030712_100%)]"></div>
+
+    <div class="relative z-10">
+
+        <!-- ── Announcement strip ── -->
+        <div class="border-b border-slate-200 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm px-4 py-2.5">
+            <a href="{{ configs.pubDev }}" target="_blank" rel="noopener noreferrer"
+               class="group flex items-center justify-center gap-2 text-sm text-slate-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400 text-xs font-bold tracking-wide">
+                    <i class="ph-bold ph-confetti"></i> NEW
+                </span>
+                <span class="font-medium">v{{ finchVersion }} — {{ $t('Now Available on pub.dev') }}</span>
+                <i class="ph-bold ph-arrow-{{ language.isRtl ? 'left' : 'right' }} text-xs transition-transform group-hover:translate-x-0.5"></i>
+            </a>
+        </div>
+
+        <!-- ── Main two-column layout ── -->
+        <div class="grid grid-cols-1 lg:grid-cols-2">
+
+            <!-- Left: Brand & actions -->
+            <div class="flex flex-col justify-center px-8 md:px-12 py-10 lg:py-14 lg:border-r border-slate-200 dark:border-gray-800">
+
+                <!-- Logo + name inline -->
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="relative flex-shrink-0">
+                        <div class="absolute inset-0 bg-blue-500/25 rounded-2xl blur-lg"></div>
+                        <img src="/logo.svg" alt="Finch" class="relative h-14 w-14 drop-shadow-md" />
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">{{ $t('Finch') }}</h1>
+                        <span class="text-xs font-mono text-slate-400 dark:text-gray-500 mt-1 block">v{{ finchVersion }}</span>
+                    </div>
+                </div>
+
+                <!-- Feature grid -->
+                <div class="grid grid-cols-2 gap-x-6 gap-y-2.5 mb-8">
+                    <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-gray-400">
+                        <i class="ph-bold ph-lightning text-amber-500 flex-shrink-0"></i>{{ $t('Fast & Efficient') }}
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-gray-400">
+                        <i class="ph-bold ph-shield-check text-emerald-500 flex-shrink-0"></i>{{ $t('Type-Safe') }}
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-gray-400">
+                        <i class="ph-bold ph-puzzle-piece text-blue-500 flex-shrink-0"></i>{{ $t('Modular') }}
+                    </div>
+                    <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-gray-400">
+                        <i class="ph-bold ph-rocket-launch text-violet-500 flex-shrink-0"></i>{{ $t('Production Ready') }}
+                    </div>
+                </div>
+
+                <!-- CTA buttons -->
+                <div class="flex flex-wrap gap-3">
+                    <a href="/#breadcrumb"
+                       class="inline-flex items-center gap-2 h-10 px-5 rounded-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-sm font-semibold transition-colors shadow-sm shadow-blue-500/30">
+                        <i class="ph-bold ph-book-open"></i>{{ $t('Get Started') }}
+                    </a>
+                    <a href="{{ configs.repository }}" target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-2 h-10 px-5 rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800/70 text-slate-700 dark:text-gray-300 text-sm font-medium hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors">
+                        <i class="ph-bold ph-github-logo"></i>{{ $t('GitHub') }}
+                    </a>
+                    <a href="{{ configs.demo }}" target="_blank" rel="noopener noreferrer"
+                       class="inline-flex items-center gap-2 h-10 px-5 rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800/70 text-slate-700 dark:text-gray-300 text-sm font-medium hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors">
+                        <i class="ph-bold ph-play-circle"></i>{{ $t('Demo') }}
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right: Terminal window -->
+            <div class="flex flex-col justify-center px-8 md:px-12 py-10 lg:py-14">
+                <div class="rounded-xl overflow-hidden border border-slate-200 dark:border-gray-700 shadow-lg shadow-slate-200/60 dark:shadow-black/30">
+
+                    <!-- Window chrome -->
+                    <div class="flex items-center gap-1.5 px-4 py-3 bg-slate-100 dark:bg-gray-800 border-b border-slate-200 dark:border-gray-700">
+                        <span class="w-3 h-3 rounded-full bg-red-400 dark:bg-red-500/70"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-400 dark:bg-yellow-500/70"></span>
+                        <span class="w-3 h-3 rounded-full bg-green-400 dark:bg-green-500/70"></span>
+                        <span class="ms-3 text-xs text-slate-400 dark:text-gray-500 font-mono">bash</span>
+                        <button onclick="copyToClipboard('dart pub add finch')"
+                                class="ms-auto inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-200 dark:bg-gray-700 hover:bg-slate-300 dark:hover:bg-gray-600 text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-200 text-xs transition-colors font-medium">
+                            <i class="ph-bold ph-copy text-[10px]"></i>{{ $t('Copy') }}
+                        </button>
+                    </div>
+
+                    <!-- Terminal body -->
+                    <div dir="ltr" class="p-5 font-mono text-sm bg-white dark:bg-gray-900 space-y-1.5 select-text">
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-blue-500 dark:text-blue-400">&#10095;</span>
+                            <span class="text-slate-800 dark:text-gray-100">dart pub add finch</span>
+                        </div>
+                        <div class="text-slate-400 dark:text-gray-500 ps-5">Resolving dependencies...</div>
+                        <div class="text-emerald-600 dark:text-emerald-400 ps-5">+ finch {{ finchVersion }}</div>
+                        <div class="text-slate-400 dark:text-gray-500 ps-5">Changed 1 dependency!</div>
+                        <div class="pt-1.5 flex items-baseline gap-2">
+                            <span class="text-blue-500 dark:text-blue-400">&#10095;</span>
+                            <span class="text-slate-800 dark:text-gray-100">dart run</span>
+                        </div>
+                        <div class="text-emerald-600 dark:text-emerald-400 ps-5">&#x1F426; Finch is listening on :8080</div>
+                        <div class="ps-5 flex items-center gap-0.5 pt-0.5">
+                            <span class="inline-block w-[7px] h-[14px] bg-slate-400 dark:bg-gray-400 rounded-[2px] animate-pulse"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target.closest('button');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="ph-bold ph-check text-[10px]"></i> {{ $t("Copied!") }}';
+        btn.classList.add('text-emerald-600', 'dark:text-emerald-400');
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.classList.remove('text-emerald-600', 'dark:text-emerald-400');
+        }, 2000);
+    });
+}
+</script>
+""",
+	r"template/error.html.twig": r"""{% extends 'template/base.html.twig' %}
+
+{% block content %}
+<!-- Main Content Area -->
+<main id="main-content" class="flex-1 min-w-0 overflow-x-hidden order-2 xl:order-1 xl:mx-20 lg:mx-16 md:mx-8 sm:mx-4" role="main">
+    <div class="flex flex-col xl:flex-row w-full relative">
+    
+        <!-- Content -->
+        <div class="flex-1 w-full py-8 px-4 sm:py-12 sm:px-6 lg:px-8 xl:px-12">
+            <div class="max-w-3xl mx-auto">
+                <!-- Error Container -->
+                <div class="flex flex-col items-center text-center space-y-8">
+                    <!-- Error Status Code -->
+                    <div class="space-y-2">
+                        <h1 class="text-8xl sm:text-5xl font-bold text-gray-800 dark:text-gray-100">
+                            {{ status }}
+                        </h1>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div class="space-y-4">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">
+                            {{ $t('Oops! Something went wrong') }}
+                        </h2>
+                        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+                            {{ $t('Page not found, please check the URL or return to the homepage.') }}
+                        </p>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                        <button onclick="history.back()" class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-semibold rounded-lg border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                            <i class="ph-bold {{ language.isRtl ? 'ph-arrow-right' : 'ph-arrow-left' }} text-xl"></i>
+                            <span>{{ $t('Back') }}</span>
+                        </button>
+                        <a href="/" class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
+                            <i class="ph-bold ph-house text-xl"></i>
+                            <span>{{ $t('Home') }}</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <div class="mt-40">
+                    {% include 'template/footer.html.twig' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block rightSide %}
+<!-- Action Buttons -->
+<div class="space-y-2">
+    <a href="{{ configs.repository }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
+        <i class="ph-bold ph-github-logo text-lg group-hover:scale-110 transition-transform"></i>
+        <span class="text-sm">{{ $t('Star on GitHub') }}</span>
+    </a>
+    <a href="{{ configs.newissue }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
+        <i class="ph-bold ph-warning-circle text-lg group-hover:scale-110 transition-transform"></i>
+        <span class="text-sm">{{ $t('Report Issue') }}</span>
+    </a>
+</div>
+{% endblock %}""",
 	r"template/navbar.html.twig": r"""{% block navbar %}
 <!-- Skip to content for accessibility -->
 <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:start-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg">
@@ -141,716 +496,6 @@ var mapTemplates = {
     </div>
 </div>
 {% endblock %}""",
-	r"template/head.html.twig": r"""{% block head %}
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-D6J35LTEMC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-D6J35LTEMC');
-</script>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ title }} | Finch</title>
-{% if description is defined %}
-<meta name="description" content="{{ description }}">
-{% else %}
-<meta name="description" content="Finch helps developers build scalable Dart backends with MongoDB, MySQL, SQLite, WebSockets, auto API docs, authentication, email, and deployment tools.">
-{% endif %}
-<meta name="keywords" content="Dart backend framework, Dart web development, scalable backend, MongoDB Dart, MySQL Dart, SQLite Dart, WebSockets Dart, real-time API, Swagger documentation, API authentication, email integration, microservices Dart, enterprise backend, deployment tools">
-<link rel="icon" href="/favicon.ico" type="image/x-icon">
-<link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
-<meta name="robots" content="index, follow">
-<script>
-    (function () {
-        const theme = localStorage.getItem('theme') || 'light';
-        if (theme === 'dark') {
-            document.documentElement.classList.add('dark');
-        }
-        
-        // Initialize theme icons when DOM is ready
-        window.addEventListener('DOMContentLoaded', function() {
-            const isDark = document.documentElement.classList.contains('dark');
-            const prismLight = document.getElementById('prism-light');
-            const prismDark = document.getElementById('prism-dark');
-            const themeIconLight = document.getElementById('theme-icon-light');
-            const themeIconDark = document.getElementById('theme-icon-dark');
-            
-            // Set Prism theme
-            if (prismLight && prismDark) {
-                if (isDark) {
-                    prismLight.disabled = true;
-                    prismDark.disabled = false;
-                } else {
-                    prismLight.disabled = false;
-                    prismDark.disabled = true;
-                }
-            }
-            
-            // Set theme icons
-            if (themeIconLight && themeIconDark) {
-                if (isDark) {
-                    themeIconLight.style.display = 'none';
-                    themeIconDark.style.display = 'inline-block';
-                } else {
-                    themeIconLight.style.display = 'inline-block';
-                    themeIconDark.style.display = 'none';
-                }
-            }
-        });
-    })();
-</script>
-<link rel="stylesheet" href="/tailwindcss/output.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
-<link rel="stylesheet" href="/style.css">
-<!-- Prism.js for syntax highlighting - Light theme -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" id="prism-light">
-<!-- Prism.js for syntax highlighting - Dark theme -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" id="prism-dark" disabled>
-<!-- Prism.js Toolbar for copy button -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
-{% endblock %}""",
-	r"template/error.html.twig": r"""{% extends 'template/base.html.twig' %}
-
-{% block content %}
-<!-- Main Content Area -->
-<main id="main-content" class="flex-1 min-w-0 overflow-x-hidden order-2 xl:order-1 xl:mx-20 lg:mx-16 md:mx-8 sm:mx-4" role="main">
-    <div class="flex flex-col xl:flex-row w-full relative">
-    
-        <!-- Content -->
-        <div class="flex-1 w-full py-8 px-4 sm:py-12 sm:px-6 lg:px-8 xl:px-12">
-            <div class="max-w-3xl mx-auto">
-                <!-- Error Container -->
-                <div class="flex flex-col items-center text-center space-y-8">
-                    <!-- Error Status Code -->
-                    <div class="space-y-2">
-                        <h1 class="text-8xl sm:text-5xl font-bold text-gray-800 dark:text-gray-100">
-                            {{ status }}
-                        </h1>
-                    </div>
-
-                    <!-- Error Message -->
-                    <div class="space-y-4">
-                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">
-                            {{ $t('Oops! Something went wrong') }}
-                        </h2>
-                        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-                            {{ $t('Page not found, please check the URL or return to the homepage.') }}
-                        </p>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                        <button onclick="history.back()" class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-semibold rounded-lg border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
-                            <i class="ph-bold {{ language.isRtl ? 'ph-arrow-right' : 'ph-arrow-left' }} text-xl"></i>
-                            <span>{{ $t('Back') }}</span>
-                        </button>
-                        <a href="/" class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
-                            <i class="ph-bold ph-house text-xl"></i>
-                            <span>{{ $t('Home') }}</span>
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Footer -->
-                <div class="mt-40">
-                    {% include 'template/footer.html.twig' %}
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
-{% endblock %}
-
-{% block rightSide %}
-<!-- Action Buttons -->
-<div class="space-y-2">
-    <a href="{{ configs.repository }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
-        <i class="ph-bold ph-github-logo text-lg group-hover:scale-110 transition-transform"></i>
-        <span class="text-sm">{{ $t('Star on GitHub') }}</span>
-    </a>
-    <a href="{{ configs.newissue }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
-        <i class="ph-bold ph-warning-circle text-lg group-hover:scale-110 transition-transform"></i>
-        <span class="text-sm">{{ $t('Report Issue') }}</span>
-    </a>
-</div>
-{% endblock %}""",
-	r"template/base.html.twig": r"""<!DOCTYPE html>
-<html lang="{{ language.code }}" dir="{{ language.dir }}">
-<head>
-    {% include 'template/head.html.twig' %}
-</head>
-<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    {% include 'template/navbar.html.twig' %}
-    
-    <!-- Quick scroll to top button -->
-    <button id="scrollToTop" class="fixed bottom-6 end-6 z-40 hidden p-3 bg-blue-600 dark:bg-secondary-400 text-white dark:text-black rounded-full shadow-lg hover:bg-blue-700 dark:hover:bg-secondary-500 transition-all hover:scale-110" aria-label="Scroll to top">
-        <i class="ph-bold ph-arrow-up text-xl"></i>
-    </button>
-    
-    <!-- Main Container -->
-    <div class="flex pt-16 justify-center">
-        <div class="flex w-full max-w-[1600px]">
-        
-            <!-- Left Sidebar - Navigation Menu -->
-            <aside id="leftSidebar" data-dir="{{ language.isRtl ? 'translate-x-full' : '-translate-x-full' }}" class="fixed bg-white dark:bg-gray-900 lg:bg-transparent dark:lg:bg-transparent lg:sticky top-16 start-0 h-[calc(100vh-4rem)] w-76 border-e border-gray-200 dark:border-gray-700 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:transparent_transparent] hover:[scrollbar-color:var(--color-gray-300)_transparent] dark:hover:[scrollbar-color:var(--color-gray-600)_transparent] transform {{ language.isRtl ? 'translate-x-full' : '-translate-x-full' }} lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 shrink-0">
-                {% include 'template/sidebar.html.twig' %}
-            </aside>
-
-            <!-- Overlay for mobile -->
-            <div id="overlay" class="hidden fixed inset-0 bg-black/50 z-30 lg:hidden"></div>
-
-            {% block content %}{% endblock %}
-
-            <!-- Right Sidebar - Table of Contents -->
-            <aside class="sticky top-0 xl:top-16 xl:h-[calc(100vh-4rem)] xl:w-64 w-full overflow-y-auto px-4 py-6 xl:py-8 border-b xl:border-b-0 xl:border-s border-gray-200 dark:border-gray-700 order-1 xl:order-2 bg-white dark:bg-gray-900 hidden xl:block" role="complementary" aria-label="Table of contents">
-                <div class="xl:sticky xl:top-0">
-                    {% block rightSide %}{% endblock %}
-                </div>
-            </aside>
-        </div>
-    </div>
-    {% include 'template/scripts.html.twig' %}
-</body>
-</html>""",
-	r"template/hero.html.twig": r"""<!-- Hero Section -->
-<div class="mb-12 pt-12 p-5 md:p-8 relative overflow-hidden bg-linear-to-br from-blue-50 via-white to-purple-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 border border-blue-200 dark:border-gray-700 rounded-2xl shadow-xl">
-    <!-- Animated Network Background -->
-    <canvas id="networkCanvas" class="absolute inset-0 w-full h-full opacity-50"></canvas>
-    <div class="relative z-10">
-        <!-- Logo and Title -->
-        <div class="flex flex-col md:flex-row items-center justify-center gap-6 pt-10 pb-8">
-            <img src="/logo.svg" alt="Finch Framework" class="h-32 w-32 drop-shadow-lg" />
-            <div class="text-center md:text-left">
-                <h1 class="text-5xl md:text-5xl py-2 my-1 font-bold bg-linear-to-r from-blue-600 to-purple-600 dark:from-secondary-400 dark:to-purple-400 bg-clip-text text-transparent">{{ $t('Finch') }}</h1>
-                <div class="flex items-center justify-center md:justify-start gap-2 mt-3">
-                    <span class="px-3 py-1 rounded-full bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-secondary-400 text-sm font-semibold">v{{ finchVersion }}</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Feature Pills -->
-        <div class="flex flex-wrap justify-center gap-2 mb-8">
-            <span class="px-4 py-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                <i class="ph-bold ph-lightning text-yellow-500"></i>
-                {{ $t('Fast & Efficient') }}
-            </span>
-            <span class="px-4 py-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                <i class="ph-bold ph-shield-check text-green-500"></i>
-                {{ $t('Type-Safe') }}
-            </span>
-            <span class="px-4 py-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                <i class="ph-bold ph-puzzle-piece text-blue-500"></i>
-                {{ $t('Modular') }}
-            </span>
-            <span class="px-4 py-2 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                <i class="ph-bold ph-rocket-launch text-purple-500"></i>
-                {{ $t('Production Ready') }}
-            </span>
-        </div>
-        
-        <!-- Hero Actions -->
-        <div class="flex flex-col gap-4 w-full max-w-2xl mx-auto">
-            <!-- Announcement Badge - First Row -->
-            <div class="w-full">
-                <a href="{{ configs.pubDev }}" rel="noopener noreferrer" target="_blank" class="flex p-3 group items-center justify-center rounded-xl bg-linear-to-r from-blue-600 to-purple-600 dark:from-secondary-400 dark:to-purple-400 text-sm font-medium text-white dark:text-black transition-all hover:shadow-2xl hover:scale-105 transform">
-                    <i class="ph-bold ph-confetti text-2xl me-3 animate-bounce"></i>
-                    <span class="text-sm sm:text-base text-center font-semibold">v{{ finchVersion }} - {{ $t('Now Available on pub.dev') }}</span>
-                    <i class="ph-bold ph-caret-{{ language.isRtl ? 'left' : 'right' }} ms-3 text-lg transition-transform group-hover:translate-x-1"></i>
-                </a>
-            </div>
-            
-            <!-- Quick Start Command -->
-            <div  dir="ltr" class="p-4 bg-gray-900 dark:bg-gray-950 rounded-xl border border-gray-700">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider">{{ $t('Quick Start') }}</span>
-                    <button onclick="copyToClipboard('dart pub add finch')" class="px-2 py-1 rounded text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors">
-                        <i class="ph-bold ph-copy"></i> {{ $t('Copy') }}
-                    </button>
-                </div>
-                <code class="text-green-400 font-mono text-sm">$ dart pub add finch</code>
-            </div>
-            
-            <!-- Action Buttons Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
-                <a class="flex w-full" href="{{ configs.repository }}" target="_blank" rel="noopener noreferrer">
-                    <button class="cursor-pointer flex w-full h-12 px-6 group items-center justify-center rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-semibold transition-all hover:border-blue-500 dark:hover:border-secondary-400 hover:bg-blue-50 dark:hover:bg-gray-750 hover:shadow-lg transform hover:-translate-y-0.5">
-                        <i class="ph-bold ph-github-logo text-2xl me-2 group-hover:scale-110 transition-transform"></i>
-                        <span class="text-sm">{{ $t('GitHub') }}</span>
-                    </button>
-                </a>
-                <a class="flex w-full" href="{{ configs.demo }}" rel="noopener noreferrer" target="_blank">
-                    <button class="cursor-pointer flex w-full h-12 px-6 group items-center justify-center rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-semibold transition-all hover:border-purple-500 dark:hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-gray-750 hover:shadow-lg transform hover:-translate-y-0.5">
-                        <i class="ph-bold ph-play-circle text-2xl me-2 group-hover:scale-110 transition-transform"></i>
-                        <span class="text-sm">{{ $t('Demo') }}</span>
-                    </button>
-                </a>
-                <a class="flex w-full" href="/#breadcrumb">
-                    <button class="cursor-pointer flex w-full h-12 px-6 group items-center justify-center rounded-xl border-2 border-blue-500 dark:border-secondary-400 bg-blue-500 dark:bg-secondary-400 text-white dark:text-black font-semibold transition-all hover:bg-blue-600 dark:hover:bg-secondary-500 hover:shadow-lg transform hover:-translate-y-0.5">
-                        <i class="ph-bold ph-book-open text-2xl me-2 group-hover:scale-110 transition-transform"></i>
-                        <span class="text-sm">{{ $t('Get Started') }}</span>
-                    </button>
-                </a>
-            </div>
-        </div>
-        
-        <!-- Stats Section -->
-        {# <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 pt-8 border-t border-gray-200 dark:border-gray-700">
-            <div class="text-center">
-                <div class="text-3xl font-bold text-blue-600 dark:text-secondary-400 mb-1">10K+</div>
-                <div class="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">{{ $t('Downloads') }}</div>
-            </div>
-            <div class="text-center">
-                <div class="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-1">50+</div>
-                <div class="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">{{ $t('Contributors') }}</div>
-            </div>
-            <div class="text-center">
-                <div class="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">100%</div>
-                <div class="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">{{ $t('Free & Open') }}</div>
-            </div>
-            <div class="text-center">
-                <div class="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">24/7</div>
-                <div class="text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider">{{ $t('Community') }}</div>
-            </div>
-        </div> #}
-    </div>
-</div>
-
-<script>
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        // Show success feedback
-        const btn = event.target.closest('button');
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<i class="ph-bold ph-check"></i> {{ $t("Copied!") }}';
-        btn.classList.add('bg-green-600');
-        setTimeout(() => {
-            btn.innerHTML = originalHTML;
-            btn.classList.remove('bg-green-600');
-        }, 2000);
-    });
-}
-
-(function() {
-    const canvas = document.getElementById('networkCanvas');
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let animationFrameId;
-    
-    // Configuration
-    const config = {
-        particleCount: 120,
-        particleSpeed: 0.2,
-        connectionDistance: 90,
-        particleSize: 3,
-    };
-    
-    // Particle class
-    class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.vx = (Math.random() - 0.5) * config.particleSpeed;
-            this.vy = (Math.random() - 0.5) * config.particleSpeed;
-            this.radius = config.particleSize;
-        }
-        
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            
-            // Bounce off edges
-            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-            
-            // Keep within bounds
-            this.x = Math.max(0, Math.min(canvas.width, this.x));
-            this.y = Math.max(0, Math.min(canvas.height, this.y));
-        }
-        
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = isDarkMode() ? 'rgba(96, 165, 250, 0.2)' : 'rgba(59, 130, 246, 0.2)';
-            ctx.fill();
-        }
-    }
-    
-    // Check if dark mode is enabled
-    function isDarkMode() {
-        return document.documentElement.classList.contains('dark');
-    }
-    
-    // Initialize canvas size
-    function resizeCanvas() {
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-    }
-    
-    // Initialize particles
-    function initParticles() {
-        particles = [];
-        for (let i = 0; i < config.particleCount; i++) {
-            particles.push(new Particle());
-        }
-    }
-    
-    // Draw grid background
-    function drawGrid() {
-        const gridSize = 40; // Size of each grid square
-        ctx.strokeStyle = isDarkMode() 
-            ? 'rgba(96, 165, 250, 0.08)' 
-            : 'rgba(59, 130, 246, 0.08)';
-        ctx.lineWidth = 1;
-        
-        // Draw vertical lines
-        for (let x = 0; x <= canvas.width; x += gridSize) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, canvas.height);
-            ctx.stroke();
-        }
-        
-        // Draw horizontal lines
-        for (let y = 0; y <= canvas.height; y += gridSize) {
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(canvas.width, y);
-            ctx.stroke();
-        }
-    }
-    
-    // Draw connections between nearby particles
-    function drawConnections() {
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const distance = Math.sqrt(dx * dx + dy * dy *2);
-                
-                if (distance < config.connectionDistance) {
-                    const opacity = (1 - distance / config.connectionDistance) * 0.25;
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = isDarkMode() 
-                        ? `rgba(96, 165, 250, ${opacity})` 
-                        : `rgba(59, 130, 246, ${opacity})`;
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                }
-            }
-        }
-    }
-    
-    // Animation loop
-    function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Draw grid background first
-        drawGrid();
-        
-        // Update and draw particles
-        particles.forEach(particle => {
-            particle.update();
-            particle.draw();
-        });
-        
-        // Draw connections
-        drawConnections();
-        
-        animationFrameId = requestAnimationFrame(animate);
-    }
-    
-    // Initialize
-    resizeCanvas();
-    initParticles();
-    animate();
-    
-    // Handle window resize
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            resizeCanvas();
-            initParticles();
-        }, 250);
-    });
-    
-    // Observe dark mode changes
-    const observer = new MutationObserver(() => {
-        // Trigger a redraw when dark mode changes
-    });
-    observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class']
-    });
-    
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', () => {
-        cancelAnimationFrame(animationFrameId);
-        observer.disconnect();
-    });
-})();
-</script>""",
-	r"template/document.html.twig": r"""{% extends 'template/base.html.twig' %}
-
-{% block content %}
-<!-- Main Content Area -->
-<main id="main-content" class="flex-1 min-w-0 overflow-x-hidden order-2 xl:order-1 xl:mx-20 lg:mx-16 md:mx-8 sm:mx-4" role="main">
-    <div class="flex flex-col xl:flex-row w-full relative">
-    
-        <!-- Content -->
-        <div class="flex-1 w-full py-4 px-4 sm:py-8 sm:px-6 lg:px-8 xl:px-8 max-w-4xl mx-auto">
-            {% if $e.isKey('')  %}
-                {% include 'template/hero.html.twig' %}
-            {% endif %}
-            
-            <!-- Breadcrumb -->
-            <nav class="flex items-center justify-between mb-6 text-sm overflow-x-auto" id="breadcrumb" aria-label="Breadcrumb">
-                <ol class="flex items-center space-x-2 flex-nowrap">
-                    <li class="whitespace-nowrap"><a href="/" class="text-blue-600 dark:text-secondary-400 hover:underline">{{ $t('Home') }}</a></li>
-                    {% if meta.group %}
-                        <li class="sm:inline-flex hidden whitespace-nowrap" aria-hidden="true"><i class="ph-bold {{ language.isRtl ? 'ph-caret-left' : 'ph-caret-right' }} text-base text-gray-400"></i></li>
-                        <li class="sm:inline-flex hidden text-gray-600 dark:text-gray-400 whitespace-nowrap" aria-current="page">{{ meta.group }}</li>
-                    {% endif %}
-                    <li class="whitespace-nowrap" aria-hidden="true"><i class="ph-bold {{ language.isRtl ? 'ph-caret-left' : 'ph-caret-right' }} text-base text-gray-400"></i></li>
-                    <li class="text-gray-600 dark:text-gray-400 whitespace-nowrap" aria-current="page">{{ title }}</li>
-                </ol>
-                <div class="flex items-center gap-2 ms-4">
-                    <!-- Edit page -->
-                    <a href="{{ configs.edit }}/{{ filename }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap">
-                        <i class="ph-bold ph-pencil-simple text-base"></i>
-                        <span class="text-xs hidden sm:inline">{{ $t('Edit') }}</span>
-                    </a>
-                </div>
-            </nav>
-
-            <!-- Mobile TOC -->
-            <div class="xl:hidden mb-6 p-4 bg-linear-to-br from-gray-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-lg border border-gray-200 dark:border-gray-700">
-                <div class="flex items-center gap-2 mb-3">
-                    <i class="ph-bold ph-list-bullets text-blue-600 dark:text-secondary-400"></i>
-                    <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">{{ $t('On This Page') }}</h3>
-                </div>
-                <nav>
-                    <ul class="flex flex-wrap gap-2">
-                        {% for section in index %}
-                            <li><a href="#{{ section.id }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-white dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border border-gray-200 dark:border-gray-600 transition-colors">
-                                <i class="ph-bold ph-hash text-xs"></i>
-                                {{ section.title | html }}
-                            </a></li>
-                        {% endfor %}
-                    </ul>
-                </nav>
-            </div>
-
-            <!-- Document Content -->
-            <article class="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none overflow-x-auto doc-content">
-                {{ content }}
-            </article>
-
-            <!-- Navigation Buttons -->
-            <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mt-12 pt-8 border-t-2 border-gray-200 dark:border-gray-700">
-                {% if previous is defined %}
-                    <a href="/{{ previous.key }}" class="flex-1 group flex items-center gap-3 px-5 py-4 rounded-xl border-2 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 hover:border-blue-500 dark:hover:border-secondary-400 hover:bg-blue-50 dark:hover:bg-gray-700 transition-all hover:shadow-lg transform hover:-translate-y-0.5">
-                        <i class="ph-bold {{ language.isRtl ? 'ph-arrow-right' : 'ph-arrow-left' }} text-2xl text-blue-600 dark:text-secondary-400 group-hover:scale-110 transition-transform"></i>
-                        <div class="text-start min-w-0 flex-1">
-                            <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ $t('Previous') }}</div>
-                            <div class="font-semibold truncate text-gray-900 dark:text-white">{{ previous.title }}</div>
-                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">{{  $l.maxLength(previous.description, 50) }}</div>
-                        </div>
-                    </a>
-                {% else %}
-                    <div class="flex-1"></div>
-                {% endif %}
-                {% if next is defined %}
-                    <a href="/{{ next.key }}" class="flex-1 group flex items-center gap-3 justify-end px-5 py-4 rounded-xl border-2 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 hover:border-purple-500 dark:hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-gray-700 transition-all hover:shadow-lg transform hover:-translate-y-0.5">
-                        <div class="text-end min-w-0 flex-1">
-                            <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ $t('Next') }}</div>
-                            <div class="font-semibold truncate text-gray-900 dark:text-white">
-                                {{ next.title }}
-                            </div>
-                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">{{  $l.maxLength(next.description, 50) }}</div>
-                        </div>
-                        <i class="ph-bold {{ language.isRtl ? 'ph-arrow-left' : 'ph-arrow-right' }} text-2xl text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform"></i>
-                    </a>
-                {% else %}
-                    <div class="flex-1"></div>
-                {% endif %}
-            </div>
-
-            {% include 'template/footer.html.twig' %}
-        </div>
-    </div>
-</main>
-{% endblock %}
-
-{% block rightSide %}
-<div class="flex items-center gap-2 mb-4">
-    <i class="ph-bold ph-list-dashes text-blue-600 dark:text-secondary-400"></i>
-    <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">{{ $t('On This Page') }}</h3>
-</div>
-<nav id="tableOfContents">
-    <ul class="space-y-2">
-        {% for section in index %}
-            <li class="block">
-                <a href="#{{ section.id }}" 
-                    class="toc-link block px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border-s-2 border-transparent hover:border-blue-600 dark:hover:border-secondary-400 transition-all md-level-{{ section.level }}"
-                    data-section="{{ section.id }}">
-                    {{ section.title | html }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-</nav>
-
-<!-- Action Buttons -->
-<div class="mt-6 space-y-2 pt-6 border-t border-gray-200 dark:border-gray-700">
-    <a href="{{ configs.repository }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
-        <i class="ph-bold ph-github-logo text-lg group-hover:scale-110 transition-transform"></i>
-        <span class="text-sm">{{ $t('Star on GitHub') }}</span>
-    </a>
-    <a href="{{ configs.newissue }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
-        <i class="ph-bold ph-warning-circle text-lg group-hover:scale-110 transition-transform"></i>
-        <span class="text-sm">{{ $t('Report Issue') }}</span>
-    </a>
-    <a href="{{ configs.edit }}/{{ filename }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
-        <i class="ph-bold ph-pencil-simple text-lg group-hover:scale-110 transition-transform"></i>
-        <span class="text-sm">{{ $t('Edit this page') }}</span>
-    </a>
-</div>
-{% endblock %}""",
-	r"template/sidebar.html.twig": r"""<div class="p-4">
-	<!-- Search filter for sidebar -->
-	<div class="mb-3 ms-3">
-		<div class="relative">
-			<input 
-				type="text" 
-				id="sidebarSearch" 
-				placeholder="{{ $t('Filter...') }}" 
-				class="w-full px-3 py-1 ps-9 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:outline-none focus:ring-blue-500 dark:focus:ring-blue-400"
-				autocomplete="off"
-			>
-			<i class="ph-bold ph-funnel-simple absolute start-3 top-1/2 transform -translate-y-1/2 text-base text-gray-400"></i>
-		</div>
-	</div>
-	
-	<style>
-		details.menu-group summary .menu-chevron {
-			transition: transform 0.2s ease;
-			transform-origin: center 10px;
-            margin-bottom: 5px;
-		}
-		details.menu-group[open] summary .menu-chevron {
-			transform: rotate(90deg);
-		}
-		
-		.sidebar-item-hidden {
-			display: none !important;
-		}
-	</style>
-
-	<!-- Getting Started -->
-	<div class="mb-6">
-		<div id="noSidebarResults" class="hidden p-4 text-center text-gray-500 dark:text-gray-400">
-			{{ $t('No results found.') }}
-		</div>
-		<ul class="space-y-1">
-			{% for menu in menus %}
-				{% if menu.isGroup %}
-					<li class="menu-group-item" data-search-text="{{ menu.title | lower }}">
-                        {% for submenu in menu.children %}
-                            {% if $e.isKey(submenu.key) %}
-                                {{ $l.set('activeSubMenu', true) }}
-                            {% endif %}
-                        {% endfor %}
-						<details class="menu-group" {{ $l.get('activeSubMenu') ? 'open' : '' }}>
-							<summary class="flex items-center justify-between gap-2 px-3 py-2 font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer list-none transition-colors">
-								<span class="menu-item-text text-sm flex-1 leading-relaxed {{ $l.get('activeSubMenu') ? 'text-blue-600 dark:text-secondary-400' : '' }}">{{ menu.title }}</span>
-								<span class="w-4 h-4 menu-chevron" >
-									<i class="{{ $l.get('activeSubMenu') ? 'text-blue-600 dark:text-secondary-400' : '' }} ph-bold ph-caret-right text-lg"></i>
-								</span>
-							</summary>
-							<ul class="mt-1 ms-4 space-y-1 border-s-2 border-gray-200 dark:border-gray-700 ps-2">
-								{% for submenu in menu.children %}
-									<li class="submenu-item" data-search-text="{{ submenu.title | lower }}">
-										<a href="{{ $l.urlLn(submenu.key) }}" class="{{ $e.isKey(submenu.key) ? 'bg-blue-50 dark:bg-gray-800 border-s-2 border-blue-500 dark:border-secondary-400 text-blue-600 dark:text-secondary-400 -ms-0.5' : 'border-s-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 -ms-0.5' }} flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-											{% if submenu.meta.icon %}
-												<span class="menu-item-icon leading-none {{$e.isKey(submenu.key) ? 'text-blue-600 dark:text-secondary-400' : 'text-gray-500 dark:text-gray-400'}}">
-													<i class="{{ submenu.meta.icon }} text-base"></i>
-												</span>
-											{% endif %}
-											<span class="menu-item-text text-sm flex-1 leading-relaxed">{{ submenu.title }}</span>
-										</a>
-									</li>
-								{% endfor %}
-							</ul>
-						</details>
-					</li>
-                    {{ $l.set('activeSubMenu', false) }}
-				{% else %}
-					<li class="menu-item" data-search-text="{{ menu.title | lower }}">
-						<a href="{{ $l.urlLn(menu.key) }}" class="{{ $e.isKey(menu.key) ? 'bg-blue-50 dark:bg-gray-800 border-s-2 border-blue-500 dark:border-secondary-400 text-blue-600 dark:text-secondary-400 -ms-0.5' : 'border-s-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 -ms-0.5' }} flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-							{% if menu.meta.icon %}
-								<span class="menu-item-icon leading-none {{$e.isKey(menu.key) ? 'text-blue-600 dark:text-secondary-400' : 'text-gray-500 dark:text-gray-400'}}">
-									<i class="{{ menu.meta.icon }} text-base"></i>
-								</span>
-							{% endif %}
-							<span class="menu-item-text text-sm flex-1 leading-relaxed">{{ menu.title }}</span>
-						</a>
-					</li>
-				{% endif %}
-			{% endfor %}
-		</ul>
-	</div>
-</div>
-""",
-	r"template/scripts.html.twig": r"""<!-- Prism.js Core -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
-<!-- Prism.js Toolbar Plugin -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js" defer></script>
-<!-- Prism.js Copy to Clipboard Plugin -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" defer></script>
-<!-- Prism.js Dart Language Support -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-dart.min.js" defer></script>
-<!-- Prism.js Additional Languages (optional) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-nginx.min.js" defer></script>
-<script src="/script.js"></script>
-<script src="/app/includes.js" crossorigin="anonymous"></script>
-{% if not isLocalDebug %}
-<script type="speculationrules">
-	{
-        "prerender": [
-            {
-                "source": "document",
-                "where": {
-                    "and": [
-                        {"href_matches": "/*"},
-                        {"not": {"href_matches": "mailto:*"}},
-                        {"not": {"href_matches": "tel:*"}},
-                        {"not": {"href_matches": "javascript:*"}},
-                        {"not": {"href_matches": "#*"}},
-                        {"not": {"selector_matches": "a[target='_blank']"}},
-                        {"not": {"selector_matches": "a[download]"}},
-                        {"not": {"selector_matches": "a[rel~='external']"}},
-                        {"not": {"selector_matches": "a[data-lang]"}}
-                    ]
-                },
-                "eagerness": "moderate"
-            }
-        ]
-    }
-</script>
-{% endif %}""",
 	r"template/footer.html.twig": r"""<!-- Footer -->
 <footer class="mt-16 bg-linear-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 border-t-2 border-gray-200 dark:border-gray-700">
     <!-- Newsletter Section -->
@@ -1000,5 +645,211 @@ function copyToClipboard(text) {
             </div>
         </div>
     </div>
-</footer>"""
+</footer>""",
+	r"template/base.html.twig": r"""<!DOCTYPE html>
+<html lang="{{ language.code }}" dir="{{ language.dir }}">
+<head>
+    {% include 'template/head.html.twig' %}
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    {% include 'template/navbar.html.twig' %}
+    
+    <!-- Quick scroll to top button -->
+    <button id="scrollToTop" class="fixed bottom-6 end-6 z-40 hidden p-3 bg-blue-600 dark:bg-secondary-400 text-white dark:text-black rounded-full shadow-lg hover:bg-blue-700 dark:hover:bg-secondary-500 transition-all hover:scale-110" aria-label="Scroll to top">
+        <i class="ph-bold ph-arrow-up text-xl"></i>
+    </button>
+    
+    <!-- Main Container -->
+    <div class="flex pt-16 justify-center">
+        <div class="flex w-full max-w-[1600px]">
+        
+            <!-- Left Sidebar - Navigation Menu -->
+            <aside id="leftSidebar" data-dir="{{ language.isRtl ? 'translate-x-full' : '-translate-x-full' }}" class="fixed bg-white dark:bg-gray-900 lg:bg-transparent dark:lg:bg-transparent lg:sticky top-16 start-0 h-[calc(100vh-4rem)] w-76 border-e border-gray-200 dark:border-gray-700 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:transparent_transparent] hover:[scrollbar-color:var(--color-gray-300)_transparent] dark:hover:[scrollbar-color:var(--color-gray-600)_transparent] transform {{ language.isRtl ? 'translate-x-full' : '-translate-x-full' }} lg:translate-x-0 transition-transform duration-300 ease-in-out z-40 shrink-0">
+                {% include 'template/sidebar.html.twig' %}
+            </aside>
+
+            <!-- Overlay for mobile -->
+            <div id="overlay" class="hidden fixed inset-0 bg-black/50 z-30 lg:hidden"></div>
+
+            {% block content %}{% endblock %}
+
+            <!-- Right Sidebar - Table of Contents -->
+            <aside class="sticky top-0 xl:top-16 xl:h-[calc(100vh-4rem)] xl:w-64 w-full overflow-y-auto px-4 py-6 xl:py-8 border-b xl:border-b-0 xl:border-s border-gray-200 dark:border-gray-700 order-1 xl:order-2 bg-white dark:bg-gray-900 hidden xl:block" role="complementary" aria-label="Table of contents">
+                <div class="xl:sticky xl:top-0">
+                    {% block rightSide %}{% endblock %}
+                </div>
+            </aside>
+        </div>
+    </div>
+    {% include 'template/scripts.html.twig' %}
+</body>
+</html>""",
+	r"template/scripts.html.twig": r"""<!-- Prism.js Core -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+<!-- Prism.js Toolbar Plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js" defer></script>
+<!-- Prism.js Copy to Clipboard Plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" defer></script>
+<!-- Prism.js Dart Language Support -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-dart.min.js" defer></script>
+<!-- Prism.js Additional Languages (optional) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-nginx.min.js" defer></script>
+<script src="/script.js"></script>
+<script src="/app/includes.js" crossorigin="anonymous"></script>
+{% if not isLocalDebug %}
+<script type="speculationrules">
+	{
+        "prerender": [
+            {
+                "source": "document",
+                "where": {
+                    "and": [
+                        {"href_matches": "/*"},
+                        {"not": {"href_matches": "mailto:*"}},
+                        {"not": {"href_matches": "tel:*"}},
+                        {"not": {"href_matches": "javascript:*"}},
+                        {"not": {"href_matches": "#*"}},
+                        {"not": {"selector_matches": "a[target='_blank']"}},
+                        {"not": {"selector_matches": "a[download]"}},
+                        {"not": {"selector_matches": "a[rel~='external']"}},
+                        {"not": {"selector_matches": "a[data-lang]"}}
+                    ]
+                },
+                "eagerness": "moderate"
+            }
+        ]
+    }
+</script>
+{% endif %}""",
+	r"template/document.html.twig": r"""{% extends 'template/base.html.twig' %}
+
+{% block content %}
+<!-- Main Content Area -->
+<main id="main-content" class="flex-1 min-w-0 overflow-x-hidden order-2 xl:order-1 xl:mx-20 lg:mx-16 md:mx-8 sm:mx-4" role="main">
+    <div class="flex flex-col xl:flex-row w-full relative">
+    
+        <!-- Content -->
+        <div class="flex-1 w-full py-4 px-4 sm:py-8 sm:px-6 lg:px-8 xl:px-8 max-w-4xl mx-auto">
+            {% if $e.isKey('')  %}
+                {% include 'template/hero.html.twig' %}
+            {% endif %}
+            
+            <!-- Breadcrumb -->
+            <nav class="flex items-center justify-between mb-6 text-sm overflow-x-auto" id="breadcrumb" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-2 flex-nowrap">
+                    <li class="whitespace-nowrap"><a href="/" class="text-blue-600 dark:text-secondary-400 hover:underline">{{ $t('Home') }}</a></li>
+                    {% if meta.group %}
+                        <li class="sm:inline-flex hidden whitespace-nowrap" aria-hidden="true"><i class="ph-bold {{ language.isRtl ? 'ph-caret-left' : 'ph-caret-right' }} text-base text-gray-400"></i></li>
+                        <li class="sm:inline-flex hidden text-gray-600 dark:text-gray-400 whitespace-nowrap" aria-current="page">{{ meta.group }}</li>
+                    {% endif %}
+                    <li class="whitespace-nowrap" aria-hidden="true"><i class="ph-bold {{ language.isRtl ? 'ph-caret-left' : 'ph-caret-right' }} text-base text-gray-400"></i></li>
+                    <li class="text-gray-600 dark:text-gray-400 whitespace-nowrap" aria-current="page">{{ title }}</li>
+                </ol>
+                <div class="flex items-center gap-2 ms-4">
+                    <!-- Edit page -->
+                    <a href="{{ configs.edit }}/{{ filename }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors whitespace-nowrap">
+                        <i class="ph-bold ph-pencil-simple text-base"></i>
+                        <span class="text-xs hidden sm:inline">{{ $t('Edit') }}</span>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Mobile TOC -->
+            <div class="xl:hidden mb-6 p-4 bg-linear-to-br from-gray-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-lg border border-gray-200 dark:border-gray-700">
+                <div class="flex items-center gap-2 mb-3">
+                    <i class="ph-bold ph-list-bullets text-blue-600 dark:text-secondary-400"></i>
+                    <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">{{ $t('On This Page') }}</h3>
+                </div>
+                <nav>
+                    <ul class="flex flex-wrap gap-2">
+                        {% for section in index %}
+                            <li><a href="#{{ section.id }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-white dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border border-gray-200 dark:border-gray-600 transition-colors">
+                                <i class="ph-bold ph-hash text-xs"></i>
+                                {{ section.title | html }}
+                            </a></li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Document Content -->
+            <article class="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert max-w-none overflow-x-auto doc-content">
+                {{ content }}
+            </article>
+
+            <!-- Navigation Buttons -->
+            <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mt-12 pt-8 border-t-2 border-gray-200 dark:border-gray-700">
+                {% if previous is defined %}
+                    <a href="/{{ previous.key }}" class="flex-1 group flex items-center gap-3 px-5 py-4 rounded-xl border-2 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 hover:border-blue-500 dark:hover:border-secondary-400 hover:bg-blue-50 dark:hover:bg-gray-700 transition-all hover:shadow-lg transform hover:-translate-y-0.5">
+                        <i class="ph-bold {{ language.isRtl ? 'ph-arrow-right' : 'ph-arrow-left' }} text-2xl text-blue-600 dark:text-secondary-400 group-hover:scale-110 transition-transform"></i>
+                        <div class="text-start min-w-0 flex-1">
+                            <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ $t('Previous') }}</div>
+                            <div class="font-semibold truncate text-gray-900 dark:text-white">{{ previous.title }}</div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">{{  $l.maxLength(previous.description, 50) }}</div>
+                        </div>
+                    </a>
+                {% else %}
+                    <div class="flex-1"></div>
+                {% endif %}
+                {% if next is defined %}
+                    <a href="/{{ next.key }}" class="flex-1 group flex items-center gap-3 justify-end px-5 py-4 rounded-xl border-2 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 hover:border-purple-500 dark:hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-gray-700 transition-all hover:shadow-lg transform hover:-translate-y-0.5">
+                        <div class="text-end min-w-0 flex-1">
+                            <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ $t('Next') }}</div>
+                            <div class="font-semibold truncate text-gray-900 dark:text-white">
+                                {{ next.title }}
+                            </div>
+                            <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">{{  $l.maxLength(next.description, 50) }}</div>
+                        </div>
+                        <i class="ph-bold {{ language.isRtl ? 'ph-arrow-left' : 'ph-arrow-right' }} text-2xl text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform"></i>
+                    </a>
+                {% else %}
+                    <div class="flex-1"></div>
+                {% endif %}
+            </div>
+
+            {% include 'template/footer.html.twig' %}
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block rightSide %}
+<div class="flex items-center gap-2 mb-4">
+    <i class="ph-bold ph-list-dashes text-blue-600 dark:text-secondary-400"></i>
+    <h3 class="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide">{{ $t('On This Page') }}</h3>
+</div>
+<nav id="tableOfContents">
+    <ul class="space-y-2">
+        {% for section in index %}
+            <li class="block">
+                <a href="#{{ section.id }}" 
+                    class="toc-link block px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 border-s-2 border-transparent hover:border-blue-600 dark:hover:border-secondary-400 transition-all md-level-{{ section.level }}"
+                    data-section="{{ section.id }}">
+                    {{ section.title | html }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</nav>
+
+<!-- Action Buttons -->
+<div class="mt-6 space-y-2 pt-6 border-t border-gray-200 dark:border-gray-700">
+    <a href="{{ configs.repository }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
+        <i class="ph-bold ph-github-logo text-lg group-hover:scale-110 transition-transform"></i>
+        <span class="text-sm">{{ $t('Star on GitHub') }}</span>
+    </a>
+    <a href="{{ configs.newissue }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
+        <i class="ph-bold ph-warning-circle text-lg group-hover:scale-110 transition-transform"></i>
+        <span class="text-sm">{{ $t('Report Issue') }}</span>
+    </a>
+    <a href="{{ configs.edit }}/{{ filename }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
+        <i class="ph-bold ph-pencil-simple text-lg group-hover:scale-110 transition-transform"></i>
+        <span class="text-sm">{{ $t('Edit this page') }}</span>
+    </a>
+</div>
+{% endblock %}"""
 };

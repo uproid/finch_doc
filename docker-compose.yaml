@@ -10,7 +10,6 @@ services:
     image: uproid/finch:latest
     volumes:
       - ./bin:/www/bin
-      - ./pubspac.yml:/www/pubspac.yaml
       - ./lib:/www/lib
       - ./content:/www/content
       - ./public:/www/public
