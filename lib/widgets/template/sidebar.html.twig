@@ -45,8 +45,8 @@
 						<details class="menu-group" {{ $l.get('activeSubMenu') ? 'open' : '' }}>
 							<summary class="flex items-center justify-between gap-2 px-3 py-2 font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg cursor-pointer list-none transition-colors">
 								<span class="menu-item-text text-sm flex-1 leading-relaxed {{ $l.get('activeSubMenu') ? 'text-blue-600 dark:text-secondary-400' : '' }}">{{ menu.title }}</span>
-								<span class="w-4 h-4 menu-chevron" >
-									<i class="{{ $l.get('activeSubMenu') ? 'text-blue-600 dark:text-secondary-400' : '' }} ph-bold ph-caret-right text-lg"></i>
+							<span class="w-4 h-4 menu-chevron flex items-center justify-center">
+									<i class="{{ $l.get('activeSubMenu') ? 'text-blue-600 dark:text-secondary-400' : '' }} ph-bold ph-caret-right text-xs"></i>
 								</span>
 							</summary>
 							<ul class="mt-1 ms-4 space-y-1 border-s-2 border-gray-200 dark:border-gray-700 ps-2">
