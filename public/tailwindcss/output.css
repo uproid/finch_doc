@@ -695,6 +695,10 @@
     --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
+  .translate-y-px {
+    --tw-translate-y: 1px;
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
   }

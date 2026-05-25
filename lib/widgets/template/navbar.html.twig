@@ -12,8 +12,8 @@
     <div class="max-w-[1600px] mx-auto flex items-center justify-between px-4 h-16">
         <!-- Left: Logo & Menu Toggle -->
         <div class="flex items-center gap-4">
-            <button id="menuToggle" class="lg:hidden px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="Toggle navigation menu" aria-expanded="false">
-                <i class="ph-bold ph-list text-2xl"></i>
+            <button id="menuToggle" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="Toggle navigation menu" aria-expanded="false">
+                <i class="ph-bold ph-list text-xl leading-none"></i>
             </button>
             <a href="/" class="flex items-center gap-2 group">
                 <img src="/logo.svg" alt="Finch Framework Logo" class="h-10 group-hover:scale-110 transition-transform">
@@ -51,9 +51,9 @@
         <div class="flex items-center gap-2">
             <!-- Tools Dropdown -->
             <div class="relative group">
-                <button id="toolsDropdown" class="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-haspopup="true" aria-expanded="false">
-                    <span class="font-medium">{{ $t('Help') }}</span>
-                    <i class="ph-bold ph-caret-down text-lg transition-transform group-hover:rotate-180"></i>
+                <button id="toolsDropdown" class="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-haspopup="true" aria-expanded="false">
+                    <span class="text-sm font-medium">{{ $t('Help') }}</span>
+                    <i class="ph-bold ph-caret-down text-xs leading-none translate-y-px"></i>
                 </button>
                 
                 <!-- Dropdown Menu -->
@@ -78,25 +78,25 @@
             </div>
 
             <!-- Mobile Search -->
-            <button id="mobileSearchToggle" class="md:hidden px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="Open search">
-                <i class="ph-bold ph-magnifying-glass text-2xl"></i>
+            <button id="mobileSearchToggle" class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="Open search">
+                <i class="ph-bold ph-magnifying-glass text-xl leading-none"></i>
             </button>
 
             <!-- GitHub with star count -->
-            <a href="{{ configs.repository }}" target="_blank" rel="noopener noreferrer" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group" aria-label="View on GitHub">
-                <i class="ph-bold ph-github-logo text-2xl"></i>
+            <a href="{{ configs.repository }}" target="_blank" rel="noopener noreferrer" class="hidden sm:flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-label="View on GitHub">
+                <i class="ph-bold ph-github-logo text-xl leading-none"></i>
             </a>
 
             <!-- Theme Toggle -->
-            <button id="themeToggle" class="px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors" aria-label="Toggle theme">
-                <i id="theme-icon-light" class="ph-bold ph-moon text-2xl" style="display: inline-block;"></i>
-                <i id="theme-icon-dark" class="ph-bold ph-sun text-2xl" style="display: none;"></i>
+            <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors flex items-center justify-center" aria-label="Toggle theme">
+                <i id="theme-icon-light" class="ph-bold ph-moon text-xl leading-none" style="display: inline-block;"></i>
+                <i id="theme-icon-dark" class="ph-bold ph-sun text-xl leading-none" style="display: none;"></i>
             </button>
 
             <!-- Language Dropdown -->
             <div class="relative group">
-                <button id="languageDropdown" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-haspopup="true" aria-expanded="false" aria-label="Select language">
-                    <i class="ph-bold ph-translate text-xl"></i>
+                <button id="languageDropdown" class="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" aria-haspopup="true" aria-expanded="false" aria-label="Select language">
+                    <i class="ph-bold ph-translate text-xl leading-none"></i>
                     <span class="hidden lg:inline text-sm font-medium uppercase">{{ $e.ln }}</span>
                 </button>
                 
