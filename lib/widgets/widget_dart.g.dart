@@ -473,7 +473,7 @@ function copyToClipboard(text) {
                     type="text" 
                     id="searchInput"
                     placeholder="{{ $t('Search documentation...') }}" 
-                    class="w-full px-4 py-2 ps-10 pe-24 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all"
+                    class="w-full px-4 py-2 ps-10 pe-24 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:border transition-all"
                     autocomplete="off"
                     role="searchbox"
                     aria-label="Search documentation"
@@ -743,8 +743,8 @@ function copyToClipboard(text) {
     {% include 'template/navbar.html.twig' %}
     
     <!-- Quick scroll to top button -->
-    <button id="scrollToTop" class="fixed bottom-6 end-6 z-40 hidden p-3 bg-blue-600 dark:bg-secondary-400 text-white dark:text-black rounded-full shadow-lg hover:bg-blue-700 dark:hover:bg-secondary-500 transition-all hover:scale-110" aria-label="Scroll to top">
-        <i class="ph-bold ph-arrow-up text-xl"></i>
+    <button id="scrollToTop" class="fixed h-10 w-10 bottom-6 end-6 z-40 hidden p-2 bg-blue-600 dark:bg-secondary-400 text-white dark:text-black rounded-full shadow-lg hover:bg-blue-700 dark:hover:bg-secondary-500 transition-all hover:scale-110" aria-label="Scroll to top">
+        <i class="ph-bold ph-arrow-up text-lg"></i>
     </button>
     
     <!-- Main Container -->
