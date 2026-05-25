@@ -185,7 +185,7 @@ var mapTemplates = {
         <div class="grid grid-cols-1 lg:grid-cols-2">
 
             <!-- Left: Brand & actions -->
-            <div class="flex flex-col justify-center px-8 md:px-12 py-10 lg:py-14 lg:border-r border-slate-200 dark:border-gray-800">
+            <div class="flex flex-col justify-center lg:ps-8 lg:pe-4 py-10 px-8 lg:py-14">
 
                 <!-- Logo + name inline -->
                 <div class="flex items-center gap-4 mb-5">
@@ -233,7 +233,7 @@ var mapTemplates = {
             </div>
 
             <!-- Right: Terminal window -->
-            <div class="flex flex-col justify-center px-8 md:px-12 py-10 lg:py-14">
+            <div class="flex flex-col justify-center lg:ps-4 lg:pe-8 py-6 px-8 lg:py-14">
                 <div class="rounded-xl overflow-hidden border border-slate-200 dark:border-gray-700 shadow-lg shadow-slate-200/60 dark:shadow-black/30">
 
                     <!-- Window chrome -->
