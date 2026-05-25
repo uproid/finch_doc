@@ -50,7 +50,7 @@ var mapTemplates = {
 									<i class="{{ $l.get('activeSubMenu') ? 'text-blue-600 dark:text-secondary-400' : '' }} ph-bold ph-caret-right text-xs"></i>
 								</span>
 							</summary>
-							<ul class="mt-1 ms-4 space-y-1 border-s-2 border-gray-200 dark:border-gray-700 ps-2">
+							<ul class="mt-1 ms-4 space-y-1 border-s border-gray-200 dark:border-gray-700 ps-2">
 								{% for submenu in menu.children %}
 									<li class="submenu-item" data-search-text="{{ submenu.title | lower }}">
 										<a href="{{ $l.urlLn(submenu.key) }}" class="{{ $e.isKey(submenu.key) ? 'bg-blue-50 dark:bg-gray-800 border-s-2 border-blue-500 dark:border-secondary-400 text-blue-600 dark:text-secondary-400 -ms-0.5' : 'border-s-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 -ms-0.5' }} flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
