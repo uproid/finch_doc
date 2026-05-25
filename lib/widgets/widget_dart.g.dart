@@ -159,14 +159,13 @@ var mapTemplates = {
 	r"template/hero.html.twig": r"""<!-- Hero Section -->
 <div class="mb-12 relative overflow-hidden rounded-2xl border border-slate-200 dark:border-gray-800/60 bg-slate-50 dark:bg-gray-950">
 
-    <!-- Ambient glows -->
-    <div class="pointer-events-none absolute -top-24 left-1/3 w-72 h-72 bg-blue-500/10 dark:bg-blue-500/20 rounded-full blur-3xl"></div>
-    <div class="pointer-events-none absolute -bottom-16 right-1/4 w-56 h-56 bg-violet-500/8 dark:bg-violet-500/15 rounded-full blur-3xl"></div>
+    <!-- Galaxy canvas -->
+    <canvas id="hero-galaxy" class="pointer-events-none absolute inset-0 w-full h-full"></canvas>
 
     <!-- Dot grid -->
     <div class="absolute inset-0 [background-image:radial-gradient(circle,#cbd5e1_1px,transparent_1px)] dark:[background-image:radial-gradient(circle,#1e293b_1px,transparent_1px)] [background-size:24px_24px]"></div>
     <!-- Vignette to fade dot edges -->
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_80%_100%_at_50%_50%,transparent_30%,#f8fafc_100%)] dark:bg-[radial-gradient(ellipse_80%_100%_at_50%_50%,transparent_30%,#030712_100%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_90%_110%_at_50%_50%,transparent_55%,#f8fafc_100%)] dark:bg-[radial-gradient(ellipse_90%_110%_at_50%_50%,transparent_55%,#030712_100%)]"></div>
 
     <div class="relative z-10">
 
@@ -287,6 +286,95 @@ function copyToClipboard(text) {
         }, 2000);
     });
 }
+
+(function () {
+  var canvas = document.getElementById('hero-galaxy');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var stars = [], nebulas, raf;
+
+  var NEBULAS = [
+    { rx: 0.22, ry: 0.35, rad: 260, h: 224, s: 85 },
+    { rx: 0.75, ry: 0.55, rad: 220, h: 265, s: 80 },
+    { rx: 0.50, ry: 0.88, rad: 200, h: 195, s: 75 },
+    { rx: 0.12, ry: 0.70, rad: 160, h: 180, s: 70 },
+    { rx: 0.88, ry: 0.20, rad: 180, h: 305, s: 75 },
+    { rx: 0.60, ry: 0.15, rad: 150, h: 245, s: 80 },
+  ];
+
+  function resize() {
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    initStars();
+  }
+
+  function initStars() {
+    stars = [];
+    var count = Math.floor(canvas.width * canvas.height / 900);
+    for (var i = 0; i < count; i++) {
+      var bright = Math.random() < 0.08; // 8% chance of a large bright star
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: bright ? (Math.random() * 1.8 + 1.4) : (Math.random() * 1.0 + 0.3),
+        speed: Math.random() * 0.18 + 0.03,
+        phase: Math.random() * Math.PI * 2,
+        dPhase: Math.random() * 0.022 + 0.005,
+        bright: bright,
+      });
+    }
+  }
+
+  function drawNebulas(w, h, dark) {
+    for (var i = 0; i < NEBULAS.length; i++) {
+      var nb = NEBULAS[i];
+      var x = nb.rx * w, y = nb.ry * h;
+      var alpha = dark ? 0.28 : 0.14;
+      var g = ctx.createRadialGradient(x, y, 0, x, y, nb.rad);
+      g.addColorStop(0,   'hsla(' + nb.h + ',' + nb.s + '%,62%,' + alpha + ')');
+      g.addColorStop(0.4, 'hsla(' + nb.h + ',' + nb.s + '%,62%,' + (alpha * 0.5) + ')');
+      g.addColorStop(1,   'hsla(' + nb.h + ',' + nb.s + '%,62%,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, nb.rad, 0, 6.2832);
+      ctx.fill();
+    }
+  }
+
+  function draw() {
+    var w = canvas.width, h = canvas.height;
+    var dark = document.documentElement.classList.contains('dark');
+    ctx.clearRect(0, 0, w, h);
+
+    drawNebulas(w, h, dark);
+
+    for (var j = 0; j < stars.length; j++) {
+      var s = stars[j];
+      s.phase += s.dPhase;
+      var brightness = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(s.phase));
+      var alpha = (dark ? 0.9 : 0.5) * brightness;
+      if (s.bright && dark) {
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = 'rgba(180,200,255,0.7)';
+      }
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, 6.2832);
+      ctx.fillStyle = dark
+        ? 'rgba(220,232,255,' + alpha + ')'
+        : 'rgba(51,65,85,'   + alpha + ')';
+      ctx.fill();
+      if (s.bright && dark) { ctx.shadowBlur = 0; }
+      s.y -= s.speed;
+      if (s.y < -2) { s.y = h + 2; s.x = Math.random() * w; }
+    }
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  resize();
+  draw();
+  window.addEventListener('resize', function () { cancelAnimationFrame(raf); resize(); draw(); });
+})();
 </script>
 """,
 	r"template/error.html.twig": r"""{% extends 'template/base.html.twig' %}

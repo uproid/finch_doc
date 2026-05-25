@@ -1,3 +1,31 @@
+/* ── Galaxy hero animation ── */
+@keyframes gx-drift-a {
+    0%,100% { transform: translate(0,    0   ) scale(1);    }
+    30%      { transform: translate(40px, -30px) scale(1.12); }
+    65%      { transform: translate(-25px, 20px) scale(0.92); }
+}
+@keyframes gx-drift-b {
+    0%,100% { transform: translate(0,    0   ) scale(1);    }
+    40%      { transform: translate(-35px, 28px) scale(1.08); }
+    72%      { transform: translate(22px, -35px) scale(1.14); }
+}
+@keyframes gx-drift-c {
+    0%,100% { transform: translate(0,    0   ) scale(1);    }
+    25%      { transform: translate(18px,  30px) scale(0.88); }
+    75%      { transform: translate(-30px,-18px) scale(1.1);  }
+}
+@keyframes gx-pulse {
+    0%,100% { opacity: 1;   }
+    50%      { opacity: 0.6; }
+}
+.gx-a  { animation: gx-drift-a 14s ease-in-out infinite; }
+.gx-b  { animation: gx-drift-b 18s ease-in-out infinite; }
+.gx-c  { animation: gx-drift-c 22s ease-in-out infinite; }
+.gx-ar { animation: gx-drift-a 16s ease-in-out infinite reverse; }
+.gx-br { animation: gx-drift-b 20s ease-in-out infinite reverse; }
+.gx-cr { animation: gx-drift-c 12s ease-in-out infinite reverse; }
+.gx-p  { animation: gx-pulse   8s  ease-in-out infinite; }
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
