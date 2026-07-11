@@ -56,5 +56,8 @@
     "Oops! Something went wrong": "哎呀！出了点问题",
     "Page not found, please check the URL or return to the homepage.": "页面未找到，请检查网址或返回主页。",
     "Back": "返回",
-    "No results found.": "未找到结果。"
+    "No results found.": "未找到结果。",
+    "You can use this endpoint to access the MCP server for your project. Make sure to keep it secure and do not share it publicly.": "您可以使用此端点访问您的项目的 MCP 服务器。请确保保持其安全，并且不要公开分享。",
+    "For more information, refer to the documentation.": "有关更多信息，请参阅文档。",
+    "If you encounter any issues, please contact support.": "如果您遇到任何问题，请联系支持。"
 }

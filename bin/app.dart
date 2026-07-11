@@ -1,5 +1,3 @@
-import 'package:finch/finch_ui.dart';
-import 'package:finch/src/views/htmler.dart';
 import 'package:finch_doc/core/configs.dart';
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch_doc/core/local_events.dart';
@@ -19,10 +17,6 @@ void main(List<String>? args) async {
   });
 
   if (!Console.isDebug) {
-    Request.errorWidget = ErrorWidget();
-  }
-
-  if (!Console.isDebug) {
     app.registerCron(FinchCron(
       onCron: (_, __) async {
         print('Updating contents...');
@@ -33,12 +27,4 @@ void main(List<String>? args) async {
       delayFirstMoment: false,
     ).start());
   }
-}
-
-class ErrorWidget extends FinchStringWidget {
-  @override
-  Tag Function(Map args)? get generateHtml => (Map args) {
-        homeController.error404();
-        return $Text("Error 404");
-      };
 }

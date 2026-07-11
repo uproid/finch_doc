@@ -56,5 +56,8 @@
     "Oops! Something went wrong": "اوه! مشکلی پیش آمد",
     "Page not found, please check the URL or return to the homepage.": "صفحه پیدا نشد، لطفاً آدرس را بررسی کنید یا به صفحه اصلی بازگردید.",
     "Back": "بازگشت",
-    "No results found.": "نتیجه‌ای یافت نشد."
+    "No results found.": "نتیجه‌ای یافت نشد.",
+    "You can use this endpoint to access the MCP server for your project. Make sure to keep it secure and do not share it publicly.": "شما می‌توانید از این نقطه پایانی برای دسترسی به سرور MCP برای پروژه خود استفاده کنید. مطمئن شوید که آن را ایمن نگه دارید و به صورت عمومی به اشتراک نگذارید.",
+    "For more information, refer to the documentation.": "برای اطلاعات بیشتر، به مستندات مراجعه کنید.",
+    "If you encounter any issues, please contact support.": "اگر با مشکلی مواجه شدید، لطفاً با پشتیبانی تماس بگیرید."
 }

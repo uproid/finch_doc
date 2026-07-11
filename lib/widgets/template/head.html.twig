@@ -11,9 +11,9 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ title }} | Finch</title>
+<title>{% block title %}{{ title }}{% endblock %} | Finch</title>
 {% if description is defined %}
-<meta name="description" content="{{ description }}">
+<meta name="description" content="{% block description %}{{ description }}{% endblock %}">
 {% else %}
 <meta name="description" content="Finch helps developers build scalable Dart backends with MongoDB, MySQL, SQLite, WebSockets, auto API docs, authentication, email, and deployment tools.">
 {% endif %}

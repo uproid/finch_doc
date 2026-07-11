@@ -28,6 +28,10 @@ var localEvents = <String, Object>{
     var rq = Context.rq;
     return rq.getParam(key, def: def);
   },
+  'isRouteKey': (String key) {
+    var rq = Context.rq;
+    return rq.route?.key == key;
+  },
 };
 
 String url(Request rq, String subPath, {Map<String, String>? params}) {

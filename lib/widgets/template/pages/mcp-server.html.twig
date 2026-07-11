@@ -1,0 +1,34 @@
+{% extends 'template/page.html.twig' %}
+
+{% block html %}
+	<!-- MCP Server Content -->
+	<div class="not-prose space-y-5 pb-10">
+		<div>
+			<label class="flex items-center gap-2 text-[11px] font-bold tracking-wider text-gray-500 dark:text-gray-400">
+				<i class="fa-solid fa-link text-teal-600 dark:text-teal-400"></i>
+				{{ $t('Endpoint') }}
+			</label>
+			<div class="mt-5 items-stretch gap-2">
+				<pre class="bg-gray-100 border-2 border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-red-400 p-4 rounded mb-4 overflow-x-auto language-bash" dir="ltr" tabindex="0"><code class="language-bash">{{ $e.url('mcp') }}</code></pre>
+			</div>
+			<div class="mt-5 text-sm text-gray-500 dark:text-gray-400">
+				<p>{{ $t('You can use this endpoint to access the MCP server for your project. Make sure to keep it secure and do not share it publicly.') }}</p>
+				<p>{{ $t('For more information, refer to the documentation.') }}</p>
+				<p>{{ $t('If you encounter any issues, please contact support.') }}</p>
+			</div>
+			<div>
+				<pre class="bg-gray-100 border-2 border-gray-300 dark:border-gray-700 dark:bg-gray-800 text-red-400 p-4 rounded mb-4 overflow-x-auto language-json" dir="ltr" tabindex="0"><code class="language-json">{
+    "mcpServers": {
+        "mcp-finch-doc": {
+            "url": "{{ $e.url('mcp') }}",
+            "type": "sse"
+        }
+    }
+}</code>
+</pre>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block title %}MCP Server{% endblock %}

@@ -1,6 +1,7 @@
 import 'package:finch_doc/controllers/mcp_doc_controller.dart';
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch/route.dart';
+import 'package:finch_doc/core/languages.dart';
 import '../controllers/home_controller.dart';
 
 final homeController = HomeController();
@@ -8,6 +9,13 @@ final mcpDocController = McpDocController();
 
 Future<List<FinchRoute>> getFinchRoute(Request rq) async {
   return [
+    FinchRoute(
+      key: 'home.mcpserver.index',
+      path: '/mcp-server',
+      extraPath: languages.keys.map((lang) => '/$lang/mcp-server/').toList(),
+      methods: Methods.ALL,
+      index: homeController.mcpServer,
+    ),
     ...Extractor.routes,
     FinchRoute(
       path: '/api/search',

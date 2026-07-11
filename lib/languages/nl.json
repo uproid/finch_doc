@@ -56,5 +56,8 @@
     "Oops! Something went wrong": "Oeps! Er is iets misgegaan",
     "Page not found, please check the URL or return to the homepage.": "Pagina niet gevonden, controleer de URL of keer terug naar de startpagina.",
     "Back": "Terug",
-    "No results found.": "Geen resultaten gevonden."
+    "No results found.": "Geen resultaten gevonden.",
+    "You can use this endpoint to access the MCP server for your project. Make sure to keep it secure and do not share it publicly.": "U kunt deze endpoint gebruiken om toegang te krijgen tot de MCP-server voor uw project. Zorg ervoor dat u deze veilig houdt en niet openbaar deelt.",
+    "For more information, refer to the documentation.": "Voor meer informatie, raadpleeg de documentatie.",
+    "If you encounter any issues, please contact support.": "Als u problemen ondervindt, neem dan contact op met de ondersteuning."
 }

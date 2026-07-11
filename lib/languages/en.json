@@ -56,5 +56,9 @@
     "Oops! Something went wrong": "Oops! Something went wrong",
     "Page not found, please check the URL or return to the homepage.": "Page not found, please check the URL or return to the homepage.",
     "Back": "Back",
-    "No results found.": "No results found."
+    "No results found.": "No results found.",
+    "You can use this endpoint to access the MCP server for your project. Make sure to keep it secure and do not share it publicly.": "You can use this endpoint to access the MCP server for your project. Make sure to keep it secure and do not share it publicly.",
+    "For more information, refer to the documentation.": "For more information, refer to the documentation.",
+    "If you encounter any issues, please contact support.": "If you encounter any issues, please contact support."
+
 }

@@ -8,6 +8,8 @@ services:
     hostname: finchdoc
     container_name: finchdoc
     image: uproid/finch:latest
+    stdin_open: true
+    tty: true
     volumes:
       - ./bin:/www/bin
       - ./lib:/www/lib
@@ -30,13 +32,19 @@ services:
       - ./public/:/var/www/html
     depends_on:
       - finchdoc
-  
+
   nodejs:
-      image: node:20-alpine
-      working_dir: /app
-      tty: true
-      stdin_open: true
-      volumes:
-        - ./:/app
-      command: sh -c "npm install && npm run watch:css"
-      restart: always
+    image: node:20-alpine
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./:/app
+    command: sh -c "npm install && npm run watch:css"
+    restart: always
+
+  mail:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"
+      - "1025:1025"
