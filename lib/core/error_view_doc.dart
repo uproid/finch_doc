@@ -26,7 +26,7 @@ class ErrorViewDoc extends FinchStringWidget {
         rq.addParam('index', []);
         rq.addParam('filename', "content.filename");
         rq.addParam(
-            'key', pathNorm(rq.uri.pathSegments.last, endWithSlash: false));
+            'key', pathNorm(rq.uri.safePathSegments.last, endWithSlash: false));
         rq.addParam('configs', Extractor.configs);
         rq.addParam('meta', {});
         rq.addParam('description', "content.description");
