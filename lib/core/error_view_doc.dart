@@ -32,7 +32,10 @@ class ErrorViewDoc extends FinchStringWidget {
         rq.addParam('description', "content.description");
         rq.addParam('finchVersion', FinchApp.info.version);
         var menus = Extractor.contents['en']!.menus;
-        rq.addParam('language', languages[rq.getLanguage()]!.toMap());
+        rq.addParam(
+          'language',
+          languages[rq.getLanguage()]?.toMap() ?? languages['en']!.toMap(),
+        );
         rq.addParam('languages', Extractor.allLanguages());
         rq.addParam('menus', menus);
 
