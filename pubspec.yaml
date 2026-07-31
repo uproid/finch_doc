@@ -13,7 +13,7 @@ dev_dependencies:
   json_serializable:
 
 dependencies:
-  finch: 1.4.4
+  finch: 1.5.0
     # path: ../dart/dweb
   markdown: ^7.3.1
   watcher: 1.2.1
