@@ -46,11 +46,13 @@ class McpDocController extends McpServerController {
               $meta: MetaObject(doc.meta.cast()),
             ),
           ],
-          $meta: MetaObject({
+          $meta: ResultMetaObject(additionalData: {
             ...doc.meta.cast<String, dynamic>(),
             'uri': req.params.uri,
             'url': rq.url(key),
           }),
+          ttlMs: 60000,
+          cacheScope: CacheScope.public,
         ),
       );
 
@@ -67,7 +69,7 @@ class McpDocController extends McpServerController {
               content: TextContent(text: doc.md, mimeType: 'text/markdown'),
             ),
           ],
-          $meta: MetaObject({
+          $meta: ResultMetaObject(additionalData: {
             ...doc.meta.cast<String, dynamic>(),
             'name': req.params.name,
             'url': rq.url(key),
