@@ -7,7 +7,7 @@ import '../controllers/home_controller.dart';
 final homeController = HomeController();
 final mcpDocController = McpDocController();
 
-Future<List<FinchRoute>> getFinchRoute(Request rq) async {
+Future<List<FinchRoute>> getFinchRoute() async {
   return [
     FinchRoute(
       key: 'home.mcpserver.index',
