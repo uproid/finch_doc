@@ -211,19 +211,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const themeIconLight = document.getElementById('theme-icon-light');
     const themeIconDark = document.getElementById('theme-icon-dark');
 
-    function updatePrismTheme(isDark) {
-        const prismLight = document.getElementById('prism-light');
-        const prismDark = document.getElementById('prism-dark');
-        
-        if (isDark) {
-            prismLight.disabled = true;
-            prismDark.disabled = false;
-        } else {
-            prismLight.disabled = false;
-            prismDark.disabled = true;
-        }
-    }
-
     function updateThemeIcons(isDark) {
         if (themeIconLight && themeIconDark) {
             if (isDark) {
@@ -236,9 +223,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Initialize Prism theme and icons on load
+    // Initialize theme icons on load
     const initialDarkMode = html.classList.contains('dark');
-    updatePrismTheme(initialDarkMode);
     updateThemeIcons(initialDarkMode);
 
     if (themeToggle) {
@@ -250,12 +236,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (isDark) {
                     html.classList.remove('dark');
                     localStorage.setItem('theme', 'light');
-                    updatePrismTheme(false);
                     updateThemeIcons(false);
                 } else {
                     html.classList.add('dark');
                     localStorage.setItem('theme', 'dark');
-                    updatePrismTheme(true);
                     updateThemeIcons(true);
                 }
                 

@@ -188,21 +188,8 @@ var mapTemplates = {
         // Initialize theme icons when DOM is ready
         window.addEventListener('DOMContentLoaded', function() {
             const isDark = document.documentElement.classList.contains('dark');
-            const prismLight = document.getElementById('prism-light');
-            const prismDark = document.getElementById('prism-dark');
             const themeIconLight = document.getElementById('theme-icon-light');
             const themeIconDark = document.getElementById('theme-icon-dark');
-            
-            // Set Prism theme
-            if (prismLight && prismDark) {
-                if (isDark) {
-                    prismLight.disabled = true;
-                    prismDark.disabled = false;
-                } else {
-                    prismLight.disabled = false;
-                    prismDark.disabled = true;
-                }
-            }
             
             // Set theme icons
             if (themeIconLight && themeIconDark) {
@@ -220,12 +207,10 @@ var mapTemplates = {
 <link rel="stylesheet" href="/tailwindcss/output.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
 <link rel="stylesheet" href="/style.css">
-<!-- Prism.js for syntax highlighting - Light theme -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" id="prism-light">
-<!-- Prism.js for syntax highlighting - Dark theme -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" id="prism-dark" disabled>
-<!-- Prism.js Toolbar for copy button -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
+<!-- Fonts: Inter (UI), Vazirmatn (Persian/RTL), JetBrains Mono (code) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 {% endblock %}""",
 	r"template/error.html.twig": r"""{% extends 'template/base.html.twig' %}
 
@@ -804,20 +789,8 @@ function copyToClipboard(text) {
 	</div>
 </div>
 """,
-	r"template/scripts.html.twig": r"""<!-- Prism.js Core -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
-<!-- Prism.js Toolbar Plugin -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js" defer></script>
-<!-- Prism.js Copy to Clipboard Plugin -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" defer></script>
-<!-- Prism.js Dart Language Support -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-dart.min.js" defer></script>
-<!-- Prism.js Additional Languages (optional) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-nginx.min.js" defer></script>
+	r"template/scripts.html.twig": r"""<!-- Modern code blocks (Shiki syntax highlighting) -->
+<script type="module" src="/code-blocks.js"></script>
 <script src="/script.js"></script>
 <script src="/app/includes.js" crossorigin="anonymous"></script>
 {% if not isLocalDebug %}
