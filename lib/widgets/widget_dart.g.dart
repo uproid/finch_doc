@@ -417,7 +417,7 @@ var mapTemplates = {
 
                 <!-- CTA buttons -->
                 <div class="flex flex-wrap gap-3">
-                    <a href="/#explore-docs"
+                    <a href="/#breadcrumb"
                        class="inline-flex items-center gap-2 h-10 px-5 rounded-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-sm font-semibold transition-colors shadow-sm shadow-blue-500/30">
                         <i class="ph-bold ph-book-open"></i>{{ $t('Get Started') }}
                     </a>
