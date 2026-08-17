@@ -14,6 +14,10 @@ class HomeController extends Controller {
     return rq.renderHtml(html: "Hello world from Home Controller");
   }
 
+  Future<String> home() async {
+    return renderPage('home');
+  }
+
   Future<String> mcpServer() async {
     return renderPage('mcp-server');
   }

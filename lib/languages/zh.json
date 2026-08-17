@@ -59,5 +59,22 @@
     "No results found.": "未找到结果。",
     "You can use this endpoint to access the MCP server for your project. Make sure to keep it secure and do not share it publicly.": "您可以使用此端点访问您的项目的 MCP 服务器。请确保保持其安全，并且不要公开分享。",
     "For more information, refer to the documentation.": "有关更多信息，请参阅文档。",
-    "If you encounter any issues, please contact support.": "如果您遇到任何问题，请联系支持。"
+    "If you encounter any issues, please contact support.": "如果您遇到任何问题，请联系支持。",
+    "Everything you need to ship a backend": "打造后端所需的一切",
+    "Finch bundles the pieces every Dart backend needs, so you can focus on your product instead of wiring plumbing.": "Finch 集成了每个 Dart 后端所需的各种组件，让你专注于产品本身，而不是搭建基础设施。",
+    "API Docs with Swagger": "使用 Swagger 生成 API 文档",
+    "Rapid API development with auto-generated OpenAPI documentation.": "借助自动生成的 OpenAPI 文档，实现快速的 API 开发。",
+    "Real-Time WebSockets": "实时 WebSocket",
+    "Build live features with first-class WebSocket support.": "凭借一流的 WebSocket 支持构建实时功能。",
+    "Multi-Database Support": "多数据库支持",
+    "MongoDB, MySQL and SQLite integrations, ready out of the box.": "内置 MongoDB、MySQL 和 SQLite 集成，开箱即用。",
+    "Scheduled Tasks": "定时任务",
+    "Run cron jobs directly from your Finch application.": "直接在 Finch 应用中运行定时任务（cron jobs）。",
+    "Multi-Language & i18n": "多语言与国际化 (i18n)",
+    "Localization is built into routing, templates and content.": "本地化功能已内置于路由、模板和内容之中。",
+    "Database Migrations": "数据库迁移",
+    "Manage schema changes with a built-in migration system.": "通过内置的迁移系统管理数据库结构的变更。",
+    "Explore the documentation": "浏览文档",
+    "Jump straight into the topic you need.": "直接跳转到你需要的主题。",
+    "Finch is a fast, modular and type-safe Dart web framework with built-in support for databases, WebSockets, auth, i18n and more.": "Finch 是一个快速、模块化且类型安全的 Dart Web 框架，内置支持数据库、WebSocket、身份验证、国际化（i18n）等功能。"
 }

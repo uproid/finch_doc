@@ -59,5 +59,22 @@
     "No results found.": "نتیجه‌ای یافت نشد.",
     "You can use this endpoint to access the MCP server for your project. Make sure to keep it secure and do not share it publicly.": "شما می‌توانید از این نقطه پایانی برای دسترسی به سرور MCP برای پروژه خود استفاده کنید. مطمئن شوید که آن را ایمن نگه دارید و به صورت عمومی به اشتراک نگذارید.",
     "For more information, refer to the documentation.": "برای اطلاعات بیشتر، به مستندات مراجعه کنید.",
-    "If you encounter any issues, please contact support.": "اگر با مشکلی مواجه شدید، لطفاً با پشتیبانی تماس بگیرید."
+    "If you encounter any issues, please contact support.": "اگر با مشکلی مواجه شدید، لطفاً با پشتیبانی تماس بگیرید.",
+    "Everything you need to ship a backend": "هر آنچه برای ساخت یک بک‌اند نیاز دارید",
+    "Finch bundles the pieces every Dart backend needs, so you can focus on your product instead of wiring plumbing.": "فینچ تمام قطعاتی را که هر بک‌اند Dart به آن‌ها نیاز دارد در خود جای داده است؛ بنابراین می‌توانید به‌جای درگیر شدن با زیرساخت، روی محصول خود تمرکز کنید.",
+    "API Docs with Swagger": "مستندات API با Swagger",
+    "Rapid API development with auto-generated OpenAPI documentation.": "توسعه سریع API با مستندات OpenAPI تولید شده به‌صورت خودکار.",
+    "Real-Time WebSockets": "وب‌سوکت‌های بلادرنگ",
+    "Build live features with first-class WebSocket support.": "با پشتیبانی درجه‌یک از WebSocket، ویژگی‌های زنده بسازید.",
+    "Multi-Database Support": "پشتیبانی از چند پایگاه داده",
+    "MongoDB, MySQL and SQLite integrations, ready out of the box.": "یکپارچگی با MongoDB، MySQL و SQLite، آماده استفاده بدون نیاز به تنظیمات اضافی.",
+    "Scheduled Tasks": "وظایف زمان‌بندی‌شده",
+    "Run cron jobs directly from your Finch application.": "وظایف cron را مستقیماً از برنامه Finch خود اجرا کنید.",
+    "Multi-Language & i18n": "چندزبانگی و i18n",
+    "Localization is built into routing, templates and content.": "بومی‌سازی به‌صورت درونی در مسیریابی، قالب‌ها و محتوا پیاده‌سازی شده است.",
+    "Database Migrations": "مهاجرت‌های پایگاه داده",
+    "Manage schema changes with a built-in migration system.": "تغییرات ساختار پایگاه داده را با یک سیستم مهاجرت داخلی مدیریت کنید.",
+    "Explore the documentation": "مستندات را کاوش کنید",
+    "Jump straight into the topic you need.": "مستقیم به موضوعی که نیاز دارید بروید.",
+    "Finch is a fast, modular and type-safe Dart web framework with built-in support for databases, WebSockets, auth, i18n and more.": "فینچ یک فریم‌ورک وب Dart سریع، ماژولار و ایمن از نظر نوع داده است که به‌صورت درونی از پایگاه‌های داده، WebSocket، احراز هویت، i18n و موارد دیگر پشتیبانی می‌کند."
 }

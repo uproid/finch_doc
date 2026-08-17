@@ -10,6 +10,13 @@ final mcpDocController = McpDocController();
 Future<List<FinchRoute>> getFinchRoute() async {
   return [
     FinchRoute(
+      key: 'home.index',
+      path: '/',
+      extraPath: languages.keys.map((lang) => '/$lang/').toList(),
+      methods: [Methods.GET, Methods.POST, Methods.HEAD],
+      index: homeController.home,
+    ),
+    FinchRoute(
       key: 'home.mcpserver.index',
       path: '/mcp-server',
       extraPath: languages.keys.map((lang) => '/$lang/mcp-server/').toList(),
