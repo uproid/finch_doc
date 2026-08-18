@@ -147,6 +147,22 @@ Sitemap: ${rq.url('/sitemap.xml')}
 
     var allLanguages = Extractor.contents.keys;
     var allContentsByKey = <String, Map<String, List<ContentModel>>>{};
+
+    for (var lang in ['', ...allLanguages]) {
+      sitemapEntries.writeln('\t<url>');
+      sitemapEntries
+          .writeln('\t\t<loc>${rq.url(lang.isEmpty ? '/' : '/$lang/')}</loc>');
+      for (var subLang in allLanguages) {
+        sitemapEntries.writeln(
+            '\t\t<xhtml:link rel="alternate" ${subLang.isNotEmpty ? 'hreflang="$subLang" ' : ''}href="${rq.url(subLang.isEmpty ? '/' : '/$subLang/')}" />');
+      }
+      sitemapEntries.writeln(
+          '\t\t<xhtml:link rel="alternate" hreflang="x-default" href="${rq.url('')}" />');
+      sitemapEntries.writeln('\t\t<changefreq>weekly</changefreq>');
+      sitemapEntries.writeln('\t\t<priority>1.0</priority>');
+      sitemapEntries.writeln('\t</url>');
+    }
+
     for (var lang in allLanguages) {
       var contents = Extractor.contents[lang]!.contents;
       contents.forEach((key, content) {
