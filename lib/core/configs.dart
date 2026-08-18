@@ -3,6 +3,7 @@ import 'package:finch/finch_app.dart';
 import 'package:finch/finch_tools.dart';
 import 'package:finch/model.dart';
 import 'package:finch_doc/core/error_view_doc.dart';
+import 'package:finch_doc/core/languages.dart';
 import 'package:finch_doc/languages/language_dart.g.dart';
 import 'package:finch_doc/widgets/widget_dart.g.dart';
 
@@ -22,4 +23,5 @@ final FinchConfigs configs = FinchConfigs(
   dartLanguages: languageDart,
   jinjaMapTemplate: mapTemplates,
   errorWidget: ErrorViewDoc(),
+  languages: languages.keys.toList(),
 );

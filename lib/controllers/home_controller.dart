@@ -51,13 +51,6 @@ class HomeController extends Controller {
     var lang = rq.getLanguage();
     var isApi = enableApi && (rq.isApiEndpoint || rq.endpoint == 'api');
 
-    /// Allowed languages only
-    var allowedLanguages = Extractor.allLanguages();
-    if (allowedLanguages.indexWhere((element) => element['code'] == lang) ==
-        -1) {
-      lang = 'en';
-    }
-
     var langModel = languages[lang] ?? languages['en']!;
     if (languages[lang] == null) {
       lang = 'en';
