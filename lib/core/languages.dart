@@ -3,8 +3,9 @@ class Language {
   final String localName;
   final String name;
   final String emojiFlag;
+  final String longCode;
 
-  Language(this.code, this.localName, this.name, this.emojiFlag);
+  Language(this.code, this.localName, this.name, this.emojiFlag, this.longCode);
 
   bool get isRtl {
     const rtlLanguages = [
@@ -33,15 +34,16 @@ class Language {
       'emojiFlag': emojiFlag,
       'isRtl': isRtl,
       'dir': isRtl ? 'rtl' : 'ltr',
+      'longCode': longCode,
     };
   }
 }
 
 Map<String, Language> languages = {
-  'en': Language('en', 'English', 'English', '🇺🇸'),
-  'fa': Language('fa', 'فارسی', 'Persian', '🇮🇷'),
-  'nl': Language('nl', 'Nederlands', 'Dutch', '🇳🇱'),
-  'zh': Language('zh', '中文', 'Chinese', '🇨🇳'),
+  'en': Language('en', 'English', 'English', '🇺🇸', 'en-US'),
+  'fa': Language('fa', 'فارسی', 'Persian', '🇮🇷', 'fa-IR'),
+  'nl': Language('nl', 'Nederlands', 'Dutch', '🇳🇱', 'nl-NL'),
+  'zh': Language('zh', '中文', 'Chinese', '🇨🇳', 'zh-CN'),
 
   // 'es': Language('es', 'Español', 'Spanish', '🇪🇸'),
   // 'fr': Language('fr', 'Français', 'French', '🇫🇷'),

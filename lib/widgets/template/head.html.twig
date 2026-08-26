@@ -54,4 +54,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+{% if(status|default(200) == 200) %}
+    {% for lang in languages %}
+<link rel="alternate" hreflang="{{ lang.longCode }}" href="{{ $e.url('/'~lang.code~'/'~key) }}"/>
+    {% endfor %}
+<link rel="alternate" hreflang="x-default" href="{{ $e.url('/'~key) }}"/>
+{% endif %}
 {% endblock %}
