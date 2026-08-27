@@ -362,6 +362,112 @@ var mapTemplates = {
     {% include 'template/scripts.html.twig' %}
 </body>
 </html>""",
+	r"template/sitemap-xsl.html.twig": r"""<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:sm="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <xsl:output method="html" encoding="UTF-8" indent="yes" />
+
+  <xsl:template match="/sm:urlset">
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <title>XML Sitemap</title>
+        <style>
+          :root { color-scheme: light dark; }
+          body {
+            margin: 0;
+            padding: 2.5rem 1.5rem;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f7f7f8;
+            color: #1f2328;
+          }
+          .wrap { max-width: 960px; margin: 0 auto; }
+          h1 { font-size: 1.4rem; margin: 0 0 0.25rem; }
+          p.meta { color: #57606a; margin: 0 0 1.5rem; }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            overflow: hidden;
+          }
+          thead th {
+            text-align: left;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #57606a;
+            background: #f6f8fa;
+            padding: 0.6rem 0.9rem;
+            border-bottom: 1px solid #d0d7de;
+          }
+          tbody td {
+            padding: 0.55rem 0.9rem;
+            border-bottom: 1px solid #eaeef2;
+            font-size: 0.9rem;
+            vertical-align: top;
+          }
+          tbody tr:last-child td { border-bottom: none; }
+          tbody tr:hover { background: #f6f8fa; }
+          a { color: #0969da; text-decoration: none; word-break: break-all; }
+          a:hover { text-decoration: underline; }
+          td.num { text-align: center; white-space: nowrap; }
+          @media (prefers-color-scheme: dark) {
+            body { background: #0d1117; color: #e6edf3; }
+            p.meta { color: #8b949e; }
+            table { background: #161b22; border-color: #30363d; }
+            thead th { background: #161b22; color: #8b949e; border-color: #30363d; }
+            tbody td { border-color: #21262d; }
+            tbody tr:hover { background: #1c2128; }
+            a { color: #58a6ff; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="wrap">
+          <h1>XML Sitemap</h1>
+          <p class="meta">
+            <xsl:value-of select="count(sm:url)" /> URLs listed below. This file is meant for search engines
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>URL</th>
+                <th>Alternates</th>
+                <th>Change freq.</th>
+                <th>Priority</th>
+              </tr>
+            </thead>
+            <tbody>
+              <xsl:for-each select="sm:url">
+                <tr>
+                  <td>
+                    <a href="{sm:loc}">
+                      <xsl:value-of select="sm:loc" />
+                    </a>
+                  </td>
+                  <td class="num">
+                    <xsl:value-of select="count(xhtml:link)" />
+                  </td>
+                  <td class="num">
+                    <xsl:value-of select="sm:changefreq" />
+                  </td>
+                  <td class="num">
+                    <xsl:value-of select="sm:priority" />
+                  </td>
+                </tr>
+              </xsl:for-each>
+            </tbody>
+          </table>
+        </div>
+      </body>
+    </html>
+  </xsl:template>
+</xsl:stylesheet>
+""",
 	r"template/hero.html.twig": r"""<!-- Hero Section -->
 <div class="mb-12 relative overflow-hidden rounded-2xl border border-slate-200 dark:border-gray-800/60 bg-slate-50 dark:bg-gray-950">
 
@@ -820,6 +926,22 @@ function copyToClipboard(text) {
     }
 </script>
 {% endif %}""",
+	r"template/sitemap.html.twig": r"""<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="{{ xslHref }}"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+	{%- for url in urls %}
+	<url>
+		<loc>{{ url.loc | unscape }}</loc>
+		{% for alt in url.alternates -%}
+		<xhtml:link rel="alternate" hreflang="{{ alt.hreflang }}" href="{{ alt.href | unscape }}" />
+		{% endfor -%}
+		<changefreq>{{ url.changefreq }}</changefreq>
+		<priority>{{ url.priority }}</priority>
+	</url>
+	{%- endfor %}
+</urlset>
+""",
 	r"template/footer.html.twig": r"""<!-- Footer -->
 <footer class="mt-16 bg-linear-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 border-t-2 border-gray-200 dark:border-gray-700">
     <!-- Newsletter Section -->

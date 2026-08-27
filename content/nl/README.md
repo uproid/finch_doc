@@ -36,6 +36,11 @@ Welkom bij de Finch Documentatie! Deze documentatie begeleidt je door het gebrui
 25. [Finch Database Migratie Gids](25.database_migration.md)
 26. [Docker voor Finch](26.docker_for_finch.md)
 27. [Nginx voor Finch](27.nginx_for_finch.md)
+28. [Finch Capp Gids](28.capp.md)
+29. [Finch Middleware Gids](29.middleware.md)
+30. [Finch Route Cache Gids](30.route_cache.md)
+31. [Finch MCP Server Gids](31.mcp_server.md)
+32. [Finch-configuratie in pubspec.yaml](32.pubspec_configuration.md)
 
 ## Functies
 
@@ -77,5 +82,5 @@ Voel je vrij om de voorbeelden aan te passen en het project uit te breiden om de
 
 ### Community
 
-* Contact: info@uproid.com
+* Contact: info@finchdart.com
 * Discord: https://discord.gg/YduDmJxCp9

@@ -45,6 +45,11 @@ Future<List<FinchRoute>> getFinchRoute() async {
       index: homeController.sitemap,
     ),
     FinchRoute(
+      path: '/sitemap.xsl',
+      methods: const [Methods.GET, Methods.POST, Methods.HEAD, Methods.OPTIONS],
+      index: homeController.sitemapXsl,
+    ),
+    FinchRoute(
       path: '/mcp',
       methods: const [Methods.GET, Methods.POST, Methods.HEAD, Methods.OPTIONS],
       index: mcpDocController.index,
