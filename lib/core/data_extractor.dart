@@ -227,7 +227,12 @@ class Extractor {
               'api/$key',
             ],
           ],
-          methods: [Methods.GET, Methods.POST, Methods.HEAD],
+          methods: const [
+            Methods.GET,
+            Methods.POST,
+            Methods.HEAD,
+            Methods.OPTIONS
+          ],
           index: () async => homeController.renderDocument(key),
         ));
       }
