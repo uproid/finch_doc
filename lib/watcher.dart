@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:developer' as dev;
 import 'package:vm_service/utils.dart';
-import 'package:vm_service/vm_service.dart';
+import 'package:vm_service/vm_service.dart' as v;
 import 'package:vm_service/vm_service_io.dart';
 import 'package:watcher/watcher.dart';
 import 'package:stream_transform/stream_transform.dart';
@@ -72,7 +72,7 @@ void main([List<String>? args]) async {
   });
 }
 
-class StdoutLog extends Log {
+class StdoutLog extends v.Log {
   @override
   void warning(String message) => print('Watcher warning: $message');
   @override
