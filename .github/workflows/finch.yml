@@ -108,7 +108,7 @@ jobs:
       - name: Install Finch CLI
         run: |
           dart pub global activate finch
-          setx PATH "%PATH%;%USERPROFILE%\.pub-cache\bin"
+          echo "$USERPROFILE/.pub-cache/bin" >> "$GITHUB_PATH"
       - name: Build finch project for Windows
         run: |
           finch build -a ./lib/app.dart -t exe -o ./build_windows
