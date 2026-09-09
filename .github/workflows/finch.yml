@@ -22,7 +22,11 @@ jobs:
       - name: Install Finch CLI
         run: |
           dart pub global activate finch
-          export PATH="$PATH:$HOME/.pub-cache/bin"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            echo "$LOCALAPPDATA/Pub/Cache/bin" >> "$GITHUB_PATH"
+          else
+            echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+          fi
       - name: Build finch project for Linux
         run: |
           finch build -a ./lib/app.dart -t exe -o ./build_linux
@@ -65,7 +69,11 @@ jobs:
       - name: Install Finch CLI
         run: |
           dart pub global activate finch
-          export PATH="$PATH:$HOME/.pub-cache/bin"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            echo "$LOCALAPPDATA/Pub/Cache/bin" >> "$GITHUB_PATH"
+          else
+            echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+          fi
       - name: Build finch project
         run: |
           finch build -a ./lib/app.dart -t exe -o ./build_macos
@@ -108,7 +116,11 @@ jobs:
       - name: Install Finch CLI
         run: |
           dart pub global activate finch
-          export PATH="$PATH:$HOME/.pub-cache/bin"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            echo "$LOCALAPPDATA/Pub/Cache/bin" >> "$GITHUB_PATH"
+          else
+            echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+          fi
       - name: Build finch project for Windows
         run: |
           finch build -a ./lib/app.dart -t exe -o ./build_windows
