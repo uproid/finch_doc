@@ -84,7 +84,7 @@ var mapTemplates = {
             </button>
             
             <!-- MCP -->
-            <a href="{{ $e.url('mcp-server') }}" rel="noopener noreferrer" class="hidden sm:flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors {{ $l.isRouteKey('home.mcpserver.index') ? 'bg-blue-50 dark:bg-gray-900' : '' }} " aria-label="View on GitHub">
+            <a href="{{ $e.url('mcp-server') }}" rel="noopener noreferrer" class=" sm:flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors {{ $l.isRouteKey('home.mcpserver.index') ? 'bg-blue-50 dark:bg-gray-900' : '' }} " aria-label="View on GitHub">
                 <i class="text-xl leading-none text-black dark:text-white">
                     <svg width="20" height="20" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g>
@@ -188,21 +188,8 @@ var mapTemplates = {
         // Initialize theme icons when DOM is ready
         window.addEventListener('DOMContentLoaded', function() {
             const isDark = document.documentElement.classList.contains('dark');
-            const prismLight = document.getElementById('prism-light');
-            const prismDark = document.getElementById('prism-dark');
             const themeIconLight = document.getElementById('theme-icon-light');
             const themeIconDark = document.getElementById('theme-icon-dark');
-            
-            // Set Prism theme
-            if (prismLight && prismDark) {
-                if (isDark) {
-                    prismLight.disabled = true;
-                    prismDark.disabled = false;
-                } else {
-                    prismLight.disabled = false;
-                    prismDark.disabled = true;
-                }
-            }
             
             // Set theme icons
             if (themeIconLight && themeIconDark) {
@@ -220,12 +207,16 @@ var mapTemplates = {
 <link rel="stylesheet" href="/tailwindcss/output.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
 <link rel="stylesheet" href="/style.css">
-<!-- Prism.js for syntax highlighting - Light theme -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" id="prism-light">
-<!-- Prism.js for syntax highlighting - Dark theme -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" id="prism-dark" disabled>
-<!-- Prism.js Toolbar for copy button -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
+<!-- Fonts: Inter (UI), Vazirmatn (Persian/RTL), JetBrains Mono (code) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Vazirmatn:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+{% if(status|default(200) == 200) %}
+    {% for lang in languages %}
+<link rel="alternate" hreflang="{{ lang.longCode }}" href="{{ $e.url('/'~lang.code~'/'~key) }}"/>
+    {% endfor %}
+<link rel="alternate" hreflang="x-default" href="{{ $e.url('/'~key) }}"/>
+{% endif %}
 {% endblock %}""",
 	r"template/error.html.twig": r"""{% extends 'template/base.html.twig' %}
 
@@ -371,6 +362,112 @@ var mapTemplates = {
     {% include 'template/scripts.html.twig' %}
 </body>
 </html>""",
+	r"template/sitemap-xsl.html.twig": r"""<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:sm="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <xsl:output method="html" encoding="UTF-8" indent="yes" />
+
+  <xsl:template match="/sm:urlset">
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <title>XML Sitemap</title>
+        <style>
+          :root { color-scheme: light dark; }
+          body {
+            margin: 0;
+            padding: 2.5rem 1.5rem;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f7f7f8;
+            color: #1f2328;
+          }
+          .wrap { max-width: 960px; margin: 0 auto; }
+          h1 { font-size: 1.4rem; margin: 0 0 0.25rem; }
+          p.meta { color: #57606a; margin: 0 0 1.5rem; }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            overflow: hidden;
+          }
+          thead th {
+            text-align: left;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #57606a;
+            background: #f6f8fa;
+            padding: 0.6rem 0.9rem;
+            border-bottom: 1px solid #d0d7de;
+          }
+          tbody td {
+            padding: 0.55rem 0.9rem;
+            border-bottom: 1px solid #eaeef2;
+            font-size: 0.9rem;
+            vertical-align: top;
+          }
+          tbody tr:last-child td { border-bottom: none; }
+          tbody tr:hover { background: #f6f8fa; }
+          a { color: #0969da; text-decoration: none; word-break: break-all; }
+          a:hover { text-decoration: underline; }
+          td.num { text-align: center; white-space: nowrap; }
+          @media (prefers-color-scheme: dark) {
+            body { background: #0d1117; color: #e6edf3; }
+            p.meta { color: #8b949e; }
+            table { background: #161b22; border-color: #30363d; }
+            thead th { background: #161b22; color: #8b949e; border-color: #30363d; }
+            tbody td { border-color: #21262d; }
+            tbody tr:hover { background: #1c2128; }
+            a { color: #58a6ff; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="wrap">
+          <h1>XML Sitemap</h1>
+          <p class="meta">
+            <xsl:value-of select="count(sm:url)" /> URLs listed below. This file is meant for search engines
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>URL</th>
+                <th>Alternates</th>
+                <th>Change freq.</th>
+                <th>Priority</th>
+              </tr>
+            </thead>
+            <tbody>
+              <xsl:for-each select="sm:url">
+                <tr>
+                  <td>
+                    <a href="{sm:loc}">
+                      <xsl:value-of select="sm:loc" />
+                    </a>
+                  </td>
+                  <td class="num">
+                    <xsl:value-of select="count(xhtml:link)" />
+                  </td>
+                  <td class="num">
+                    <xsl:value-of select="sm:changefreq" />
+                  </td>
+                  <td class="num">
+                    <xsl:value-of select="sm:priority" />
+                  </td>
+                </tr>
+              </xsl:for-each>
+            </tbody>
+          </table>
+        </div>
+      </body>
+    </html>
+  </xsl:template>
+</xsl:stylesheet>
+""",
 	r"template/hero.html.twig": r"""<!-- Hero Section -->
 <div class="mb-12 relative overflow-hidden rounded-2xl border border-slate-200 dark:border-gray-800/60 bg-slate-50 dark:bg-gray-950">
 
@@ -432,7 +529,7 @@ var mapTemplates = {
 
                 <!-- CTA buttons -->
                 <div class="flex flex-wrap gap-3">
-                    <a href="/#breadcrumb"
+                    <a href="#explore-docs" rel="noopener noreferrer"
                        class="inline-flex items-center gap-2 h-10 px-5 rounded-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white text-sm font-semibold transition-colors shadow-sm shadow-blue-500/30">
                         <i class="ph-bold ph-book-open"></i>{{ $t('Get Started') }}
                     </a>
@@ -601,10 +698,6 @@ function copyToClipboard(text) {
     
         <!-- Content -->
         <div class="flex-1 w-full py-4 px-4 sm:py-8 sm:px-6 lg:px-8 xl:px-8 max-w-4xl mx-auto">
-            {% if $e.isKey('')  %}
-                {% include 'template/hero.html.twig' %}
-            {% endif %}
-            
             <!-- Breadcrumb -->
             <nav class="flex items-center justify-between mb-6 text-sm overflow-x-auto" id="breadcrumb" aria-label="Breadcrumb">
                 <ol class="flex items-center space-x-2 flex-nowrap">
@@ -804,20 +897,8 @@ function copyToClipboard(text) {
 	</div>
 </div>
 """,
-	r"template/scripts.html.twig": r"""<!-- Prism.js Core -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
-<!-- Prism.js Toolbar Plugin -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js" defer></script>
-<!-- Prism.js Copy to Clipboard Plugin -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" defer></script>
-<!-- Prism.js Dart Language Support -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-dart.min.js" defer></script>
-<!-- Prism.js Additional Languages (optional) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-nginx.min.js" defer></script>
+	r"template/scripts.html.twig": r"""<!-- Modern code blocks (Shiki syntax highlighting) -->
+<script type="module" src="/code-blocks.js"></script>
 <script src="/script.js"></script>
 <script src="/app/includes.js" crossorigin="anonymous"></script>
 {% if not isLocalDebug %}
@@ -845,6 +926,22 @@ function copyToClipboard(text) {
     }
 </script>
 {% endif %}""",
+	r"template/sitemap.html.twig": r"""<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="{{ xslHref }}"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+	{%- for url in urls %}
+	<url>
+		<loc>{{ url.loc | unscape }}</loc>
+		{% for alt in url.alternates -%}
+		<xhtml:link rel="alternate" hreflang="{{ alt.hreflang }}" href="{{ alt.href | unscape }}" />
+		{% endfor -%}
+		<changefreq>{{ url.changefreq }}</changefreq>
+		<priority>{{ url.priority }}</priority>
+	</url>
+	{%- endfor %}
+</urlset>
+""",
 	r"template/footer.html.twig": r"""<!-- Footer -->
 <footer class="mt-16 bg-linear-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 border-t-2 border-gray-200 dark:border-gray-700">
     <!-- Newsletter Section -->
@@ -1029,5 +1126,87 @@ function copyToClipboard(text) {
 {% endblock %}
 
 {% block title %}MCP Server{% endblock %}
+""",
+	r"template/pages/home.html.twig": r"""{% extends 'template/page.html.twig' %}
+
+{% block content %}
+<!-- Main Content Area -->
+<main id="main-content" class="flex-1 min-w-0 overflow-x-hidden order-2 xl:order-1 xl:mx-20 lg:mx-16 md:mx-8 sm:mx-4" role="main">
+    <div class="flex flex-col xl:flex-row w-full relative">
+        <div class="flex-1 w-full py-4 px-4 sm:py-8 sm:px-6 lg:px-8 xl:px-8 max-w-4xl mx-auto">
+
+            {% include 'template/hero.html.twig' %}
+
+            {% set features = [
+                {'icon': 'ph-bold ph-book-open', 'color': 'text-blue-600 dark:text-blue-400', 'bg': 'bg-blue-50 dark:bg-blue-950', 'title': 'API Docs with Swagger', 'desc': 'Rapid API development with auto-generated OpenAPI documentation.'},
+                {'icon': 'ph-bold ph-broadcast', 'color': 'text-violet-600 dark:text-violet-400', 'bg': 'bg-violet-50 dark:bg-violet-950', 'title': 'Real-Time WebSockets', 'desc': 'Build live features with first-class WebSocket support.'},
+                {'icon': 'ph-bold ph-database', 'color': 'text-emerald-600 dark:text-emerald-400', 'bg': 'bg-emerald-50 dark:bg-emerald-950', 'title': 'Multi-Database Support', 'desc': 'MongoDB, MySQL and SQLite integrations, ready out of the box.'},
+                {'icon': 'ph-bold ph-clock-countdown', 'color': 'text-amber-600 dark:text-amber-400', 'bg': 'bg-amber-50 dark:bg-amber-950', 'title': 'Scheduled Tasks', 'desc': 'Run cron jobs directly from your Finch application.'},
+                {'icon': 'ph-bold ph-translate', 'color': 'text-pink-600 dark:text-pink-400', 'bg': 'bg-pink-50 dark:bg-pink-950', 'title': 'Multi-Language & i18n', 'desc': 'Localization is built into routing, templates and content.'},
+                {'icon': 'ph-bold ph-arrows-clockwise', 'color': 'text-teal-600 dark:text-teal-400', 'bg': 'bg-teal-50 dark:bg-teal-950', 'title': 'Database Migrations', 'desc': 'Manage schema changes with a built-in migration system.'}
+            ] %}
+
+            <!-- Why Finch -->
+            <section class="mb-14">
+                <div class="text-center mb-8 max-w-2xl mx-auto">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{{ $t('Everything you need to ship a backend') }}</h2>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">{{ $t('Finch bundles the pieces every Dart backend needs, so you can focus on your product instead of wiring plumbing.') }}</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {% for feature in features %}
+                    <div class="p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/60 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                        <div class="w-10 h-10 rounded-lg {{ feature.bg }} flex items-center justify-center mb-3">
+                            <i class="{{ feature.icon }} {{ feature.color }} text-xl"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white mb-1">{{ $t(feature.title) }}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ $t(feature.desc) }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Explore the docs -->
+            <section id="explore-docs" class="mb-14 scroll-mt-20">
+                <div class="mb-6">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{{ $t('Explore the documentation') }}</h2>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">{{ $t('Jump straight into the topic you need.') }}</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {% for menu in menus %}
+                        {% if menu.isGroup %}
+                        <div class="p-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/60 hover:border-blue-300 dark:hover:border-secondary-400 transition-colors">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 shrink-0 rounded-lg bg-blue-50 dark:bg-gray-900 flex items-center justify-center">
+                                    <i class="{{ menu.children[0].meta.icon ? menu.children[0].meta.icon : 'ph-bold ph-folder' }} text-blue-600 dark:text-secondary-400 text-xl"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-900 dark:text-white">{{ menu.title }}</h3>
+                            </div>
+                            <ul class="space-y-1.5">
+                                {% for child in menu.children %}
+                                    {% if child.key %}
+                                    <li>
+                                        <a href="{{ $l.urlLn(child.key) }}" class="group flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-secondary-400 transition-colors">
+                                            <i class="ph-bold ph-caret-right text-xs text-gray-400 group-hover:translate-x-0.5 transition-transform"></i>
+                                            {{ child.title }}
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </section>
+
+            {% include 'template/footer.html.twig' %}
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block title %}{{ $t('Home') }}{% endblock %}
+
+{% block description %}{{ $t('Finch is a fast, modular and type-safe Dart web framework with built-in support for databases, WebSockets, auth, i18n and more.') }}{% endblock %}
 """
 };

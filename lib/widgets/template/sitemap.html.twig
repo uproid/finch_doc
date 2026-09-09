@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="{{ xslHref }}"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+	{%- for url in urls %}
+	<url>
+		<loc>{{ url.loc | unscape }}</loc>
+		{% for alt in url.alternates -%}
+		<xhtml:link rel="alternate" hreflang="{{ alt.hreflang }}" href="{{ alt.href | unscape }}" />
+		{% endfor -%}
+		<changefreq>{{ url.changefreq }}</changefreq>
+		<priority>{{ url.priority }}</priority>
+	</url>
+	{%- endfor %}
+</urlset>

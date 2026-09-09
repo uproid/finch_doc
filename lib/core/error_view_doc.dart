@@ -57,7 +57,7 @@ class ErrorViewDoc extends FinchStringWidget {
   Future<void> _sendEmail(int statusCode, Map<dynamic, dynamic> args) async {
     if (_allowSend() == false) return;
 
-    var to = [env['DEBUG_EMAIL_TO'] ?? 'test@finchdart.com'];
+    var to = [env.get('DEBUG_EMAIL_TO', 'test@finchdart.com')];
 
     args.addAll(<String, dynamic>{
       'url': Context.rq.uri.toString(),
@@ -69,17 +69,17 @@ class ErrorViewDoc extends FinchStringWidget {
     });
 
     MailSender.sendEmail(
-      from: env['DEBUG_EMAIL_FROM'] ?? 'test@finchdart.com',
+      from: env.get('DEBUG_EMAIL_FROM', 'test@finchdart.com'),
       to: to,
       allowInsecure: true,
       subject: 'Document(Finch) Error: $statusCode',
-      fromName: env['DEBUG_EMAIL_FROM_NAME'] ?? 'Finch Documentation',
-      host: env['DEBUG_EMAIL_HOST'] ?? 'mail',
-      port: int.tryParse(env['DEBUG_EMAIL_PORT'] ?? '1025') ?? 1025,
+      fromName: env.get('DEBUG_EMAIL_FROM_NAME', 'Finch Documentation'),
+      host: env.get('DEBUG_EMAIL_HOST', 'mail'),
+      port: env.getInt('DEBUG_EMAIL_PORT', 1025),
       html: _mapToHtml(args),
-      password: env['DEBUG_EMAIL_PASSWORD'],
-      ssl: env['DEBUG_EMAIL_SSL']?.toLowerCase() == 'true' ? true : false,
-      username: env['DEBUG_EMAIL_USERNAME'],
+      password: env.get('DEBUG_EMAIL_PASSWORD'),
+      ssl: env.getBool('DEBUG_EMAIL_SSL', false),
+      username: env.get('DEBUG_EMAIL_USERNAME'),
     ).onError((error, stackTrace) {
       Console.e('Error sending email: $error');
       return false;

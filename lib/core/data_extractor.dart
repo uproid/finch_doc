@@ -203,7 +203,7 @@ class Extractor {
         var content = file.readAsStringSync();
         var key = fileNameToKey(file.fileName);
         if (key.toLowerCase() == 'readme') {
-          key = '';
+          key = 'documentation';
         }
         var doc = ContentModel(
           '$langPath${file.fileFullName}',
@@ -221,13 +221,18 @@ class Extractor {
             '$lang/${file.fileFullName}',
             if (lang == 'en') ...[
               file.fileFullName,
-              '$lang/$key' == 'en/' ? '/' : key,
+              key,
             ],
             if (enableApi) ...[
               'api/$key',
             ],
           ],
-          methods: [Methods.GET, Methods.POST, Methods.HEAD],
+          methods: const [
+            Methods.GET,
+            Methods.POST,
+            Methods.HEAD,
+            Methods.OPTIONS
+          ],
           index: () async => homeController.renderDocument(key),
         ));
       }

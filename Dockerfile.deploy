@@ -12,7 +12,7 @@ COPY . .
 
 RUN dart pub get 
 RUN dart pub get --offline 
-RUN dart build cli -t ./bin/app.dart -o ./build
+RUN dart build cli -t ./lib/app.dart -o ./build
 #RUN cp -r ./build/bundle/bin/ ./
 #RUN chmod -R a+rxw ./bin
 

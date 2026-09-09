@@ -59,6 +59,22 @@
     "No results found.": "No results found.",
     "You can use this endpoint to access the MCP server for your project. Make sure to keep it secure and do not share it publicly.": "You can use this endpoint to access the MCP server for your project. Make sure to keep it secure and do not share it publicly.",
     "For more information, refer to the documentation.": "For more information, refer to the documentation.",
-    "If you encounter any issues, please contact support.": "If you encounter any issues, please contact support."
-
+    "If you encounter any issues, please contact support.": "If you encounter any issues, please contact support.",
+    "Everything you need to ship a backend": "Everything you need to ship a backend",
+    "Finch bundles the pieces every Dart backend needs, so you can focus on your product instead of wiring plumbing.": "Finch bundles the pieces every Dart backend needs, so you can focus on your product instead of wiring plumbing.",
+    "API Docs with Swagger": "API Docs with Swagger",
+    "Rapid API development with auto-generated OpenAPI documentation.": "Rapid API development with auto-generated OpenAPI documentation.",
+    "Real-Time WebSockets": "Real-Time WebSockets",
+    "Build live features with first-class WebSocket support.": "Build live features with first-class WebSocket support.",
+    "Multi-Database Support": "Multi-Database Support",
+    "MongoDB, MySQL and SQLite integrations, ready out of the box.": "MongoDB, MySQL and SQLite integrations, ready out of the box.",
+    "Scheduled Tasks": "Scheduled Tasks",
+    "Run cron jobs directly from your Finch application.": "Run cron jobs directly from your Finch application.",
+    "Multi-Language & i18n": "Multi-Language & i18n",
+    "Localization is built into routing, templates and content.": "Localization is built into routing, templates and content.",
+    "Database Migrations": "Database Migrations",
+    "Manage schema changes with a built-in migration system.": "Manage schema changes with a built-in migration system.",
+    "Explore the documentation": "Explore the documentation",
+    "Jump straight into the topic you need.": "Jump straight into the topic you need.",
+    "Finch is a fast, modular and type-safe Dart web framework with built-in support for databases, WebSockets, auth, i18n and more.": "Finch is a fast, modular and type-safe Dart web framework with built-in support for databases, WebSockets, auth, i18n and more."
 }

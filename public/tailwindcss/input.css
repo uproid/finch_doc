@@ -3,6 +3,9 @@
 @variant dark (&:is(.dark, .dark *));
 
 @theme {
+  --font-sans: "Inter", "Vazirmatn", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
   --color-blue-50: #e6f0ff;
   --color-blue-100: #cce0ff;
   --color-blue-200: #99c2ff;

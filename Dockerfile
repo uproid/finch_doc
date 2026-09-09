@@ -12,4 +12,4 @@ RUN dart pub get
 RUN dart pub get --offline
 
 EXPOSE 9902 9901
-CMD ["finch", "serve", "-p", "/www/bin/watcher.dart"]
+CMD ["finch", "serve", "-p", "/www/lib/watcher.dart"]

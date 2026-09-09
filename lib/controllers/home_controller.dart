@@ -14,6 +14,10 @@ class HomeController extends Controller {
     return rq.renderHtml(html: "Hello world from Home Controller");
   }
 
+  Future<String> home() async {
+    return renderPage('home');
+  }
+
   Future<String> mcpServer() async {
     return renderPage('mcp-server');
   }
@@ -46,13 +50,6 @@ class HomeController extends Controller {
   Future<String> renderDocument(String key) async {
     var lang = rq.getLanguage();
     var isApi = enableApi && (rq.isApiEndpoint || rq.endpoint == 'api');
-
-    /// Allowed languages only
-    var allowedLanguages = Extractor.allLanguages();
-    if (allowedLanguages.indexWhere((element) => element['code'] == lang) ==
-        -1) {
-      lang = 'en';
-    }
 
     var langModel = languages[lang] ?? languages['en']!;
     if (languages[lang] == null) {
@@ -145,61 +142,62 @@ Sitemap: ${rq.url('/sitemap.xml')}
     );
   }
 
-  Future<String> sitemap() async {
-    var sitemapEntries = StringBuffer();
+  Future<String> sitemapXsl() async {
+    rq.contentType = ContentType('text', 'xsl');
+    return rq.renderView(path: 'template/sitemap-xsl');
+  }
 
-    var allLanguages = Extractor.contents.keys;
+  Future<String> sitemap() async {
+    var allLanguages = Extractor.contents.keys.toList();
+    var urls = <Map<String, dynamic>>[];
+
+    Map<String, dynamic> urlEntry(String loc, List<Map<String, String>> alternates) {
+      return {
+        'loc': loc,
+        'alternates': alternates,
+        'changefreq': 'weekly',
+        'priority': '1.0',
+      };
+    }
+
+    for (var lang in ['', ...allLanguages]) {
+      urls.add(urlEntry(rq.url(lang.isEmpty ? '/' : '/$lang/'), [
+        for (var subLang in allLanguages)
+          {'hreflang': subLang, 'href': rq.url('/$subLang/')},
+        {'hreflang': 'x-default', 'href': rq.url('')},
+      ]));
+    }
+
     var allContentsByKey = <String, Map<String, List<ContentModel>>>{};
     for (var lang in allLanguages) {
-      var contents = Extractor.contents[lang]!.contents;
-      contents.forEach((key, content) {
+      Extractor.contents[lang]!.contents.forEach((key, content) {
         allContentsByKey.putIfAbsent(key, () => {});
         allContentsByKey[key]!.putIfAbsent(lang, () => []);
         allContentsByKey[key]![lang]!.add(content);
       });
     }
 
-    allContentsByKey.forEach((key, contents) {
-      sitemapEntries.writeln('\t<url>');
-      sitemapEntries.writeln('\t\t<loc>${rq.url('/${key}')}</loc>');
-      contents.forEach((lang, contentList) {
-        for (var content in contentList) {
-          sitemapEntries.writeln(
-              '\t\t<xhtml:link rel="alternate" hreflang="$lang" href="${rq.url('${lang}/${content.key}')}" />');
-        }
-      });
-      sitemapEntries.writeln(
-          '\t\t<xhtml:link rel="alternate" hreflang="x-default" href="${rq.url('en/${key}')}" />');
-      sitemapEntries.writeln('\t\t<changefreq>weekly</changefreq>');
-      sitemapEntries.writeln('\t\t<priority>1.0</priority>');
-      sitemapEntries.writeln('\t</url>');
+    allContentsByKey.forEach((key, contentsByLang) {
+      var alternates = [
+        for (var entry in contentsByLang.entries)
+          for (var content in entry.value)
+            {'hreflang': entry.key, 'href': rq.url('${entry.key}/${content.key}')},
+        {'hreflang': 'x-default', 'href': rq.url('en/$key')},
+      ];
 
-      contents.forEach((lang, contentList) {
+      urls.add(urlEntry(rq.url('/$key'), alternates));
+
+      contentsByLang.forEach((lang, contentList) {
         for (var _ in contentList) {
-          sitemapEntries.writeln('\t<url>');
-          sitemapEntries.writeln('\t\t<loc>${rq.url('$lang/${key}')}</loc>');
-          contents.forEach((lang, contentList) {
-            for (var content in contentList) {
-              sitemapEntries.writeln(
-                  '\t\t<xhtml:link rel="alternate" hreflang="$lang" href="${rq.url('${lang}/${content.key}')}" />');
-            }
-          });
-          sitemapEntries.writeln(
-              '\t\t<xhtml:link rel="alternate" hreflang="x-default" href="${rq.url('en/${key}')}" />');
-          sitemapEntries.writeln('\t\t<changefreq>weekly</changefreq>');
-          sitemapEntries.writeln('\t\t<priority>1.0</priority>');
-          sitemapEntries.writeln('\t</url>');
+          urls.add(urlEntry(rq.url('$lang/$key'), alternates));
         }
       });
     });
 
-    return rq.renderString(
-      text: '''<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-$sitemapEntries
-</urlset>''',
-      contentType: ContentType('application', 'xml'),
-    );
+    rq.contentType = ContentType('application', 'xml');
+    rq.addParam('urls', urls);
+    rq.addParam('xslHref', rq.url('/sitemap.xsl'));
+
+    return rq.renderView(path: 'template/sitemap');
   }
 }
