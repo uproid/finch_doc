@@ -17,7 +17,7 @@ final FinchConfigs configs = FinchConfigs(
   languagePath: pathTo(env.get('LANGUAGE_PATH', "./lib/languages")),
   publicDir: pathTo(env.get('PUBLIC_DIR', './public')),
   dbConfig: FinchDBConfig(enable: false),
-  port: 9902,
+  port: env.getInt('FINCH_DOC_PORT', 9902),
   enableLocalDebugger: Console.isDebug,
   languageSource: LanguageSource.dart,
   dartLanguages: languageDart,

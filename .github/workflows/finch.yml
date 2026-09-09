@@ -29,7 +29,28 @@ jobs:
           cp -r ./content ./build_linux/
       - name: Test Finch_doc app in background
         run: cd ./build_linux/lib/ && ./app.exe & sleep 15 && kill %1 && cd ../../
-      - name: Upload Finch build artifacts 
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install Tauri Linux system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+      - name: Cache Cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('src-tauri/Cargo.lock') }}
+      - name: Build for Tauri
+        run: |
+          cd src-tauri
+          cargo build --release
+          cd ..
+          cp ./src-tauri/target/release/finch_doc ./build_linux/finch_doc
+          chmod +x ./build_linux/finch_doc
+      - name: Upload Finch build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: finch-build-linux

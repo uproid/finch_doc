@@ -1,0 +1,15 @@
+[package]
+name = "finch_doc"
+version = "1.6.0"
+description = "Finch Doc desktop launcher"
+edition = "2021"
+
+[[bin]]
+name = "finch_doc"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }

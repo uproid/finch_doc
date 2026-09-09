@@ -9,4 +9,7 @@ node_modules/
 .DS_Store
 package-lock.json
 pubspec.lock
+src-tauri/target/
+build_linux/
+build_macos/
 
