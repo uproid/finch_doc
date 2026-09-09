@@ -111,7 +111,7 @@ jobs:
           echo "$LOCALAPPDATA/Pub/Cache/bin" >> "$GITHUB_PATH"
       - name: Build finch project for Windows
         run: |
-          finch build -a ./lib/app.dart -t exe -o ./build_windows
+          dart pub global run finch:finch build -a ./lib/app.dart -t exe -o ./build_windows
           cp -r ./content ./build_windows/
       - name: Test Finch_doc app in background
         run: cd ./build_windows/lib/ && ./app.exe & sleep 15 && kill %1 && cd ../../
