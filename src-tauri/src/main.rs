@@ -5,6 +5,12 @@ use std::process::{Child, Command};
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
+
+#[cfg(target_os = "windows")]
+const CREATE_NO_WINDOW: u32 = 0x08000000;
+
 use tauri::{Manager, RunEvent, WebviewUrl, WebviewWindowBuilder};
 
 struct ChildProcess(Mutex<Option<Child>>);
@@ -40,9 +46,15 @@ fn main() {
                 .to_path_buf();
             let app_exe = exe_dir.join("lib").join("app.exe");
 
-            let child = Command::new(&app_exe)
+            let mut command = Command::new(&app_exe);
+            command
                 .current_dir(&exe_dir)
-                .env("FINCH_DOC_PORT", port.to_string())
+                .env("FINCH_DOC_PORT", port.to_string());
+
+            #[cfg(target_os = "windows")]
+            command.creation_flags(CREATE_NO_WINDOW);
+
+            let child = command
                 .spawn()
                 .unwrap_or_else(|e| panic!("failed to start {:?}: {}", app_exe, e));
 
