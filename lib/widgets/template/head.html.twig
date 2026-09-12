@@ -11,7 +11,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}{{ title }}{% endblock %} | Finch</title>
+<title>{% block title %}{{ title }}{% endblock %}{% block titleEx %} | Finch{% endblock %}</title>
 {% if description is defined %}
 <meta name="description" content="{% block description %}{{ description }}{% endblock %}">
 {% else %}

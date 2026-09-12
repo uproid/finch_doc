@@ -168,7 +168,7 @@ var mapTemplates = {
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}{{ title }}{% endblock %} | Finch</title>
+<title>{% block title %}{{ title }}{% endblock %}{% block titleEx %} | Finch{% endblock %}</title>
 {% if description is defined %}
 <meta name="description" content="{% block description %}{{ description }}{% endblock %}">
 {% else %}
@@ -1205,7 +1205,8 @@ function copyToClipboard(text) {
 </main>
 {% endblock %}
 
-{% block title %}{{ $t('Home') }}{% endblock %}
+{% block title %}Finch{% endblock %}
+{% block titleEx %}{% endblock %}
 
 {% block description %}{{ $t('Finch is a fast, modular and type-safe Dart web framework with built-in support for databases, WebSockets, auth, i18n and more.') }}{% endblock %}
 """
