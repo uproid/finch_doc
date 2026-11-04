@@ -1,3 +1,4 @@
+import 'package:finch_doc/commands/build_html.dart';
 import 'package:finch_doc/core/configs.dart';
 import 'package:finch_doc/core/data_extractor.dart';
 import 'package:finch_doc/core/local_events.dart';
@@ -12,6 +13,7 @@ void main(List<String>? args) async {
   Extractor.init();
   Request.localEvents.addAll(localEvents);
   app.addRouting(getFinchRoute);
+  app.commands.add(buildHtmlCommand);
   app.start(args).then((value) {
     Console.p("App is running at: http://localhost:${value.port}");
   });
